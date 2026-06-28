@@ -107,7 +107,7 @@
             flex-shrink: 0;
         }
 
-        /* Efeito de espalhamento */
+        /* Efeito de espalhamento (Desativado no mobile depois) */
         .portal:nth-child(4n+1) { margin-top: -30px; transform: scale(0.9); }
         .portal:nth-child(4n+2) { margin-top: 80px; transform: scale(1.1); }
         .portal:nth-child(4n+3) { margin-top: 20px; margin-left: 40px; }
@@ -216,6 +216,91 @@
             font-weight: bold;
             font-size: 12px;
             z-index: 700;
+        }
+
+
+        /* =========================================
+           RESPONSIVIDADE (CELULARES E TABLETS)
+           ========================================= */
+        @media (max-width: 1024px) {
+            .portal {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Ajuste de Botões de Navegação */
+            .btn-exit {
+                top: 20px;
+                right: 20px;
+                padding: 10px 15px;
+                font-size: 10px;
+            }
+            
+            .back {
+                top: 20px; 
+                left: 20px;
+                padding: 10px 15px;
+                font-size: 10px;
+            }
+
+            .home-content {
+                padding: 80px 10px 40px;
+            }
+
+            .center {
+                margin-bottom: 40px;
+            }
+
+            .portals-cloud {
+                gap: 15px; /* Reduz o espaço entre os portais */
+                justify-content: center;
+            }
+
+            .portal {
+                width: 105px;
+                height: 105px;
+            }
+
+            /* Reseta o efeito de espalhamento para alinhar perfeitamente no celular */
+            .portal:nth-child(4n+1), 
+            .portal:nth-child(4n+2), 
+            .portal:nth-child(4n+3), 
+            .portal:nth-child(4n+4) {
+                margin: 0;
+                transform: scale(1);
+            }
+
+            .portal:hover {
+                transform: scale(1.05) !important; /* Scale mais sutil no celular */
+            }
+
+            .label {
+                font-size: 9px;
+                padding: 6px 0;
+                letter-spacing: 1px;
+            }
+
+            /* Ajustes no interior do "Mundo" */
+            .world {
+                padding-top: 100px;
+            }
+
+            .world-header {
+                padding: 20px;
+                font-size: 24px;
+            }
+
+            .grid {
+                padding: 20px;
+                gap: 20px;
+                grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); /* 1 card por linha */
+            }
+
+            .card img {
+                height: 280px; 
+            }
         }
     </style>
 </head>
@@ -330,94 +415,54 @@
             theme: { primary: "#ff0000", accent: "#ff8c00", cardBg: "#1a0808" },
             items: [{img:"imagens/mcquem.webp", name:"McQueen", price:"R$159"}, {img:"imagens/melhor amigo.webp", name:"Melhores Amigos", price:"R$139"}, {img:"imagens/trofeu.webp", name:"Copa Pistão", price:"R$139"}]
         },
-
-    "Ratatouille": {
-        theme: { primary: "#f5e1a4", accent: "#8b0000", cardBg: "#1a130e" },
-        items: [
-            {img:"imagens/remi.webp", name:"Remy", price:"R$129"},
-            {img:"imagens/placa.webp", name:"Placa", price:"R$139"},
-            {img:"imagens/remicenoura.webp", name:"remi (modelo 2)", price:"R$89"}
-        ]
-    },
-    "Lilo & Stitch": {
-        theme: { primary: "#4cc9f0", accent: "#f72585", cardBg: "#003049" },
-        items: [
-            {img:"imagens/stitch.webp", name:"Stitch", price:"R$"},
-            {img:"imagens/modelo2s.webp", name:"Stitch (modelo 2)", price:"R$"},
-            {img:"imagens/anjo.webp", name:"Angel", price:"R$"}
-        ]
-    },
-    "Monstros S.A.": {
-        theme: { primary: "#00f5d4", accent: "#9b5de5", cardBg: "#0d1b2a" },
-        items: [
-            {img:"imagens/sulivan.webp", name:"James P. Sullivan", price:"R$210"},
-            {img:"imagens/mike.webp", name:"Mike Wazowski", price:"R$150"},
-            {img:"imagens/randal.webp", name:"Randal", price:"R$130"}
-        ]
-    },
-
-"WALL-E": {
-        // Paleta: Amarelo Trator (WALL-E), Azul Espacial e Preto Vácuo
-        theme: { primary: "#f4c430", accent: "#0077b6", cardBg: "#010101" },
-        items: [
-            {img:"imagens/walle.webp", name:"WALL-E", price:"R$189"},
-            {img:"imagens/eva.webp", name:"E.V.A.", price:"R$199"},
-            {img:"imagens/walle2.webp", name:"WALL-E (moodelo 2)", price:"R$99"}
-        ]
-    },
-    "Up: Altas Aventuras": {
-        // Paleta: Azul Céu, Amarelo Aventura (Escoteiro) e Marrom Casa
-        theme: { primary: "#87ceeb", accent: "#f9c74f", cardBg: "#1a120b" },
-        items: [
-            {img:"imagens/carl.webp", name:"Carl Fredricksen", price:"R$179"},
-            {img:"imagens/chave.webp", name:"suporte", price:"R$159"},
-            {img:"imagens/casaup.webp", name:"Casa com Balões", price:"R$350"}
-        ]
-    },
-    "Divertida Mente": {
-        // Paleta: Amarelo Alegria, Roxo Medo e Vermelho Raiva (Fundo Neutro Cinza)
-        theme: { primary: "#ffee33", accent: "#9b5de5", cardBg: "#121212" },
-        items: [
-            {img:"imagens/alegria.webp", name:"Alegria", price:"R$169"},
-            {img:"imagens/tristeza.webp", name:"Tristeza", price:"R$149"},
-            {img:"imagens/raiva.webp", name:"Raiva", price:"R$179"}
-        ]
-    },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* --- MODELO PARA FUTURO UNIVERSO (Copie e Cole abaixo) ---
-        "NOME DO MUNDO": {
-            theme: { primary: "#COR_DO_TITULO", accent: "#COR_DO_BOTAO", cardBg: "#COR_DO_FUNDO" },
+        "Ratatouille": {
+            theme: { primary: "#f5e1a4", accent: "#8b0000", cardBg: "#1a130e" },
             items: [
-                {img:"imagens/foto1.jpg", name:"Produto 1", price:"R$000"},
-                {img:"imagens/foto2.jpg", name:"Produto 2", price:"R$000"},
-                {img:"imagens/foto3.jpg", name:"Produto 3", price:"R$000"}
+                {img:"imagens/remi.webp", name:"Remy", price:"R$129"},
+                {img:"imagens/placa.webp", name:"Placa", price:"R$139"},
+                {img:"imagens/remicenoura.webp", name:"remi (modelo 2)", price:"R$89"}
             ]
         },
-        --------------------------------------------------------- */
+        "Lilo & Stitch": {
+            theme: { primary: "#4cc9f0", accent: "#f72585", cardBg: "#003049" },
+            items: [
+                {img:"imagens/stitch.webp", name:"Stitch", price:"R$"},
+                {img:"imagens/modelo2s.webp", name:"Stitch (modelo 2)", price:"R$"},
+                {img:"imagens/anjo.webp", name:"Angel", price:"R$"}
+            ]
+        },
+        "Monstros S.A.": {
+            theme: { primary: "#00f5d4", accent: "#9b5de5", cardBg: "#0d1b2a" },
+            items: [
+                {img:"imagens/sulivan.webp", name:"James P. Sullivan", price:"R$210"},
+                {img:"imagens/mike.webp", name:"Mike Wazowski", price:"R$150"},
+                {img:"imagens/randal.webp", name:"Randal", price:"R$130"}
+            ]
+        },
+        "WALL-E": {
+            theme: { primary: "#f4c430", accent: "#0077b6", cardBg: "#010101" },
+            items: [
+                {img:"imagens/walle.webp", name:"WALL-E", price:"R$189"},
+                {img:"imagens/eva.webp", name:"E.V.A.", price:"R$199"},
+                {img:"imagens/walle2.webp", name:"WALL-E (moodelo 2)", price:"R$99"}
+            ]
+        },
+        "Up: Altas Aventuras": {
+            theme: { primary: "#87ceeb", accent: "#f9c74f", cardBg: "#1a120b" },
+            items: [
+                {img:"imagens/carl.webp", name:"Carl Fredricksen", price:"R$179"},
+                {img:"imagens/chave.webp", name:"suporte", price:"R$159"},
+                {img:"imagens/casaup.webp", name:"Casa com Balões", price:"R$350"}
+            ]
+        },
+        "Divertida Mente": {
+            theme: { primary: "#ffee33", accent: "#9b5de5", cardBg: "#121212" },
+            items: [
+                {img:"imagens/alegria.webp", name:"Alegria", price:"R$169"},
+                {img:"imagens/tristeza.webp", name:"Tristeza", price:"R$149"},
+                {img:"imagens/raiva.webp", name:"Raiva", price:"R$179"}
+            ]
+        }
     };
 
     function openWorld(e, name) {
