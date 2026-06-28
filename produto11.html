@@ -126,6 +126,18 @@
             align-content: start;
         }
 
+        /* CUSTOM SCROLLBAR PARA O INVENTÁRIO */
+        .lista-itens::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lista-itens::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.5);
+        }
+        .lista-itens::-webkit-scrollbar-thumb {
+            background: var(--ouro-velho);
+            border-radius: 4px;
+        }
+
         .item-slot {
             aspect-ratio: 1/1;
             background: rgba(255, 255, 255, 0.03);
@@ -231,6 +243,80 @@
             50% { transform: translateY(-20px); }
         }
 
+        /* =========================================
+           RESPONSIVIDADE (CELULARES E TABLETS)
+           ========================================= */
+        @media (max-width: 1024px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto; /* Permite rolar a tela no celular */
+                padding: 80px 15px 30px;
+                justify-content: flex-start;
+            }
+
+            .btn-voltar {
+                top: 15px;
+                left: 15px;
+                background: rgba(0, 0, 0, 0.6); /* Fundo para melhorar leitura em cima do vídeo */
+                border-radius: 4px;
+            }
+
+            .titulo-forja h1 {
+                font-size: 35px;
+            }
+
+            .menu-inventario {
+                grid-template-columns: 1fr; /* Coloca o inventário em cima dos detalhes */
+                height: auto;
+            }
+
+            .lista-itens {
+                grid-template-columns: repeat(5, 1fr); /* 5 itens por linha em telas menores */
+                max-height: 300px;
+                padding: 15px;
+            }
+
+            .detalhes-reliquia {
+                grid-template-columns: 1fr;
+                padding: 30px 20px;
+                text-align: center;
+            }
+
+            .info-container {
+                border-left: none;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-left: 0;
+                padding-top: 30px;
+            }
+
+            .circulo-ritual {
+                width: 250px;
+                height: 250px;
+            }
+
+            #img-principal {
+                max-height: 220px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .titulo-forja h1 {
+                font-size: 28px;
+            }
+
+            .lista-itens {
+                grid-template-columns: repeat(4, 1fr); /* 4 itens por linha no celular */
+            }
+
+            h1#nome {
+                font-size: 30px;
+            }
+
+            .stats-grid {
+                text-align: left; /* Mantém os status alinhados corretamente */
+            }
+        }
     </style>
 </head>
 <body>
