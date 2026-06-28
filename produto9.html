@@ -1,406 +1,323 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Umbrella Inventory</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-
-font-family:'Orbitron',sans-serif;
-color:white;
-overflow-x:hidden;
-
+body {
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    overflow-x: hidden;
 }
 
 /* VIDEO FUNDO */
-video{
-
-position:fixed;
-
-top:0;
-left:0;
-
-width:100vw;
-height:100vh;
-
-object-fit:cover;
-
-z-index:-2;
-
+video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
 }
 
 /* OVERLAY */
-
-.overlay{
-
-position:fixed;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.75);
-z-index:-1;
-
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: -1;
 }
 
 /* LAYOUT */
-
-.main{
-
-max-width:1300px;
-margin:auto;
-padding:80px 30px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:50px;
-
+.main {
+    max-width: 1300px;
+    margin: auto;
+    padding: 80px 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
 }
 
 /* MALETA */
-
-.case{
-
-background:rgba(10,10,10,0.95);
-border:3px solid #444;
-padding:22px;
-border-radius:10px;
-
+.case {
+    background: rgba(10,10,10,0.95);
+    border: 3px solid #444;
+    padding: 22px;
+    border-radius: 10px;
 }
 
-.case-title{
-
-text-align:center;
-letter-spacing:8px;
-font-size:22px;
-margin-bottom:25px;
-letter-spacing:10px;
-font-weight:700;
+.case-title {
+    text-align: center;
+    letter-spacing: 8px;
+    font-size: 22px;
+    margin-bottom: 25px;
+    font-weight: 700;
 }
-
-
 
 /* INVENTARIO */
-
-.inventory{
-
-display:grid;
-grid-template-columns:repeat(6,75px);
-grid-template-rows:repeat(6,75px);
-gap:6px;
-justify-content:center;
-
+.inventory {
+    display: grid;
+    grid-template-columns: repeat(6, 75px);
+    grid-template-rows: repeat(6, 75px);
+    gap: 6px;
+    justify-content: center;
 }
 
-.slot{
-
-width:75px;
-height:75px;
-background:#000;
-border:1px solid #333;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-transition:0.2s;
-
+.slot {
+    width: 75px;
+    height: 75px;
+    background: #000;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.slot:hover{
-
-border:1px solid red;
-transform:scale(1.08);
-
+.slot:hover {
+    border: 1px solid red;
+    transform: scale(1.08);
 }
 
-.slot img{
-
-max-width:65px;
-
+.slot img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
 }
 
 /* CAIXA PRODUTO */
-
-.inspect{
-
-background:linear-gradient(180deg,#2b0000,#120000);
-
-border:2px solid #8b0000;
-
-border-radius:12px;
-
-padding:32px;
-
-text-align:center;
-
-box-shadow:0 0 18px rgba(255,0,0,0.25);
-
+.inspect {
+    background: linear-gradient(180deg,#2b0000,#120000);
+    border: 2px solid #8b0000;
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 0 18px rgba(255,0,0,0.25);
 }
 
-.product-img{
-
-width:260px;
-
-margin-bottom:25px;
-
-border-radius:6px;
-
+.product-img {
+    width: 100%;
+    max-width: 260px; /* Evita que fique gigante no PC */
+    margin-bottom: 25px;
+    border-radius: 6px;
 }
 
-#itemName{
-font-weight:700;
-letter-spacing:2px;
+#itemName {
+    font-weight: 700;
+    letter-spacing: 2px;
 }
 
-
-#itemDesc{
-
-opacity:0.8;
-
-margin-bottom:15px;
-
+#itemDesc {
+    opacity: 0.8;
+    margin-bottom: 15px;
 }
 
-#itemPrice{
-
-font-size:28px;
-
-margin:20px 0;
-
+#itemPrice {
+    font-size: 28px;
+    margin: 20px 0;
 }
 
 /* BOTÃO */
-
-.buy-btn{
-
-padding:16px 40px;
-
-background:#c40000;
-
-border:none;
-
-color:white;
-
-font-size:18px;
-
-cursor:pointer;
-
-transition:0.3s;
-
-border-radius:4px;
-
+.buy-btn {
+    padding: 16px 40px;
+    background: #c40000;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 4px;
 }
 
-.buy-btn:hover{
-
-background:red;
-transform:scale(1.08);
-box-shadow:0 0 12px red;
-
+.buy-btn:hover {
+    background: red;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px red;
 }
 
 /* VOLTAR */
-
-.back-btn{
-
-display:inline-block;
-
-margin-top:25px;
-
-padding:14px 30px;
-
-background:#222;
-
-border:1px solid #666;
-
-color:white;
-
-text-decoration:none;
-
-transition:0.2s;
-
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 14px 30px;
+    background: #222;
+    border: 1px solid #666;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
 }
 
-.back-btn:hover{
-
-background:#333;
-
+.back-btn:hover {
+    background: #333;
 }
 
+
+/* =========================================
+   RESPONSIVIDADE PARA CELULARES E TABLETS
+   ========================================= */
+@media (max-width: 850px) {
+    .main {
+        grid-template-columns: 1fr; /* Coloca a inspeção embaixo da maleta */
+        padding: 30px 15px; /* Reduz o espaçamento lateral no celular */
+        gap: 30px;
+    }
+
+    .case {
+        padding: 15px; /* Menos borda no celular para dar espaço ao grid */
+    }
+
+    .inventory {
+        /* Cria 6 colunas flexíveis em vez de tamanho fixo em pixels */
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: auto;
+        gap: 4px;
+    }
+
+    .slot {
+        width: 100%; 
+        height: auto;
+        /* O aspect-ratio garante que o slot fique sempre um quadrado perfeito */
+        aspect-ratio: 1 / 1; 
+    }
+
+    .inspect {
+        padding: 20px;
+    }
+}
 </style>
-
 </head>
 
 <body>
 
-<!-- VIDEO FUNDO -->
-
 <video autoplay muted loop>
-<source src="imagens/resident-evil-requiem-9-leon-moewalls-com.mp4" type="video/mp4">
+    <source src="imagens/resident-evil-requiem-9-leon-moewalls-com.mp4" type="video/mp4">
 </video>
 
 <div class="overlay"></div>
 
 <div class="main">
 
-<!-- MALETA -->
+    <div class="case">
+        <div class="case-title">
+            INVENTÁRIO
+        </div>
 
-<div class="case">
+        <div class="inventory">
+            <div class="slot" onclick="selectItem(this,'Leon','Personagem clássico','120')">
+                <img src="imagens/leon.jpg">
+            </div>
+            
+            <div class="slot"></div>
+            
+            <div class="slot" onclick="selectItem(this,'Jill Valentine','Heroína de Raccoon City','140')">
+                <img src="imagens/nemesis4.jpg">
+            </div>
+            
+            <div class="slot"></div>
+            <div class="slot"></div>
+            
+            <div class="slot" onclick="selectItem(this,'Nemesis','Criatura extremamente perigosa','180')">
+                <img src="imagens/nemesis2.webp">
+            </div>
+            
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            
+            <div class="slot" onclick="selectItem(this,'Mister X','Forma Perseguidor','220')">
+                <img src="imagens/mrx.webp">
+            </div>
+            
+            <div class="slot"></div>
+            
+            <div class="slot" onclick="selectItem(this,'Erva Verde','A lendária erva medicinal','não disponivel para compra')">
+                <img src="imagens/erva amarela.webp">
+            </div>
+            
+            <div class="slot" onclick="selectItem(this,'Nemesis','Criatura extremamente perigosa','180')">
+                <img src="nemesis2.webp">
+            </div>
+            
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            
+            <div class="slot" onclick="selectItem(this,'Leon','Personagem clássico','120')">
+                <img src="leon.jpg">
+            </div>
+            
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+    </div>
 
-<div class="case-title">
-INVENTÁRIO
-</div>
-
-<div class="inventory">
-
-<!-- ITENS -->
-
-<div class="slot" onclick="selectItem(this,'Leon','Personagem clássico','120')">
-<img src="imagens/leon.jpg">
-</div>
-
-<div class="slot"></div>
-
-
-<div class="slot" onclick="selectItem(this,'Jill Valentine','Heroína de Raccoon City','140')">
-<img src="imagens/nemesis4.jpg">
-</div>
-
-
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot" onclick="selectItem(this,'Nemesis','Criatura extremamente perigosa','180')">
-<img src="imagens/nemesis2.webp">
-</div>
-
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot" onclick="selectItem(this,'Mister X','Forma Perseguidor','220')">
-<img src="imagens/mrx.webp">
-</div>
-
-<div class="slot"></div>
-
-<!-- SLOTS RESTANTES -->
-
-<div class="slot" onclick="selectItem(this,'Erva Verde','A lendária erva medicinal','não disponivel para compra')">
-<img src="imagens/erva amarela.webp">
-</div>
-
-<div class="slot" onclick="selectItem(this,'Nemesis','Criatura extremamente perigosa','180')">
-<img src="nemesis2.webp">
-</div>
-
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-
-<div class="slot"></div>
-
-<div class="slot" onclick="selectItem(this,'Leon','Personagem clássico','120')">
-<img src="leon.jpg">
-</div>
-
-
-
-
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-<div class="slot"></div>
-
-</div>
-
-</div>
-
-<!-- CAIXA PRODUTO -->
-
-<div class="inspect">
-
-<img id="productImage" class="product-img">
-
-<h2 id="itemName">
-Selecione um item
-</h2>
-
-<p id="itemDesc">
-Clique em um item da maleta
-</p>
-
-<div id="itemPrice"></div>
-
-<button class="buy-btn" onclick="buyItem()">
-Comprar
-</button>
-
-<br>
-
-<a href="produtos.html" class="back-btn">
-Voltar para todos os produtos
-</a>
-
-</div>
+    <div class="inspect">
+        <img id="productImage" class="product-img">
+        
+        <h2 id="itemName">Selecione um item</h2>
+        <p id="itemDesc">Clique em um item da maleta</p>
+        <div id="itemPrice"></div>
+        
+        <button class="buy-btn" onclick="buyItem()">Comprar</button>
+        <br>
+        <a href="produtos.html" class="back-btn">Voltar para todos os produtos</a>
+    </div>
 
 </div>
 
 <script>
+let currentItem = ""
 
-let currentItem=""
-
-function selectItem(slot,name,desc,price){
-
-currentItem=name
-
-document.getElementById("itemName").innerText=name
-document.getElementById("itemDesc").innerText=desc
-document.getElementById("itemPrice").innerText="R$ "+price
-
-let img=slot.querySelector("img").src
-
-document.getElementById("productImage").src=img
-
+function selectItem(slot, name, desc, price) {
+    currentItem = name
+    document.getElementById("itemName").innerText = name
+    document.getElementById("itemDesc").innerText = desc
+    
+    // Se o preço for um texto em vez de número (ex: 'não disponivel')
+    if (isNaN(price)) {
+        document.getElementById("itemPrice").innerText = price
+    } else {
+        document.getElementById("itemPrice").innerText = "R$ " + price
+    }
+    
+    let img = slot.querySelector("img").src
+    document.getElementById("productImage").src = img
 }
 
-function buyItem(){
-
-let phone="5599999999999"
-
-let message="Olá, quero comprar: "+currentItem
-
-let url="https://wa.me/"+phone+"?text="+encodeURIComponent(message)
-
-window.open(url,"_blank")
-
+function buyItem() {
+    if(!currentItem) {
+        alert("Selecione um item primeiro!");
+        return;
+    }
+    
+    let phone = "5599999999999"
+    let message = "Olá, quero comprar: " + currentItem
+    let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message)
+    window.open(url, "_blank")
 }
-
 </script>
 
 </body>
