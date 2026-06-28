@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vasos Decorativos</title>
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+/* PÁGINA */
+
+body{
+
+font-family:Arial, Helvetica, sans-serif;
+
+background:#0c0c0c;
+
+color:white;
+
+filter:grayscale(100%);
+
+animation:vida 3s forwards;
+
+overflow-x:hidden;
+
+}
+
+/* VIDA SURGINDO */
+
+@keyframes vida{
+
+0%{filter:grayscale(100%);}
+100%{filter:grayscale(0%);}
+
+}
+
+/* BOTÃO VOLTAR */
+
+.voltar{
+
+position:absolute;
+
+top:25px;
+
+left:25px;
+
+text-decoration:none;
+
+color:#aaa;
+
+font-size:14px;
+
+padding:10px 16px;
+
+border-radius:25px;
+
+background:#1a1a1a;
+
+transition:0.3s;
+
+}
+
+.voltar:hover{
+
+color:#7cff9e;
+
+background:#222;
+
+}
+
+/* FOLHAS */
+
+.folha{
+
+position:fixed;
+
+width:6px;
+
+height:6px;
+
+background:#7cff9e;
+
+border-radius:50%;
+
+opacity:0.4;
+
+animation:subir linear infinite;
+
+}
+
+@keyframes subir{
+
+0%{
+transform:translateY(100vh) translateX(0);
+opacity:0;
+}
+
+50%{
+opacity:0.6;
+}
+
+100%{
+transform:translateY(-10vh) translateX(40px);
+opacity:0;
+}
+
+}
+
+/* HEADER */
+
+header{
+
+text-align:center;
+
+padding:90px 20px 50px;
+
+}
+
+header h1{
+
+font-size:42px;
+
+margin-bottom:10px;
+
+background:linear-gradient(90deg,#ffffff,#7cff9e,#4fd1ff);
+
+background-size:300%;
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+animation:corTitulo 6s linear infinite;
+
+}
+
+@keyframes corTitulo{
+
+0%{background-position:0%}
+100%{background-position:300%}
+
+}
+
+header p{
+
+color:#aaa;
+
+}
+
+/* GRID PRODUTOS */
+
+.produtos{
+
+max-width:1200px;
+
+margin:auto;
+
+padding:60px 40px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+gap:40px;
+
+}
+
+/* CARD */
+
+.card{
+
+background:#1a1a1a;
+
+padding:25px;
+
+border-radius:18px;
+
+text-align:center;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+min-height:420px;
+
+transition:0.4s;
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 15px 40px rgba(0,0,0,0.6);
+
+}
+
+/* IMAGEM */
+
+.card img{
+
+width:100%;
+
+height:auto;
+
+max-height:220px;
+
+object-fit:contain;
+
+margin-bottom:15px;
+
+filter:grayscale(100%);
+
+transition:0.6s;
+
+}
+
+.card:hover img{
+
+filter:grayscale(0%);
+
+transform:scale(1.05);
+
+}
+
+/* TITULO PRODUTO */
+
+.card h2{
+
+font-size:20px;
+
+margin-bottom:10px;
+
+color:#7cff9e;
+
+transition:0.4s;
+
+}
+
+/* TITULO GANHA MAIS VIDA */
+
+.card:hover h2{
+
+color:#baffc9;
+
+}
+
+/* DESCRIÇÃO */
+
+.desc{
+
+font-size:14px;
+
+color:#aaa;
+
+margin-bottom:10px;
+
+}
+
+/* PREÇO */
+
+.preco{
+
+font-size:20px;
+
+margin-bottom:15px;
+
+}
+
+/* BOTÃO */
+
+.botao{
+
+display:inline-block;
+
+background:#25D366;
+
+color:white;
+
+padding:12px 25px;
+
+border-radius:25px;
+
+text-decoration:none;
+
+font-weight:bold;
+
+transition:0.3s;
+
+}
+
+.botao:hover{
+
+transform:scale(1.05);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a class="voltar" href="produtos.html">
+← Voltar para todos os produtos
+</a>
+
+<!-- FOLHAS -->
+
+<div class="folha" style="left:5%;animation-duration:12s"></div>
+<div class="folha" style="left:20%;animation-duration:14s"></div>
+<div class="folha" style="left:40%;animation-duration:10s"></div>
+<div class="folha" style="left:60%;animation-duration:16s"></div>
+<div class="folha" style="left:80%;animation-duration:11s"></div>
+
+<header>
+
+<h1>Vasos Decorativos 3D</h1>
+
+<p>Pequenos detalhes que dão vida ao ambiente.</p>
+
+</header>
+
+<section class="produtos">
+
+<!-- PRODUTO -->
+
+<div class="card">
+
+<img src="imagens/objeto3d2.webp">
+
+<h2>Vaso Decorativo</h2>
+
+<p class="desc">
+Design moderno que transforma qualquer ambiente.
+</p>
+
+<div class="preco">R$120</div>
+
+<a class="botao" href="https://wa.me/5599999999999" target="_blank">
+Comprar no WhatsApp
+</a>
+
+</div>
+
+<!-- PRODUTO -->
+
+<div class="card">
+
+<img src="imagens/objeto3d1.webp">
+
+<h2>Vaso Minimalista</h2>
+
+<p class="desc">
+Perfeito para decoração moderna.
+</p>
+
+<div class="preco">R$110</div>
+
+<a class="botao" href="https://wa.me/5599999999999" target="_blank">
+Comprar no WhatsApp
+</a>
+
+</div>
+
+<!-- PRODUTO -->
+
+<div class="card">
+
+<img src="imagens/objeto3d.jpeg">
+
+<h2>Vaso Moderno</h2>
+
+<p class="desc">
+Elegância e natureza no mesmo design.
+</p>
+
+<div class="preco">R$135</div>
+
+<a class="botao" href="https://wa.me/5599999999999" target="_blank">
+Comprar no WhatsApp
+</a>
+
+</div>
+
+
+
+<div class="card">
+<img src="imagens/vaso22.webp">
+<h2>Nome do Produto</h2>
+<p class="desc">Descrição curta do produto.</p>
+<div class="preco">R$120</div>
+<a class="botao" href="https://wa.me/5599999999999">Comprar</a>
+</div>
+
+
+
+<div class="card">
+<img src="imagens/fruteira.webp">
+<h2>Nome do Produto</h2>
+<p class="desc">Descrição curta do produto.</p>
+<div class="preco">R$120</div>
+<a class="botao" href="https://wa.me/5599999999999">Comprar</a>
+</div>
+
+
+
+<div class="card">
+<img src="imagens/decora.webp">
+<h2>Nome do Produto</h2>
+<p class="desc">Descrição curta do produto.</p>
+<div class="preco">R$120</div>
+<a class="botao" href="https://wa.me/5599999999999">Comprar</a>
+</div>
+
+
+
+
+</section>
+
+</body>
+</html>

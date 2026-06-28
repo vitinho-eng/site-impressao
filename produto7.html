@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Relíquias da Terra Média</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+/* FONTE */
+
+body{
+font-family:'Cinzel',serif;
+color:#e7d8a2;
+overflow-x:hidden;
+}
+
+/* TITULOS */
+
+h1,h2{
+font-family:'Uncial Antiqua',serif;
+letter-spacing:2px;
+}
+
+/* VIDEO FUNDO */
+
+.video-fundo{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+z-index:-2;
+
+}
+
+/* CAMADA ESCURA */
+
+.overlay{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.55);
+
+z-index:-1;
+
+}
+
+/* TITULO */
+
+header{
+
+text-align:center;
+padding:60px 20px;
+
+font-size:38px;
+
+}
+
+/* BOTAO VOLTAR */
+
+.voltar-container{
+
+text-align:center;
+margin-bottom:40px;
+
+}
+
+.botao-voltar{
+
+padding:10px 25px;
+
+background:transparent;
+
+border:2px solid #caa64a;
+
+color:#e7d8a2;
+
+font-family:'Cinzel',serif;
+
+cursor:pointer;
+
+transition:0.3s;
+
+border-radius:6px;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+/* brilho */
+
+.botao-voltar::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:-100%;
+
+width:100%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,0.6),
+transparent
+);
+
+transition:0.5s;
+
+}
+
+.botao-voltar:hover{
+
+background:#caa64a;
+
+color:black;
+
+transform:scale(1.05);
+
+}
+
+.botao-voltar:hover::after{
+
+left:100%;
+
+}
+
+/* AREA PRODUTOS */
+
+.produtos{
+
+width:90%;
+max-width:1200px;
+
+margin:auto;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(260px,260px));
+
+justify-content:center;
+
+gap:40px;
+
+padding-bottom:80px;
+
+}
+
+/* CARD */
+
+.card{
+
+max-width:260px;
+
+background:rgba(0,0,0,0.65);
+
+border:2px solid #caa64a;
+
+border-radius:10px;
+
+text-align:center;
+
+padding:20px;
+
+transition:0.4s;
+
+box-shadow:0 0 20px rgba(0,0,0,0.6);
+
+overflow:hidden;
+
+position:relative;
+
+}
+
+/* EFEITO MAGICO */
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+top:-50%;
+left:-50%;
+
+width:200%;
+height:200%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(202,166,74,0.4),
+transparent
+);
+
+transform:rotate(25deg);
+
+opacity:0;
+
+transition:0.6s;
+
+}
+
+.card:hover{
+
+transform:translateY(-10px) scale(1.03);
+
+box-shadow:0 0 25px rgba(202,166,74,0.7);
+
+}
+
+.card:hover::before{
+
+opacity:1;
+
+animation:magic 2s linear infinite;
+
+}
+
+@keyframes magic{
+
+0%{transform:translateX(-100%) rotate(25deg);}
+100%{transform:translateX(100%) rotate(25deg);}
+
+}
+
+/* IMAGEM */
+
+.card img{
+
+width:140px;
+
+margin:15px 0;
+
+}
+
+/* DESCRIÇÕES */
+
+.personagem-desc{
+
+font-size:13px;
+margin-bottom:10px;
+color:#e0d5a5;
+
+}
+
+.produto-desc{
+
+font-size:12px;
+margin-bottom:15px;
+color:#cfc49b;
+
+}
+
+/* PREÇO */
+
+.preco{
+
+font-size:18px;
+margin-bottom:15px;
+color:#d8c27a;
+
+}
+
+/* BOTAO COMPRA */
+
+.botao{
+
+padding:12px 28px;
+
+background:#caa64a;
+
+border:none;
+
+color:black;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.3s;
+
+border-radius:5px;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.botao::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:-100%;
+
+width:100%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,0.7),
+transparent
+);
+
+transition:0.5s;
+
+}
+
+.botao:hover{
+
+background:#e2c777;
+
+transform:scale(1.08);
+
+}
+
+.botao:hover::after{
+
+left:100%;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<video autoplay muted loop class="video-fundo">
+<source src="imagens/o anel.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<header>
+
+Relíquias da Terra Média
+
+</header>
+
+<div class="voltar-container">
+
+<a href="produtos.html">
+<button class="botao-voltar">← Voltar ao Menu de Produtos</button>
+</a>
+
+</div>
+
+<section class="produtos">
+
+<!-- PRODUTOS AQUI (Frodo, Gandalf etc) -->
+
+</section>
+
+</body>
+</html>
+
+<section class="produtos">
+
+<!-- FRODO -->
+<div class="card">
+
+<h2>Frodo</h2>
+
+<img src="imagens/velho2.webp">
+
+<div class="personagem-desc">
+Portador do Um Anel e herói do Condado.
+</div>
+
+<div class="produto-desc">
+Action figure em impressão 3D, pintura artesanal e acabamento detalhado.
+</div>
+
+<div class="preco">
+
+</div>
+
+<a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20Frodo">
+<button class="botao">Comprar</button>
+</a>
+
+</div>
+
+
+<!-- GANDALF -->
+<div class="card">
+
+<h2>Gandalf</h2>
+
+<img src="imagens/gandalf44.jpg">
+
+<div class="personagem-desc">
+O mago cinzento que guia a Sociedade do Anel.
+</div>
+
+<div class="produto-desc">
+Figure 3D detalhada com pintura manual e acabamento premium.
+</div>
+
+<div class="preco">
+
+</div>
+
+<a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20Gandalf">
+<button class="botao">Comprar</button>
+</a>
+
+</div>
+
+
+<!-- LEGOLAS -->
+<div class="card">
+
+<h2>Legolas</h2>
+
+<img src="imagens/legolas2.jpg">
+
+<div class="personagem-desc">
+Príncipe élfico e arqueiro lendário da Sociedade.
+</div>
+
+<div class="produto-desc">
+Action figure 3D com escultura detalhada e acabamento artesanal.
+</div>
+
+<div class="preco">
+
+</div>
+
+<a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20Legolas">
+<button class="botao">Comprar</button>
+</a>
+
+</div>
+
+
+<!-- GIMLI -->
+<div class="card">
+
+<h2>Gimli</h2>
+
+<img src="imagens/anao.png">
+
+<div class="personagem-desc">
+O poderoso guerreiro anão de Erebor.
+</div>
+
+<div class="produto-desc">
+Figure impressa em 3D com pintura detalhada e base temática.
+</div>
+
+<div class="preco">
+
+</div>
+
+<a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20Gimli">
+<button class="botao">Comprar</button>
+</a>
+
+</div>
+
+</section>
+
+</body>
+</html>

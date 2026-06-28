@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Action Figures 3D - Dark Fantasy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== FUNDO DARK FANTASY ===== */
+
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background: radial-gradient(circle at center, #140021, #050008 70%);
+    color:#f5f5f5;
+    overflow-x:hidden;
+}
+
+/* ===== NÉVOA MÁGICA ===== */
+
+body::before{
+    content:"";
+    position:fixed;
+    width:200%;
+    height:200%;
+    background:linear-gradient(45deg, rgba(140,0,255,0.07), rgba(60,0,120,0.07));
+    animation: nevoa 20s linear infinite alternate;
+    z-index:0;
+}
+
+@keyframes nevoa{
+    from{ transform:translate(0,0); }
+    to{ transform:translate(-400px,-400px); }
+}
+
+/* ===== PARTÍCULAS ===== */
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:0;
+}
+
+/* ===== CONTAINER ===== */
+
+.container{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:40px;
+}
+
+/* ===== CARD ===== */
+
+.produto-card{
+    width:100%;
+    max-width:1100px;
+    display:flex;
+    gap:70px;
+    padding:60px;
+    border-radius:25px;
+    background:rgba(20,0,40,0.85);
+    border:1px solid rgba(180,0,255,0.4);
+    box-shadow:
+        0 0 40px rgba(140,0,255,0.5),
+        0 0 80px rgba(100,0,200,0.3),
+        0 40px 80px rgba(0,0,0,0.8);
+}
+
+/* ===== GALERIA ===== */
+
+.galeria{
+    position:relative;
+    width:420px;
+    height:420px;
+}
+
+.slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:20px;
+    opacity:0;
+    transition:0.4s ease;
+    box-shadow:0 0 30px rgba(160,0,255,0.5);
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* ===== BOTÕES SLIDER ===== */
+
+.nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.7);
+    border:1px solid #a200ff;
+    color:#d580ff;
+    font-size:22px;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:3;
+}
+
+.nav:hover{
+    background:#a200ff;
+    color:black;
+    box-shadow:0 0 20px #c84dff;
+}
+
+.prev{ left:-20px; }
+.next{ right:-20px; }
+
+/* ===== INFO ===== */
+
+.info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.info h1{
+    font-family:'Cinzel', serif;
+    font-size:42px;
+    color:#d580ff;
+    text-shadow:0 0 20px rgba(180,0,255,0.8);
+}
+
+.preco{
+    font-size:34px;
+    font-weight:700;
+    color:#e0aaff;
+    margin:30px 0;
+}
+
+/* ===== BOTÃO COMPRA ===== */
+
+.botao-comprar{
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg, #6a00f4, #b100ff);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.botao-comprar:hover{
+    box-shadow:0 0 30px #c84dff;
+    transform:scale(1.05);
+}
+
+/* ===== BOTÃO VOLTAR ===== */
+
+.voltar-interno{
+    margin-top:25px;
+    text-align:center;
+    color:#c77dff;
+    text-decoration:none;
+    font-weight:500;
+    display:inline-block;
+    transition:0.3s;
+}
+
+.voltar-interno:hover{
+    color:white;
+    text-shadow:0 0 10px #b100ff;
+}
+
+/* ===== RESPONSIVO ===== */
+
+@media(max-width:900px){
+    .produto-card{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+    }
+
+    .prev{ left:10px; }
+    .next{ right:10px; }
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+<div class="produto-card">
+
+    <div class="galeria">
+        <img src="imagens/miniaturas1.webp" class="slide active">
+        <img src="imagens/miniaturas2.webp" class="slide">
+        <img src="imagens/miniaturas3.webp" class="slide">
+        <img src="imagens/miniaturas4.png" class="slide">
+
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+
+    <div class="info">
+        <h1>Relíquias Dark Fantasy 3D</h1>
+        <p>Miniaturas místicas impressas em 3D, inspiradas em universos sombrios e lendas esquecidas.</p>
+        <div class="preco">R$ 120,00</div>
+
+     <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20a%20Relíquias%20Dark%20Fantasy%203D"
+         target="_blank"
+         class="botao-comprar">
+         Invocar via WhatsApp
+        </a>
+
+        <a href="produtos.html" class="voltar-interno">
+            ← Retornar ao Catálogo Arcano
+        </a>
+    </div>
+
+</div>
+</div>
+
+<script>
+
+/* SLIDER */
+let slides = document.querySelectorAll(".slide");
+let current = 0;
+
+function showSlide(index){
+    slides.forEach(s=>s.classList.remove("active"));
+    slides[index].classList.add("active");
+}
+
+document.querySelector(".next").addEventListener("click", ()=>{
+    current++;
+    if(current >= slides.length) current = 0;
+    showSlide(current);
+});
+
+document.querySelector(".prev").addEventListener("click", ()=>{
+    current--;
+    if(current < 0) current = slides.length - 1;
+    showSlide(current);
+});
+
+/* PARTÍCULAS ROXAS */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        size:Math.random()*2.5,
+        speedY:Math.random()*0.6+0.2
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="rgba(180,0,255,0.6)";
+
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fill();
+
+        p.y+=p.speedY;
+        if(p.y>canvas.height){
+            p.y=0;
+            p.x=Math.random()*canvas.width;
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+</body>
+</html>

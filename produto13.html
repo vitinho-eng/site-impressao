@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<!-- Meta tags -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Prints - Times do Brasileirão</title>
+
+<!-- Importação de fontes -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ========================================
+   RESET
+   ======================================== */
+*{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+
+body{
+	font-family:'Poppins', sans-serif;
+	background:linear-gradient(135deg, #0a0a0a 0%, #1a0f2e 50%, #0a0a0a 100%);
+	color:white;
+	overflow-x:hidden;
+}
+
+/* ========================================
+   VIDEO DE FUNDO
+   ======================================== */
+.video-bg{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:-2;
+}
+
+.video-bg video{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	filter:brightness(35%) contrast(1.1);
+}
+
+/* ========================================
+   PARTÍCULAS
+   ======================================== */
+.particulas{
+	position:fixed;
+	width:100%;
+	height:100%;
+	z-index:-1;
+	pointer-events:none;
+}
+
+/* Grid de perspectiva 3D */
+.particulas::before{
+	content:"";
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-image:
+		linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.02) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02) 76%, transparent 77%, transparent),
+		linear-gradient(90deg, transparent 24%, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.02) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02) 76%, transparent 77%, transparent);
+	background-size:50px 50px;
+	pointer-events:none;
+	opacity:0.3;
+	z-index:1;
+}
+
+/* Auras de fundo dinâmicas */
+.particulas::after{
+	content:"";
+	position:absolute;
+	top:-50%;
+	left:-50%;
+	width:200%;
+	height:200%;
+	background:radial-gradient(circle at 30% 50%, rgba(0,150,255,0.15) 0%, transparent 50%),
+				radial-gradient(circle at 70% 50%, rgba(206,17,38,0.15) 0%, transparent 50%),
+				radial-gradient(circle at 50% 80%, rgba(0,200,100,0.1) 0%, transparent 50%);
+	pointer-events:none;
+	animation:fluirAuras 20s ease-in-out infinite;
+	z-index:0;
+}
+
+@keyframes fluirAuras{
+	0%, 100%{
+		transform:translate(0, 0);
+	}
+	25%{
+		transform:translate(30px, -30px);
+	}
+	50%{
+		transform:translate(0, 50px);
+	}
+	75%{
+		transform:translate(-30px, -30px);
+	}
+}
+
+.particula{
+	position:absolute;
+	width:2px;
+	height:2px;
+	background:#ffffff;
+	border-radius:50%;
+	box-shadow:0 0 6px rgba(255,255,255,0.6);
+	animation:flutuar 12s linear infinite;
+	opacity:0.7;
+}
+
+@keyframes flutuar{
+	0%{
+		transform:translateY(100vh) translateX(0);
+		opacity:0;
+	}
+	10%{
+		opacity:0.8;
+	}
+	50%{
+		transform:translateY(50vh) translateX(100px);
+		opacity:0.8;
+	}
+	90%{
+		opacity:0.8;
+	}
+	100%{
+		transform:translateY(-10vh) translateX(0);
+		opacity:0;
+	}
+}
+
+/* ========================================
+   HEADER FIXA (GLASSMORPHISM)
+   ======================================== */
+.header-fixa{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:80px;
+	background:rgba(10,10,10,0.8);
+	backdrop-filter:blur(10px);
+	border-bottom:1px solid rgba(255,255,255,0.1);
+	display:flex;
+	align-items:center;
+	justify-content:space-between;
+	padding:0 40px;
+	z-index:200;
+	box-shadow:0 4px 30px rgba(0,0,0,0.5);
+}
+
+.header-logo{
+	font-size:18px;
+	font-family:'Orbitron', sans-serif;
+	font-weight:700;
+	letter-spacing:2px;
+	color:white;
+	text-shadow:0 0 10px rgba(255,255,255,0.2);
+}
+
+.botao-voltar{
+	padding:10px 20px;
+	background:rgba(255,255,255,0.05);
+	border:1.5px solid rgba(255,255,255,0.3);
+	color:white;
+	font-weight:600;
+	border-radius:6px;
+	cursor:pointer;
+	transition:all 0.3s ease;
+	font-family:'Poppins', sans-serif;
+	text-decoration:none;
+	display:flex;
+	align-items:center;
+	gap:8px;
+	font-size:13px;
+	letter-spacing:0.5px;
+}
+
+.botao-voltar:hover{
+	background:rgba(255,255,255,0.12);
+	border-color:rgba(255,255,255,0.5);
+	box-shadow:0 0 15px rgba(255,255,255,0.15);
+	transform:translateX(-3px);
+}
+
+.botao-voltar::before{
+	content:"←";
+	font-size:14px;
+}
+
+/* ========================================
+   CONTAINER PRINCIPAL
+   ======================================== */
+.container{
+	position:relative;
+	z-index:10;
+	width:100%;
+	min-height:100vh;
+	padding:120px 20px 40px 20px;
+	margin-top:0;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.header{
+	text-align:center;
+	margin-bottom:60px;
+	opacity:0;
+	animation:fadeIn 1s ease-out 0.5s forwards;
+}
+
+.titulo{
+	font-size:52px;
+	font-family:'Orbitron', sans-serif;
+	font-weight:900;
+	color:#fff;
+	letter-spacing:3px;
+	margin-bottom:15px;
+	text-shadow:0 0 20px rgba(255,255,255,0.3);
+}
+
+.subtitulo{
+	font-size:14px;
+	color:#aaa;
+	opacity:0.9;
+	letter-spacing:2px;
+	text-transform:uppercase;
+}
+
+/* ========================================
+   ANIMAÇÕES
+   ======================================== */
+@keyframes fadeIn{
+	from{
+		opacity:0;
+		transform:translateY(20px);
+	}
+	to{
+		opacity:1;
+		transform:translateY(0);
+	}
+}
+
+@keyframes slideInUp{
+	from{
+		opacity:0;
+		transform:translateY(50px);
+	}
+	to{
+		opacity:1;
+		transform:translateY(0);
+	}
+}
+
+/* ========================================
+   GRID DE TIMES
+   ======================================== */
+.times-grid{
+	display:grid;
+	grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+	gap:40px;
+	max-width:1400px;
+	margin:0 auto;
+	padding:40px;
+}
+
+/* ========================================
+   CARD DO TIME - DESIGN MINIMALISTA
+   ======================================== */
+.card-time{
+	position:relative;
+	border-radius:15px;
+	padding:30px;
+	cursor:pointer;
+	transition:all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	overflow:hidden;
+	animation:slideInUp 0.8s ease-out forwards;
+	min-height:450px;
+	display:flex;
+	flex-direction:column;
+	justify-content:space-between;
+	background:#1a1a1f;
+	border:1px solid rgba(255,255,255,0.1);
+}
+
+.card-time:nth-child(1){ animation-delay:0.1s; }
+.card-time:nth-child(2){ animation-delay:0.15s; }
+.card-time:nth-child(3){ animation-delay:0.2s; }
+.card-time:nth-child(4){ animation-delay:0.25s; }
+.card-time:nth-child(5){ animation-delay:0.3s; }
+.card-time:nth-child(6){ animation-delay:0.35s; }
+.card-time:nth-child(7){ animation-delay:0.4s; }
+.card-time:nth-child(8){ animation-delay:0.45s; }
+.card-time:nth-child(9){ animation-delay:0.5s; }
+.card-time:nth-child(10){ animation-delay:0.55s; }
+.card-time:nth-child(11){ animation-delay:0.6s; }
+.card-time:nth-child(12){ animation-delay:0.65s; }
+.card-time:nth-child(13){ animation-delay:0.7s; }
+.card-time:nth-child(14){ animation-delay:0.75s; }
+.card-time:nth-child(15){ animation-delay:0.8s; }
+.card-time:nth-child(16){ animation-delay:0.85s; }
+
+/* Efeito de hover com aura de cor */
+.card-time:hover{
+	transform:translateY(-15px) scale(1.05);
+	border-color:rgba(255,255,255,0.3);
+}
+
+/* Aura de cor dinâmica (Glow) */
+.card-time::before{
+	content:"";
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	width:100%;
+	height:100%;
+	border-radius:15px;
+	z-index:0;
+	opacity:0;
+	transition:opacity 0.4s ease;
+	pointer-events:none;
+}
+
+.card-time:hover::before{
+	opacity:0.3;
+}
+
+/* ========================================
+   ESCUDO DO TIME (TOPO DO CARD)
+   ======================================== */
+.escudo-time{
+	position:relative;
+	width:70px;
+	height:70px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	z-index:2;
+	margin-bottom:15px;
+	transition:all 0.3s ease;
+}
+
+.escudo-time img{
+	width:100%;
+	height:100%;
+	object-fit:contain;
+	filter:drop-shadow(0 0 8px rgba(255,255,255,0.3));
+}
+
+.card-time:hover .escudo-time img{
+	filter:drop-shadow(0 0 15px rgba(255,255,255,0.6));
+	transform:scale(1.1);
+}
+
+/* ========================================
+   CONTEÚDO DO CARD
+   ======================================== */
+.card-content{
+	position:relative;
+	z-index:2;
+}
+
+/* ========================================
+   NOME DO TIME
+   ======================================== */
+.nome-time{
+	font-size:24px;
+	font-weight:700;
+	margin-bottom:15px;
+	font-family:'Orbitron', sans-serif;
+	text-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+/* ========================================
+   DESCRIÇÃO DO PRODUTO
+   ======================================== */
+.descricao-produto{
+	font-size:13px;
+	margin-bottom:20px;
+	line-height:1.6;
+	opacity:0.85;
+}
+
+/* ========================================
+   IMAGEM DO PRODUTO (CENTRALIZADA E DESTACADA)
+   ======================================== */
+.imagem-produto{
+	width:100%;
+	height:200px;
+	border-radius:10px;
+	margin:30px 0;
+	overflow:hidden;
+	border:1px solid rgba(255,255,255,0.15);
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	font-size:60px;
+	background:rgba(255,255,255,0.03);
+	transition:all 0.3s ease;
+	position:relative;
+	z-index:2;
+}
+
+.imagem-produto img{
+	width:100%;
+	height:100%;
+	object-fit:cover;
+	transition:all 0.3s ease;
+}
+
+.card-time:hover .imagem-produto{
+	border-color:rgba(255,255,255,0.3);
+	box-shadow:0 0 20px rgba(255,255,255,0.1);
+}
+
+.card-time:hover .imagem-produto img{
+	transform:scale(1.05);
+}
+
+/* ========================================
+   FOOTER DO CARD
+   ======================================== */
+.card-footer{
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	gap:15px;
+	padding-top:15px;
+	border-top:1px solid rgba(255,255,255,0.1);
+	position:relative;
+	z-index:2;
+}
+
+.preco{
+	font-size:20px;
+	font-weight:700;
+	font-family:'Orbitron', sans-serif;
+}
+
+.botao-comprar{
+	flex:1;
+	padding:12px 20px;
+	background:rgba(255,255,255,0.05);
+	border:2px solid rgba(255,255,255,0.2);
+	color:white;
+	font-weight:600;
+	border-radius:8px;
+	cursor:pointer;
+	transition:all 0.3s ease;
+	font-family:'Poppins', sans-serif;
+	text-decoration:none;
+	display:inline-block;
+	text-align:center;
+}
+
+.botao-comprar:hover{
+	transform:scale(1.05);
+}
+
+/* Botões personalizados por time */
+.card-time:nth-child(1) .botao-comprar{
+	border-color:#ff6b6b;
+	color:#ff6b6b;
+}
+.card-time:nth-child(1) .botao-comprar:hover{
+	background:#ff6b6b;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ff6b6b;
+}
+
+.card-time:nth-child(2) .botao-comprar{
+	border-color:#4ade80;
+	color:#4ade80;
+}
+.card-time:nth-child(2) .botao-comprar:hover{
+	background:#4ade80;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #4ade80;
+}
+
+.card-time:nth-child(3) .botao-comprar{
+	border-color:#ffffff;
+	color:#ffffff;
+}
+.card-time:nth-child(3) .botao-comprar:hover{
+	background:#ffffff;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ffffff;
+}
+
+.card-time:nth-child(4) .botao-comprar{
+	border-color:#cccccc;
+	color:#cccccc;
+}
+.card-time:nth-child(4) .botao-comprar:hover{
+	background:#cccccc;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #cccccc;
+}
+
+.card-time:nth-child(5) .botao-comprar{
+	border-color:#ff6b6b;
+	color:#ff6b6b;
+}
+.card-time:nth-child(5) .botao-comprar:hover{
+	background:#ff6b6b;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ff6b6b;
+}
+
+.card-time:nth-child(6) .botao-comprar{
+	border-color:#cccccc;
+	color:#cccccc;
+}
+.card-time:nth-child(6) .botao-comprar:hover{
+	background:#cccccc;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #cccccc;
+}
+
+.card-time:nth-child(7) .botao-comprar{
+	border-color:#6ba3ff;
+	color:#6ba3ff;
+}
+.card-time:nth-child(7) .botao-comprar:hover{
+	background:#6ba3ff;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #6ba3ff;
+}
+
+.card-time:nth-child(8) .botao-comprar{
+	border-color:#6ba3ff;
+	color:#6ba3ff;
+}
+.card-time:nth-child(8) .botao-comprar:hover{
+	background:#6ba3ff;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #6ba3ff;
+}
+
+.card-time:nth-child(9) .botao-comprar{
+	border-color:#ff6b6b;
+	color:#ff6b6b;
+}
+.card-time:nth-child(9) .botao-comprar:hover{
+	background:#ff6b6b;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ff6b6b;
+}
+
+.card-time:nth-child(10) .botao-comprar{
+	border-color:#cccccc;
+	color:#cccccc;
+}
+.card-time:nth-child(10) .botao-comprar:hover{
+	background:#cccccc;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #cccccc;
+}
+
+.card-time:nth-child(11) .botao-comprar{
+	border-color:#cccccc;
+	color:#cccccc;
+}
+.card-time:nth-child(11) .botao-comprar:hover{
+	background:#cccccc;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #cccccc;
+}
+
+.card-time:nth-child(12) .botao-comprar{
+	border-color:#4ade80;
+	color:#4ade80;
+}
+.card-time:nth-child(12) .botao-comprar:hover{
+	background:#4ade80;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #4ade80;
+}
+
+.card-time:nth-child(13) .botao-comprar{
+	border-color:#ff6b6b;
+	color:#ff6b6b;
+}
+.card-time:nth-child(13) .botao-comprar:hover{
+	background:#ff6b6b;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ff6b6b;
+}
+
+.card-time:nth-child(14) .botao-comprar{
+	border-color:#4ade80;
+	color:#4ade80;
+}
+.card-time:nth-child(14) .botao-comprar:hover{
+	background:#4ade80;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #4ade80;
+}
+
+.card-time:nth-child(15) .botao-comprar{
+	border-color:#6ba3ff;
+	color:#6ba3ff;
+}
+.card-time:nth-child(15) .botao-comprar:hover{
+	background:#6ba3ff;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #6ba3ff;
+}
+
+.card-time:nth-child(16) .botao-comprar{
+	border-color:#ff6b6b;
+	color:#ff6b6b;
+}
+.card-time:nth-child(16) .botao-comprar:hover{
+	background:#ff6b6b;
+	color:#1a1a1f;
+	box-shadow:0 0 20px #ff6b6b;
+}
+
+/* ========================================
+   CORES DOS TIMES (AURA GLOW)
+   ======================================== */
+
+/* Flamengo - Vermelho Rubro-Negro com Dual-Tone Glow */
+.card-time:nth-child(1){
+	border:2px solid rgba(206,17,38,0.6);
+	box-shadow:0 0 20px rgba(206,17,38,0.3);
+}
+.card-time:nth-child(1)::before{
+	background:radial-gradient(circle, rgba(206,17,38,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(206,17,38,0.6), 0 0 50px rgba(206,17,38,0.5);
+}
+.card-time:nth-child(1):hover{
+	border-color:rgba(206,17,38,1);
+	box-shadow:0 0 40px rgba(206,17,38,0.6);
+}
+
+.card-time:nth-child(1) .nome-time{
+	color:#ff6b6b;
+}
+
+/* Palmeiras - Verde Alviverde com Dual-Tone Glow */
+.card-time:nth-child(2){
+	border:2px solid rgba(0,150,80,0.6);
+	box-shadow:0 0 20px rgba(0,150,80,0.3);
+}
+.card-time:nth-child(2)::before{
+	background:radial-gradient(circle, rgba(0,150,80,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(0,150,80,0.6), 0 0 50px rgba(0,150,80,0.5);
+}
+.card-time:nth-child(2):hover{
+	border-color:rgba(0,150,80,1);
+	box-shadow:0 0 40px rgba(0,150,80,0.6);
+}
+
+.card-time:nth-child(2) .nome-time{
+	color:#4ade80;
+}
+
+/* Santos - Branco Puro com Dual-Tone Glow */
+.card-time:nth-child(3){
+	border:2px solid rgba(200,200,200,0.6);
+	box-shadow:0 0 20px rgba(200,200,200,0.3);
+}
+.card-time:nth-child(3)::before{
+	background:radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(100,100,100,0.4) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(200,200,200,0.5), 0 0 50px rgba(200,200,200,0.4);
+}
+.card-time:nth-child(3):hover{
+	border-color:rgba(255,255,255,1);
+	box-shadow:0 0 40px rgba(200,200,200,0.6);
+}
+
+.card-time:nth-child(3) .nome-time{
+	color:#ffffff;
+}
+
+/* Corinthians - Preto Profundo com Dual-Tone Glow */
+.card-time:nth-child(4){
+	border:2px solid rgba(100,100,100,0.6);
+	box-shadow:0 0 20px rgba(100,100,100,0.3);
+}
+.card-time:nth-child(4)::before{
+	background:radial-gradient(circle, rgba(150,150,150,0.7) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(100,100,100,0.5), 0 0 50px rgba(100,100,100,0.4);
+}
+.card-time:nth-child(4):hover{
+	border-color:rgba(150,150,150,1);
+	box-shadow:0 0 40px rgba(100,100,100,0.6);
+}
+
+.card-time:nth-child(4) .nome-time{
+	color:#ffffff;
+}
+
+/* São Paulo - Vermelho Tricolor com Dual-Tone Glow */
+.card-time:nth-child(5){
+	border:2px solid rgba(220,20,60,0.6);
+	box-shadow:0 0 20px rgba(220,20,60,0.3);
+}
+.card-time:nth-child(5)::before{
+	background:radial-gradient(circle, rgba(220,20,60,0.9) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.5) 100%);
+	box-shadow:inset 0 0 80px rgba(220,20,60,0.6), 0 0 50px rgba(220,20,60,0.5);
+}
+.card-time:nth-child(5):hover{
+	border-color:rgba(220,20,60,1);
+	box-shadow:0 0 40px rgba(220,20,60,0.6);
+}
+
+.card-time:nth-child(5) .nome-time{
+	color:#ff6b6b;
+}
+
+/* Atlético Mineiro - Preto Galo com Dual-Tone Glow */
+.card-time:nth-child(6){
+	border:2px solid rgba(80,80,80,0.6);
+	box-shadow:0 0 20px rgba(80,80,80,0.3);
+}
+.card-time:nth-child(6)::before{
+	background:radial-gradient(circle, rgba(120,120,120,0.7) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(80,80,80,0.5), 0 0 50px rgba(80,80,80,0.4);
+}
+.card-time:nth-child(6):hover{
+	border-color:rgba(120,120,120,1);
+	box-shadow:0 0 40px rgba(80,80,80,0.6);
+}
+
+.card-time:nth-child(6) .nome-time{
+	color:#ffffff;
+}
+
+/* Cruzeiro - Azul Raposa com Dual-Tone Glow */
+.card-time:nth-child(7){
+	border:2px solid rgba(0,80,200,0.6);
+	box-shadow:0 0 20px rgba(0,80,200,0.3);
+}
+.card-time:nth-child(7)::before{
+	background:radial-gradient(circle, rgba(0,120,255,0.9) 0%, rgba(0,40,100,0.6) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(0,80,200,0.6), 0 0 50px rgba(0,80,200,0.5);
+}
+.card-time:nth-child(7):hover{
+	border-color:rgba(0,120,255,1);
+	box-shadow:0 0 40px rgba(0,80,200,0.6);
+}
+
+.card-time:nth-child(7) .nome-time{
+	color:#6ba3ff;
+}
+
+/* Grêmio - Azul Tricolor com Dual-Tone Glow */
+.card-time:nth-child(8){
+	border:2px solid rgba(0,100,180,0.6);
+	box-shadow:0 0 20px rgba(0,100,180,0.3);
+}
+.card-time:nth-child(8)::before{
+	background:radial-gradient(circle, rgba(0,140,220,0.9) 0%, rgba(0,50,100,0.6) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(0,100,180,0.6), 0 0 50px rgba(0,100,180,0.5);
+}
+.card-time:nth-child(8):hover{
+	border-color:rgba(0,140,220,1);
+	box-shadow:0 0 40px rgba(0,100,180,0.6);
+}
+
+.card-time:nth-child(8) .nome-time{
+	color:#6ba3ff;
+}
+
+/* Internacional - Vermelho Colorado com Dual-Tone Glow */
+.card-time:nth-child(9){
+	border:2px solid rgba(206,17,38,0.7);
+	box-shadow:0 0 20px rgba(206,17,38,0.4);
+}
+.card-time:nth-child(9)::before{
+	background:radial-gradient(circle, rgba(206,17,38,0.95) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.6) 100%);
+	box-shadow:inset 0 0 80px rgba(206,17,38,0.7), 0 0 50px rgba(206,17,38,0.6);
+}
+.card-time:nth-child(9):hover{
+	border-color:rgba(206,17,38,1);
+	box-shadow:0 0 40px rgba(206,17,38,0.7);
+}
+
+.card-time:nth-child(9) .nome-time{
+	color:#ff6b6b;
+}
+
+/* Botafogo - Preto Estrela com Dual-Tone Glow */
+.card-time:nth-child(10){
+	border:2px solid rgba(70,70,70,0.6);
+	box-shadow:0 0 20px rgba(70,70,70,0.3);
+}
+.card-time:nth-child(10)::before{
+	background:radial-gradient(circle, rgba(100,100,100,0.7) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(70,70,70,0.5), 0 0 50px rgba(70,70,70,0.4);
+}
+.card-time:nth-child(10):hover{
+	border-color:rgba(100,100,100,1);
+	box-shadow:0 0 40px rgba(70,70,70,0.6);
+}
+
+.card-time:nth-child(10) .nome-time{
+	color:#ffffff;
+}
+
+/* Vasco - Preto Gigante com Dual-Tone Glow */
+.card-time:nth-child(11){
+	border:2px solid rgba(60,60,60,0.6);
+	box-shadow:0 0 20px rgba(60,60,60,0.3);
+}
+.card-time:nth-child(11)::before{
+	background:radial-gradient(circle, rgba(90,90,90,0.7) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(60,60,60,0.5), 0 0 50px rgba(60,60,60,0.4);
+}
+.card-time:nth-child(11):hover{
+	border-color:rgba(90,90,90,1);
+	box-shadow:0 0 40px rgba(60,60,60,0.6);
+}
+
+.card-time:nth-child(11) .nome-time{
+	color:#ffffff;
+}
+
+/* Fluminense - Verde Tricolor com Dual-Tone Glow */
+.card-time:nth-child(12){
+	border:2px solid rgba(0,120,70,0.6);
+	box-shadow:0 0 20px rgba(0,120,70,0.3);
+}
+.card-time:nth-child(12)::before{
+	background:radial-gradient(circle, rgba(0,160,100,0.9) 0%, rgba(255,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%);
+	box-shadow:inset 0 0 80px rgba(0,120,70,0.6), 0 0 50px rgba(0,120,70,0.5);
+}
+.card-time:nth-child(12):hover{
+	border-color:rgba(0,160,100,1);
+	box-shadow:0 0 40px rgba(0,120,70,0.6);
+}
+
+.card-time:nth-child(12) .nome-time{
+	color:#4ade80;
+}
+
+/* Athletico Paranaense - Vermelho Furacão com Dual-Tone Glow */
+.card-time:nth-child(13){
+	border:2px solid rgba(206,17,38,0.65);
+	box-shadow:0 0 20px rgba(206,17,38,0.35);
+}
+.card-time:nth-child(13)::before{
+	background:radial-gradient(circle, rgba(206,17,38,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(206,17,38,0.6), 0 0 50px rgba(206,17,38,0.5);
+}
+.card-time:nth-child(13):hover{
+	border-color:rgba(206,17,38,1);
+	box-shadow:0 0 40px rgba(206,17,38,0.6);
+}
+
+.card-time:nth-child(13) .nome-time{
+	color:#ff6b6b;
+}
+
+/* Coritiba - Verde Coxa com Dual-Tone Glow */
+.card-time:nth-child(14){
+	border:2px solid rgba(0,130,60,0.6);
+	box-shadow:0 0 20px rgba(0,130,60,0.3);
+}
+.card-time:nth-child(14)::before{
+	background:radial-gradient(circle, rgba(0,170,80,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(0,130,60,0.6), 0 0 50px rgba(0,130,60,0.5);
+}
+.card-time:nth-child(14):hover{
+	border-color:rgba(0,170,80,1);
+	box-shadow:0 0 40px rgba(0,130,60,0.6);
+}
+
+.card-time:nth-child(14) .nome-time{
+	color:#4ade80;
+}
+
+/* Bahia - Azul Esquadrão com Dual-Tone Glow */
+.card-time:nth-child(15){
+	border:2px solid rgba(0,70,160,0.6);
+	box-shadow:0 0 20px rgba(0,70,160,0.3);
+}
+.card-time:nth-child(15)::before{
+	background:radial-gradient(circle, rgba(0,100,200,0.9) 0%, rgba(200,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%);
+	box-shadow:inset 0 0 80px rgba(0,70,160,0.6), 0 0 50px rgba(0,70,160,0.5);
+}
+.card-time:nth-child(15):hover{
+	border-color:rgba(0,100,200,1);
+	box-shadow:0 0 40px rgba(0,70,160,0.6);
+}
+
+.card-time:nth-child(15) .nome-time{
+	color:#6ba3ff;
+}
+
+/* Sport - Vermelho Leão com Dual-Tone Glow */
+.card-time:nth-child(16){
+	border:2px solid rgba(220,30,50,0.65);
+	box-shadow:0 0 20px rgba(220,30,50,0.35);
+}
+.card-time:nth-child(16)::before{
+	background:radial-gradient(circle, rgba(220,30,50,0.9) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+	box-shadow:inset 0 0 80px rgba(220,30,50,0.6), 0 0 50px rgba(220,30,50,0.5);
+}
+.card-time:nth-child(16):hover{
+	border-color:rgba(220,30,50,1);
+	box-shadow:0 0 40px rgba(220,30,50,0.6);
+}
+
+.card-time:nth-child(16) .nome-time{
+	color:#ff6b6b;
+}
+
+
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+@media(max-width:768px){
+	.titulo{
+		font-size:36px;
+	}
+	.times-grid{
+		grid-template-columns:1fr;
+		gap:30px;
+		padding:20px;
+	}
+	.card-time{
+		padding:20px;
+	}
+	.header-fixa{
+		height:70px;
+		padding:0 20px;
+	}
+	.header-logo{
+		font-size:14px;
+	}
+	.botao-voltar{
+		padding:8px 14px;
+		font-size:11px;
+	}
+	.container{
+		padding:100px 20px 40px 20px;
+	}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ========================================
+     VIDEO DE FUNDO
+     ======================================== -->
+<div class="video-bg">
+	<video id="videoBg" muted playsinline>
+		<source src="estadio.mp4" type="video/mp4">
+		Seu navegador não suporta vídeo.
+	</video>
+</div>
+
+<!-- ========================================
+     PARTÍCULAS
+     ======================================== -->
+<div class="particulas" id="particulasContainer"></div>
+
+<!-- ========================================
+     HEADER FIXA (GLASSMORPHISM)
+     ======================================== -->
+<header class="header-fixa">
+	<div class="header-logo">⚽ 3D PRINTS</div>
+	<a href="produtos.html" class="botao-voltar">Voltar para Produtos</a>
+</header>
+
+<!-- ========================================
+     CONTAINER PRINCIPAL
+     ======================================== -->
+<div class="container">
+
+	<!-- ========================================
+	     HEADER
+	     ======================================== -->
+	<div class="header">
+		<h1 class="titulo">⚽ 3D PRINTS - TIMES DO BRASIL</h1>
+		<p class="subtitulo">Impressões 3D Exclusivas dos Maiores Clubes</p>
+	</div>
+
+	<!-- ========================================
+	     GRID DE TIMES
+	     ======================================== -->
+	<div class="times-grid" id="timesSection">
+
+		<!-- FLAMENGO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/fla.png" alt="Escudo Flamengo"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Flamengo</h2>
+				<p class="descricao-produto">Busto do maior ídolo rubro-negro. Perfeito para a torcida apaixonada.</p>
+				<div class="imagem-produto"><img src="imagens/flamingo.JPG" alt="Flamengo 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Flamengo%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- PALMEIRAS -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/palmeiras.png" alt="Escudo Palmeiras"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Palmeiras</h2>
+				<p class="descricao-produto">Réplica em 3D do tricampeão. Símbolo de força e tradição alviverde.</p>
+				<div class="imagem-produto"><img src="imagens/pal2.webp" alt="Palmeiras 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Palmeiras%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- SANTOS -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/santos.png" alt="Escudo Santos"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Santos</h2>
+				<p class="descricao-produto">Homenagem ao Rei Pelé. Clássico do futebol brasileiro em 3D.</p>
+				<div class="imagem-produto"><img src="imagens/santos2.JPG" alt="Santos 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Santos%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- CORINTHIANS -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/cortinas.png" alt="Escudo Corinthians"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Corinthians</h2>
+				<p class="descricao-produto">Timão em 3D. Tradição e paixão em cada detalhe impressionante.</p>
+				<div class="imagem-produto"><img src="imagens/cortinas2.JPG" alt="Corinthians 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Corinthians%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- SÃO PAULO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/sao paulo.png" alt="Escudo São Paulo"></div>
+			<div class="card-content">
+				<h2 class="nome-time">São Paulo</h2>
+				<p class="descricao-produto">Tricolor em 3D. Glória e história do futebol paulista.</p>
+				<div class="imagem-produto"><img src="imagens/sp2.JPG" alt="São Paulo 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20São%20Paulo%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- ATLÉTICO MINEIRO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/galo.png" alt="Escudo Atlético Mineiro"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Atlético Mineiro</h2>
+				<p class="descricao-produto">Galo em 3D. Força e determinação de Minas Gerais.</p>
+				<div class="imagem-produto"><img src="imagens/galo2.JPG" alt="Atlético Mineiro 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Atlético%20Mineiro%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- CRUZEIRO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/cru.png" alt="Escudo Cruzeiro"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Cruzeiro</h2>
+				<p class="descricao-produto">Raposa em 3D. Majestade do futebol mineiro em alta definição.</p>
+				<div class="imagem-produto"><img src="imagens/cru2.webp" alt="Cruzeiro 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Cruzeiro%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- GRÊMIO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/genio.png" alt="Escudo Grêmio"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Grêmio</h2>
+				<p class="descricao-produto">Tricolor gaúcho em 3D. Tradição e glória do Sul em cada impressão.</p>
+				<div class="imagem-produto"><img src="imagens/gremio.webp" alt="Grêmio 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Grêmio%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- INTERNACIONAL -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/inter.svg" alt="Escudo Internacional"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Internacional</h2>
+				<p class="descricao-produto">Colorado em 3D. Paixão e força do futebol gaúcho.</p>
+				<div class="imagem-produto"><img src="imagens/inter2.JPG" alt="Internacional 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Internacional%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- BOTAFOGO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/fogo2.png" alt="Escudo Botafogo"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Botafogo</h2>
+				<p class="descricao-produto">Estrela solitária em 3D. Clássico carioca em alta resolução.</p>
+				<div class="imagem-produto"><img src="imagens/bota.webp" alt="Botafogo 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Botafogo%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- VASCO -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/vasco.png" alt="Escudo Vasco"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Vasco da Gama</h2>
+				<p class="descricao-produto">Gigante da colina em 3D. Tradição carioca em cada detalhe.</p>
+				<div class="imagem-produto"><img src="imagens/vasco2.JPG" alt="Vasco 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Vasco%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- FLUMINENSE -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/flu.png" alt="Escudo Fluminense"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Fluminense</h2>
+				<p class="descricao-produto">Tricolor das Laranjeiras em 3D. Elegância e história.</p>
+				<div class="imagem-produto"><img src="imagens/flu2.JPG" alt="Fluminense 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Fluminense%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- ATHLETICO PARANAENSE -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/cap2.png" alt="Escudo CAP"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Athletico Paranaense</h2>
+				<p class="descricao-produto">Furacão em 3D. Força e tradição do Paraná em alta definição.</p>
+				<div class="imagem-produto"><img src="imagens/furacao.webp" alt="Athletico Paranaense 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Athletico%20Paranaense%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- CORITIBA -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/coxa.png" alt="Escudo Coritiba"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Coritiba</h2>
+				<p class="descricao-produto">Coxa em 3D. Tradição e paixão do futebol paranaense.</p>
+				<div class="imagem-produto"><img src="imagens/coritiba.JPG" alt="Coritiba 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Coritiba%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- BAHIA -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/bahia.webp" alt="Escudo Bahia"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Bahia</h2>
+				<p class="descricao-produto">Tricolor baiano em 3D. Paixão do Nordeste em alta definição.</p>
+				<div class="imagem-produto"><img src="imagens/bahea.webp" alt="Bahia 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Bahia%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+		<!-- SPORT -->
+		<div class="card-time">
+			<div class="escudo-time"><img src="imagens/sport.png" alt="Escudo Sport"></div>
+			<div class="card-content">
+				<h2 class="nome-time">Sport Recife</h2>
+				<p class="descricao-produto">Leão da Ilha em 3D. Tradição e força pernambucana.</p>
+				<div class="imagem-produto"><img src="imagens/sport2.webp" alt="Sport Recife 3D"></div>
+			</div>
+			<div class="card-footer">
+				<span class="preco">R$299</span>
+				<a class="botao-comprar" href="https://wa.me/5511999999999?text=Quero%20o%20Sport%20Recife%203D" target="_blank">Comprar</a>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<!-- ========================================
+     SCRIPT JAVASCRIPT
+     ======================================== -->
+<script>
+
+	/* Geração de partículas */
+	const particulasContainer = document.getElementById('particulasContainer');
+	
+	for(let i = 0; i < 15; i++){
+		const particula = document.createElement('div');
+		particula.className = 'particula';
+		const leftPos = Math.random() * 100;
+		particula.style.left = leftPos + '%';
+		const delay = Math.random() * 5;
+		particula.style.animationDelay = delay + 's';
+		particulasContainer.appendChild(particula);
+	}
+
+	/* Lógica do vídeo com loop suave */
+	const videoBg = document.getElementById('videoBg');
+	const timesSection = document.getElementById('timesSection');
+
+	let duracao = 0;
+	const TEMPO_LOOP = 1;
+	let tempoLoopInicio = 0;
+	let loopAtivado = false;
+	let direcaoAdiante = true;
+
+	videoBg.addEventListener('loadedmetadata', function() {
+		duracao = videoBg.duration;
+		tempoLoopInicio = Math.max(0, duracao - TEMPO_LOOP);
+		console.log('⚽ 3D Prints - 16 Times Carregados!');
+		videoBg.play();
+	});
+
+	videoBg.addEventListener('timeupdate', function() {
+		const tempoAtual = videoBg.currentTime;
+		
+		if (tempoAtual >= tempoLoopInicio && !loopAtivado) {
+			loopAtivado = true;
+			timesSection.style.opacity = '1';
+		}
+		
+		if (direcaoAdiante) {
+			if (tempoAtual >= duracao - 0.05) {
+				direcaoAdiante = false;
+				videoBg.playbackRate = -1;
+			}
+		}
+		else {
+			if (tempoAtual <= tempoLoopInicio + 0.05) {
+				direcaoAdiante = true;
+				videoBg.playbackRate = 1;
+			}
+		}
+	});
+
+	console.log('🚀 3D Prints - Times do Brasil Carregado!');
+	console.log('⚽ 16 Maiores Clubes do Brasileirão!');
+
+</script>
+
+</body>
+
+</html>

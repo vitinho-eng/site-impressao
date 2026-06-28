@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disney Experience - Universos Temáticos</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ESTILOS GERAIS E RESET */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat';
+            background: black;
+            color: white;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* VIDEO DE FUNDO */
+        video {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(.3);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 10%, black 100%);
+            z-index: -1;
+        }
+
+        /* BOTÃO DE SAÍDA PARA PRODUTOS.HTML */
+        .btn-exit {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-exit:hover {
+            background: white;
+            color: black;
+            transform: scale(1.1);
+        }
+
+        /* CONTAINER DA PÁGINA INICIAL */
+        .home-content {
+            padding: 80px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .center {
+            text-align: center;
+            margin-bottom: 60px;
+            z-index: 2;
+        }
+
+        .center h1 {
+            font-family: 'Cinzel';
+            font-size: clamp(50px, 10vw, 100px);
+            letter-spacing: 5px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+
+        /* NUVEM DE PORTAIS */
+        .portals-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 1400px;
+            gap: 60px 20px;
+        }
+
+        .portal {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 30px rgba(255,255,255,.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        /* Efeito de espalhamento */
+        .portal:nth-child(4n+1) { margin-top: -30px; transform: scale(0.9); }
+        .portal:nth-child(4n+2) { margin-top: 80px; transform: scale(1.1); }
+        .portal:nth-child(4n+3) { margin-top: 20px; margin-left: 40px; }
+        .portal:nth-child(4n+4) { margin-top: -50px; margin-right: 30px; transform: scale(0.85); }
+
+        .portal img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: 0.5s; }
+        .portal:hover { transform: scale(1.2) translateY(0) !important; box-shadow: 0 0 60px rgba(255, 255, 255, 0.6); z-index: 10; border-color: white; }
+        .portal:hover img { filter: grayscale(0%); }
+
+        .label {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            background: rgba(0,0,0,0.8);
+            padding: 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ZOOM E MUNDO */
+        .zoom {
+            position: fixed;
+            border-radius: 50%;
+            z-index: 1000;
+            transition: all .7s cubic-bezier(0.7, 0, 0.3, 1);
+            pointer-events: none;
+            display: none;
+            overflow: hidden;
+        }
+
+        .world {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            overflow-y: auto;
+            padding-top: 140px;
+            z-index: 500;
+        }
+
+        .world.active { opacity: 1; pointer-events: auto; }
+
+        .world-header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 40px;
+            text-align: center;
+            font-family: 'Cinzel';
+            font-size: clamp(30px, 6vw, 45px);
+            z-index: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* CARDS */
+        .card {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .card:hover { transform: translateY(-8px); }
+        .card img { width: 100%; height: 320px; object-fit: cover; }
+        .card h3 { padding: 20px 20px 5px; font-weight: 700; font-size: 18px; text-transform: capitalize; }
+        .price { padding: 0 20px 20px; color: #aaa; font-size: 14px; }
+
+        .buy {
+            display: block;
+            margin: 0 20px 25px;
+            padding: 16px;
+            text-align: center;
+            color: black;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: transform 0.2s ease;
+        }
+
+        .back {
+            position: fixed;
+            top: 40px; left: 40px;
+            padding: 12px 25px;
+            background: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="produtos.html" class="btn-exit">VOLTAR AOS PRODUTOS</a>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="imagens/disney2.mp4" type="video/mp4">
+    </video>
+
+    <div class="overlay"></div>
+
+    <div class="home-content" id="home">
+        <div class="center">
+            <h1>DISNEY</h1>
+            <p>Explore as galáxias dos seus personagens favoritos</p>
+        </div>
+
+        <div class="portals-cloud">
+            <div class="portal" onclick="openWorld(event,'Frozen')"><img src="imagens/frz.jpg"><div class="label">Frozen</div></div>
+            <div class="portal" onclick="openWorld(event,'Rei Leão')"><img src="imagens/rei.webp"><div class="label">Rei Leão</div></div>
+            <div class="portal" onclick="openWorld(event,'Toy Story')"><img src="imagens/toy.jpg"><div class="label">Toy Story</div></div>
+            <div class="portal" onclick="openWorld(event,'Clássicos')"><img src="imagens/classic.jpg"><div class="label">Clássicos</div></div>
+            <div class="portal" onclick="openWorld(event,'Moana')"><img src="imagens/moana.webp"><div class="label">Moana</div></div>
+            <div class="portal" onclick="openWorld(event,'Aladdin')"><img src="imagens/ala2.webp"><div class="label">Aladdin</div></div>
+            <div class="portal" onclick="openWorld(event,'Piratas do Caribe')"><img src="imagens/piratas.webp"><div class="label">Piratas do Caribe</div></div>
+            <div class="portal" onclick="openWorld(event,'Avatar')"><img src="imagens/ava.webp"><div class="label">Avatar</div></div>
+            <div class="portal" onclick="openWorld(event,'Mickey')"><img src="imagens/mk.png"><div class="label">Mickey</div></div>
+            <div class="portal" onclick="openWorld(event,'Princesas')"><img src="imagens/prin.webp"><div class="label">Princesas</div></div>
+            <div class="portal" onclick="openWorld(event,'Vilões')"><img src="imagens/vilao.webp"><div class="label">Vilões</div></div>
+            <div class="portal" onclick="openWorld(event,'Carros')"><img src="imagens/carros.webp"><div class="label">Carros</div></div>
+            <div class="portal" onclick="openWorld(event,'WALL-E')"><img src="imagens/wall.webp"><div class="label">WALL-E</div></div>
+            <div class="portal" onclick="openWorld(event,'Up: Altas Aventuras')"><img src="imagens/up.jpg"><div class="label">Up</div></div>
+            <div class="portal" onclick="openWorld(event,'Divertida Mente')"><img src="imagens/dive.webp"><div class="label">Divertida Mente</div></div>
+            <div class="portal" onclick="openWorld(event,'Ratatouille')"><img src="imagens/rato.webp"><div class="label">Ratatouille</div></div>
+            <div class="portal" onclick="openWorld(event,'Lilo & Stitch')"><img src="imagens/lilo.webp"><div class="label">Lilo & Stitch</div></div>
+            <div class="portal" onclick="openWorld(event,'Monstros S.A.')"><img src="imagens/sa.jpg"><div class="label">Monstros S.A.</div></div>
+        </div>
+    </div>
+
+    <div class="zoom" id="zoom"></div>
+
+    <div class="world" id="world">
+        <button class="back" onclick="closeWorld()">← VOLTAR AO MAPA</button>
+        <div class="world-header" id="title"></div>
+        <div class="grid" id="products"></div>
+    </div>
+
+<script>
+    const zoom = document.getElementById("zoom");
+    const world = document.getElementById("world");
+    const title = document.getElementById("title");
+    const products = document.getElementById("products");
+    const home = document.getElementById("home");
+    const body = document.body;
+
+    const data = {
+        "Frozen": {
+            theme: { primary: "#a8e0ff", accent: "#005691", cardBg: "#02111a" },
+            items: [{img:"imagens/elsa.webp", name:"Elsa", price:"R$199"}, {img:"imagens/anna.webp", name:"Anna", price:"R$149"}, {img:"imagens/olaf.webp", name:"Olaf", price:"R$129"}]
+        },
+        "Rei Leão": {
+            theme: { primary: "#ffcc33", accent: "#e36c09", cardBg: "#1f1201" },
+            items: [{img:"imagens/simba.webp", name:"Simba", price:"R$179"}, {img:"imagens/pumba.webp", name:"Pumbaa", price:"R$189"}, {img:"imagens/scar2.webp", name:"Scar", price:"R$169"}]
+        },
+        "Toy Story": {
+            theme: { primary: "#a6ff00", accent: "#7f00ff", cardBg: "#0c1f03" },
+            items: [{img:"imagens/woody.webp", name:"Woody", price:"R$159"}, {img:"imagens/buzz.webp", name:"Buzz", price:"R$179"}, {img:"imagens/jessie.webp", name:"Jessie", price:"R$149"}]
+        },
+        "Clássicos": {
+            theme: { primary: "#b3e5fc", accent: "#f48fb1", cardBg: "#11181f" },
+            items: [{img:"imagens/cinderela2.webp", name:"Cinderela", price:"R$139"}, {img:"imagens/bela.webp", name:"Bela", price:"R$149"}, {img:"imagens/ariel.webp", name:"Ariel", price:"R$149"}]
+        },
+        "Moana": {
+            theme: { primary: "#00ffff", accent: "#ff6f61", cardBg: "#002329" },
+            items: [{img:"imagens/moana2.webp", name:"Moana", price:"R$159"}, {img:"imagens/maui.webp", name:"Maui", price:"R$169"}, {img:"imagens/anzol.webp", name:"Anzol", price:"R$129"}]
+        },
+        "Aladdin": {
+            theme: { primary: "#bf40bf", accent: "#00c4cc", cardBg: "#1a0823" },
+            items: [{img:"imagens/alladin.JFIF", name:"Aladdin", price:"R$159"}, {img:"imagens/jasmi.webp", name:"Jasmine", price:"R$149"}, {img:"imagens/genio2.webp", name:"Gênio", price:"R$169"}]
+        },
+        "Piratas do Caribe": {
+            theme: { primary: "#d4af37", accent: "#8b4513", cardBg: "#120d0a" },
+            items: [
+                {img:"imagens/jack.webp", name:"Jack Sparrow", price:"R$199"},
+                {img:"imagens/navio.webp", name:"Pérola Negra", price:"R$450"},
+                {img:"imagens/pirata.webp", name:"Capitão Barbosa", price:"R$179"}
+            ]
+        },
+        "Avatar": {
+            theme: { primary: "#00ffff", accent: "#228b22", cardBg: "#001a33" },
+            items: [
+                {img:"imagens/jake.webp", name:"Jake Sully", price:"R$199"},
+                {img:"imagens/neytiTri.webp", name:"Neytiri", price:"R$189"},
+                {img:"imagens/avatar2.webp", name:"action figure ", price:"R$250"}
+            ]
+        },
+        "Mickey": {
+            theme: { primary: "#ff0000", accent: "#ffee00", cardBg: "#1a0808" },
+            items: [{img:"imagens/mickey.webp", name:"Mickey", price:"R$139"}, {img:"imagens/minnie.webp", name:"Minnie", price:"R$139"}, {img:"imagens/donald.webp", name:"Donald", price:"R$139"}]
+        },
+        "Princesas": {
+            theme: { primary: "#ff1493", accent: "#ffd700", cardBg: "#1a0a1a" },
+            items: [{img:"imagens/rapunzel.webp", name:"Rapunzel", price:"R$149"}, {img:"imagens/ariel2.webp", name:"Ariel", price:"R$149"}, {img:"imagens/merida.webp", name:"Merida", price:"R$149"}]
+        },
+        "Vilões": {
+            theme: { primary: "#a020f0", accent: "#32cd32", cardBg: "#110011" },
+            items: [{img:"imagens/malevola.webp", name:"Malévola", price:"R$179"}, {img:"imagens/nick.webp", name:"NICK(zootopia)", price:"R$159"}, {img:"imagens/urso.webp", name:"lotso", price:"R$159"}]
+        },
+        "Carros": {
+            theme: { primary: "#ff0000", accent: "#ff8c00", cardBg: "#1a0808" },
+            items: [{img:"imagens/mcquem.webp", name:"McQueen", price:"R$159"}, {img:"imagens/melhor amigo.webp", name:"Melhores Amigos", price:"R$139"}, {img:"imagens/trofeu.webp", name:"Copa Pistão", price:"R$139"}]
+        },
+
+    "Ratatouille": {
+        theme: { primary: "#f5e1a4", accent: "#8b0000", cardBg: "#1a130e" },
+        items: [
+            {img:"imagens/remi.webp", name:"Remy", price:"R$129"},
+            {img:"imagens/placa.webp", name:"Placa", price:"R$139"},
+            {img:"imagens/remicenoura.webp", name:"remi (modelo 2)", price:"R$89"}
+        ]
+    },
+    "Lilo & Stitch": {
+        theme: { primary: "#4cc9f0", accent: "#f72585", cardBg: "#003049" },
+        items: [
+            {img:"imagens/stitch.webp", name:"Stitch", price:"R$"},
+            {img:"imagens/modelo2s.webp", name:"Stitch (modelo 2)", price:"R$"},
+            {img:"imagens/anjo.webp", name:"Angel", price:"R$"}
+        ]
+    },
+    "Monstros S.A.": {
+        theme: { primary: "#00f5d4", accent: "#9b5de5", cardBg: "#0d1b2a" },
+        items: [
+            {img:"imagens/sulivan.webp", name:"James P. Sullivan", price:"R$210"},
+            {img:"imagens/mike.webp", name:"Mike Wazowski", price:"R$150"},
+            {img:"imagens/randal.webp", name:"Randal", price:"R$130"}
+        ]
+    },
+
+"WALL-E": {
+        // Paleta: Amarelo Trator (WALL-E), Azul Espacial e Preto Vácuo
+        theme: { primary: "#f4c430", accent: "#0077b6", cardBg: "#010101" },
+        items: [
+            {img:"imagens/walle.webp", name:"WALL-E", price:"R$189"},
+            {img:"imagens/eva.webp", name:"E.V.A.", price:"R$199"},
+            {img:"imagens/walle2.webp", name:"WALL-E (moodelo 2)", price:"R$99"}
+        ]
+    },
+    "Up: Altas Aventuras": {
+        // Paleta: Azul Céu, Amarelo Aventura (Escoteiro) e Marrom Casa
+        theme: { primary: "#87ceeb", accent: "#f9c74f", cardBg: "#1a120b" },
+        items: [
+            {img:"imagens/carl.webp", name:"Carl Fredricksen", price:"R$179"},
+            {img:"imagens/chave.webp", name:"suporte", price:"R$159"},
+            {img:"imagens/casaup.webp", name:"Casa com Balões", price:"R$350"}
+        ]
+    },
+    "Divertida Mente": {
+        // Paleta: Amarelo Alegria, Roxo Medo e Vermelho Raiva (Fundo Neutro Cinza)
+        theme: { primary: "#ffee33", accent: "#9b5de5", cardBg: "#121212" },
+        items: [
+            {img:"imagens/alegria.webp", name:"Alegria", price:"R$169"},
+            {img:"imagens/tristeza.webp", name:"Tristeza", price:"R$149"},
+            {img:"imagens/raiva.webp", name:"Raiva", price:"R$179"}
+        ]
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- MODELO PARA FUTURO UNIVERSO (Copie e Cole abaixo) ---
+        "NOME DO MUNDO": {
+            theme: { primary: "#COR_DO_TITULO", accent: "#COR_DO_BOTAO", cardBg: "#COR_DO_FUNDO" },
+            items: [
+                {img:"imagens/foto1.jpg", name:"Produto 1", price:"R$000"},
+                {img:"imagens/foto2.jpg", name:"Produto 2", price:"R$000"},
+                {img:"imagens/foto3.jpg", name:"Produto 3", price:"R$000"}
+            ]
+        },
+        --------------------------------------------------------- */
+    };
+
+    function openWorld(e, name) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const worldData = data[name];
+        if(!worldData) return;
+        const theme = worldData.theme;
+        
+        body.style.background = theme.cardBg;
+        body.style.color = theme.primary;
+
+        zoom.style.display = "block";
+        zoom.style.top = rect.top + "px";
+        zoom.style.left = rect.left + "px";
+        zoom.style.width = rect.width + "px";
+        zoom.style.height = rect.height + "px";
+        zoom.innerHTML = e.currentTarget.innerHTML;
+        zoom.style.borderRadius = "50%";
+
+        setTimeout(() => {
+            zoom.style.top = "0"; zoom.style.left = "0";
+            zoom.style.width = "100vw"; zoom.style.height = "100vh";
+            zoom.style.borderRadius = "0";
+        }, 10);
+
+        setTimeout(() => {
+            zoom.style.display = "none";
+            home.style.display = "none";
+            world.classList.add("active");
+            
+            title.innerText = name;
+            title.style.color = theme.primary;
+            title.style.background = `linear-gradient(to bottom, ${theme.cardBg} 80%, transparent)`;
+            
+            products.innerHTML = "";
+            worldData.items.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.borderColor = theme.accent + "44";
+                card.style.background = theme.cardBg;
+
+                card.onmouseover = () => {
+                    card.style.borderColor = theme.primary;
+                    card.style.boxShadow = `0 15px 30px ${theme.primary}33`;
+                };
+                card.onmouseout = () => {
+                    card.style.borderColor = theme.accent + "44";
+                    card.style.boxShadow = `0 10px 20px rgba(0,0,0,0.3)`;
+                };
+
+                card.innerHTML = `
+                    <img src="${p.img}">
+                    <h3 style="color: ${theme.primary}">${p.name}</h3>
+                    <div class="price">${p.price}</div>
+                    <a href="https://wa.me/5541999999999?text=Olá!%20Fiquei%20interessado%20no%20${p.name}" class="buy" style="background: ${theme.accent}">Comprar</a>
+                `;
+                products.appendChild(card);
+            });
+            window.scrollTo(0,0);
+        }, 700);
+    }
+
+    function closeWorld() {
+        world.classList.remove("active");
+        home.style.display = "flex";
+        body.style.background = "black";
+        body.style.color = "white";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina 3D - Ilumine seu Espaço</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================
+           RESET E BASE
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #050505;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* FUNDO DINÂMICO */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
+        }
+
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 150, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 200, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        /* VAGALUMES (PARTÍCULAS EM MOVIMENTO) */
+        .particulas {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particula {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            /* Brilho de vagalume: mais suave e amarelado/branco */
+            box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            /* Animação composta: flutuar e piscar */
+            animation: flutuarVagalume linear infinite;
+        }
+
+        @keyframes flutuarVagalume {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            50% {
+                /* O deslocamento real é definido via JS com variáveis CSS */
+                transform: translate(var(--x-move), var(--y-move));
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--x-end), var(--y-end));
+                opacity: 0;
+            }
+        }
+
+        /* HEADER */
+        .header-fixa {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            z-index: 200;
+        }
+
+        .header-logo {
+            font-size: 24px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .botao-voltar {
+            padding: 12px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+        }
+
+        .botao-voltar:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* CONTEÚDO */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+            padding: 150px 20px 60px 20px;
+        }
+
+        .header-content {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+
+        .titulo {
+            font-size: 60px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .subtitulo {
+            font-size: 16px;
+            color: #888;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* GRID E CARDS */
+        .grid-luminarias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card-luminaria {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-luminaria:hover {
+            transform: translateY(-15px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--glow-color);
+            border: 1px solid var(--glow-color);
+            align-self: flex-start;
+        }
+
+        .nome-produto {
+            font-size: 26px;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 15px;
+        }
+
+        .descricao-produto {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .imagem-container {
+            width: 100%;
+            height: 280px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            position: relative;
+            background: #0a0a0a;
+        }
+
+        .imagem-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: 0.8s;
+        }
+
+        .card-luminaria:hover .imagem-container img {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .preco {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .botao-pedido {
+            padding: 12px 25px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .botao-pedido:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
+        }
+
+        /* CORES DE BRILHO PERSONALIZADAS */
+        .lumi-mario { --glow-color: #ffaa33; }
+        .lumi-mine { --glow-color: #36ff33; }
+        .lumi-pac { --glow-color: #1405ec; }
+        .lumi-harry { --glow-color: #ccac0b; }
+
+
+        @media(max-width:768px){
+            .titulo{ font-size:40px; }
+            .header-fixa{ padding:0 20px; height:70px; }
+            .header-logo { font-size: 18px; }
+            .container { padding-top: 120px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="glow-overlay"></div>
+    <div class="particulas" id="particulasContainer"></div>
+
+    <header class="header-fixa">
+        <a href="index.html" class="header-logo">Lumina 3D</a>
+        <a href="produtos.html" class="botao-voltar">todos os produtos</a>
+    </header>
+
+    <div class="container">
+        <div class="header-content">
+            <h1 class="titulo">A Arte da Luz</h1>
+            <p class="subtitulo">Esculturas que iluminam sua alma</p>
+        </div>
+
+        <div class="grid-luminarias">
+            <div class="card-luminaria lumi-mario">
+                <span class="badge">Super Mario</span>
+                <h2 class="nome-produto">A estrela da vitória</h2>
+                <p class="descricao-produto">Design icônico capturado através de impressão 3D de alta fidelidade. Uma luz quente que traz nostalgia e conforto.</p>
+                <div class="imagem-container"><img src="imagens/luminaria mario.webp" alt="Mario Star"></div>
+                <div class="card-footer">
+                    <span class="preco">R$ 189</span>
+                    <a class="botao-pedido" href="#">Reservar</a>
+                </div>
+            </div>
+
+            <div class="card-luminaria lumi-mine">
+                <span class="badge">Minecraft</span>
+                <h2 class="nome-produto">A clássica lanterna</h2>
+                <p class="descricao-produto">Geometria cúbica perfeita. Projeta uma iluminação suave e pixelada, criando um ambiente moderno e imersivo.</p>
+                <div class="imagem-container"><img src="imagens/luminariamine.webp" alt="Minecraft Lamp"></div>
+                <div class="card-footer">
+                    <span class="preco">R$ 245</span>
+                    <a class="botao-pedido" href="#">Reservar</a>
+                </div>
+            </div>
+
+            <div class="card-luminaria lumi-pac">
+                <span class="badge">PAC-MAN</span>
+                <h2 class="nome-produto">luminária Pac Man</h2>
+                <p class="descricao-produto">Geometria cúbica perfeita. Projeta uma iluminação suave e pixelada, criando um ambiente moderno e imersivo.</p>
+                <div class="imagem-container"><img src="imagens/pacman2.webp" alt="Minecraft Lamp"></div>
+                <div class="card-footer">
+                    <span class="preco">R$ 245</span>
+                    <a class="botao-pedido" href="#">Reservar</a>
+                </div>
+            </div>
+
+
+     <div class="card-luminaria lumi-mine">
+                <span class="badge">Luminaria</span>
+                <h2 class="nome-produto">Luminária Glow Elegance</h2>
+                <p class="descricao-produto">Elegância que brilha em cada detalhe</p>
+                <div class="imagem-container"><img src="imagens/luminaria5.webp" alt="Minecraft Lamp"></div>
+                <div class="card-footer">
+                    <span class="preco">R$ 245</span>
+                    <a class="botao-pedido" href="#">Reservar</a>
+                </div>
+            </div>
+
+
+
+            <div class="card-luminaria lumi-harry">
+                <span class="badge">HARRY POTTER</span>
+                <h2 class="nome-produto">Luminária Harry Potter.</h2>
+                <p class="descricao-produto">A lendária plataforma de harry potter agora em forma de luz.</p>
+                <div class="imagem-container"><img src="imagens/luminariaharry.webp" alt="Cyber Sunset"></div>
+                <div class="card-footer">
+                    <span class="preco">R$ 310</span>
+                    <a class="botao-pedido" href="#">Reservar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script>
+        /* GERADOR DE VAGALUMES MELHORADO */
+        const container = document.getElementById('particulasContainer');
+        const numVagalumes = 45;
+
+        for(let i = 0; i < numVagalumes; i++){
+            const p = document.createElement('div');
+            p.className = 'particula';
+            
+            // Posição inicial aleatória
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            
+            // Variáveis de movimento aleatórias para o Keyframe
+            const xMove = (Math.random() - 0.5) * 300 + 'px';
+            const yMove = (Math.random() - 0.5) * 300 + 'px';
+            const xEnd = (Math.random() - 0.5) * 500 + 'px';
+            const yEnd = (Math.random() - 0.5) * 500 + 'px';
+            
+            p.style.setProperty('--x-move', xMove);
+            p.style.setProperty('--y-move', yMove);
+            p.style.setProperty('--x-end', xEnd);
+            p.style.setProperty('--y-end', yEnd);
+
+            // Tempos de animação variados para não parecerem mecânicos
+            p.style.animationDelay = Math.random() * 10 + 's';
+            p.style.animationDuration = 15 + Math.random() * 20 + 's';
+            
+            container.appendChild(p);
+        }
+
+        /* INTEGRAÇÃO WHATSAPP */
+        const MEU_NUMERO = "5541999999999"; 
+
+        document.querySelectorAll('.botao-pedido').forEach(botao => {
+            botao.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const card = this.closest('.card-luminaria');
+                const nome = card.querySelector('.nome-produto').innerText;
+                const preco = card.querySelector('.preco').innerText;
+
+                const mensagem = `Olá! ✨ Vi no site a luminária *${nome}* (${preco}) e gostaria de reservar esta peça!`;
+                const url = `https://wa.me/${MEU_NUMERO}?text=${encodeURIComponent(mensagem)}`;
+                
+                window.open(url, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>

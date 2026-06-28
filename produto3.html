@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars Galactic Archive | Premium Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --jedi: #00d2ff;
+            --sith: #ff0033;
+            --whatsapp: #25d366;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        body {
+            background: #000;
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+
+   .btn-central-back {
+    position: absolute; /*deixa ele parado la em cima */
+    left: 50%;
+    top: 40px; /* Distância do topo da tela */
+    transform: translateX(-50%); /* Centraliza apenas no eixo X (horizontal) */
+    z-index: 2000;
+    
+    /* Cor Mace Windu (Roxo Vibrante) */
+    background-color: #8a2be2; 
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 4px; /* Estilo mais retangular/técnico */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 1px solid #ba55d3;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.btn-central-back:hover {
+    background-color: #ba55d3;
+    color: #000;
+    box-shadow: 0 0 35px rgba(186, 85, 211, 1);
+    transform: translateX(-50%) scale(1.05);
+}
+    /* Ajuste para o sabre central não ficar por cima do botão */
+    .central-saber {
+
+        pointer-events: none;
+    }
+        /* ===== SCANLINES HOLOGRÁFICAS ===== */
+        body::before {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 1000;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* ===== FUNDO RADIAL DINÂMICO ===== */
+        .split-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            z-index: -1;
+        }
+
+        .bg-side {
+            flex: 1;
+            transition: 1s ease;
+            opacity: 0.1;
+        }
+
+        .bg-light { background: radial-gradient(circle at 25%, var(--jedi), transparent 60%); }
+        .bg-dark-side { background: radial-gradient(circle at 75%, var(--sith), transparent 60%); }
+
+        body:has(.side-light:hover) .bg-light { opacity: 0.5; }
+        body:has(.side-dark:hover) .bg-dark-side { opacity: 0.5; }
+
+        /* ===== ESTRUTURA PRINCIPAL ===== */
+        .main-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .central-saber {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255,255,255,0.05);
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        body:has(.side-light:hover) .central-saber { background: var(--jedi); box-shadow: 0 0 20px var(--jedi); }
+        body:has(.side-dark:hover) .central-saber { background: var(--sith); box-shadow: 0 0 20px var(--sith); }
+
+        .side-content {
+            flex: 1;
+            padding: 80px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .side-light { color: var(--jedi); border-right: 1px solid rgba(255,255,255,0.05); }
+        .side-dark { color: var(--sith); }
+
+        .faction-hologram {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 15px currentColor);
+            animation: float 3s infinite alternate ease-in-out;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: grayscale(100%);
+        }
+
+        .side-content:hover .product-card img { filter: grayscale(0%) drop-shadow(0 0 10px currentColor); }
+
+        .product-card h3 { 
+            font-size: 13px; 
+            letter-spacing: 1px; 
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .price { 
+            font-size: 20px; 
+            font-weight: 900; 
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        /* ===== BOTÕES DE AÇÃO (WHATSAPP) ===== */
+        .btn-action {
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        /* Estilo Botão Lado da Luz */
+        .side-light .btn-action {
+            background-color: var(--jedi);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .side-light .btn-action:hover {
+            background-color: #00bfff;
+            box-shadow: 0 0 20px var(--jedi);
+            transform: scale(1.05);
+        }
+
+        /* Estilo Botão Lado Sombrio */
+        .side-dark .btn-action {
+            background-color: var(--sith);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.3);
+        }
+
+        .side-dark .btn-action:hover {
+            background-color: #ff0000;
+            color: #000;
+            box-shadow: 0 0 20px var(--sith);
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            from { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+            to { transform: translateY(-15px) rotate(5deg); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+
+</style>
+
+<body>
+    <a href="produtos.html" class="btn-central-back">Ver Todos os Produtos</a>
+
+
+<div class="split-bg">
+    <div class="bg-side bg-light"></div>
+    <div class="bg-side bg-dark-side"></div>
+</div>
+
+<div class="main-wrapper">
+    <div class="central-saber"></div>
+
+    <div class="side-content side-light">
+        <img src="imagens/rebeldes.svg" class="faction-hologram">
+        <h2>LIGHT SIDE ARCHIVE</h2>
+        <br>
+        <div class="cards-grid">
+            <div class="product-card"> <img src="imagens/yoda22.webp"> <h3>Mestre Yoda</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Mestre%20Yoda" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/luke.webp"> <h3>Luke Skywalker</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Luke%20Skywalker" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/obi.png"> <h3>Obi-Wan Kenobi</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Obi-Wan%20Kenobi" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/leia.webp"> <h3>Princesa Leia</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20a%20Princesa%20Leia" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/han solo.webp"> <h3>Han Solo</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Han%20Solo" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/che.jpg"> <h3>Chewbacca</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Chewbacca" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/anakin.webp"> <h3>R2-D2</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20R2-D2" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/sabre2.webp"> <h3>Sabre de luz</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20a%20Ahsoka%20Tano" target="_blank" class="btn-action">ADQUIRIR AGORA</a> </div>
+        </div>
+    </div>
+
+    <div class="side-content side-dark">
+        <img src="imagens/imperio.svg" class="faction-hologram">
+        <h2>DARK SIDE ARCHIVE</h2>
+        <br>
+        <div class="cards-grid">
+            <div class="product-card"> <img src="imagens/vader2.jpg"> <h3>Darth Vader</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Darth%20Vader" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/palpatine.webp"> <h3>Imperador</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Imperador" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/maul2.jpg"> <h3>Darth Maul</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Darth%20Maul" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/kylo.webp"> <h3>Kylo Ren</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Kylo%20Ren" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/mando.webp"> <h3>Boba Fett</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Boba%20Fett" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/trooper.jpg"> <h3>Stormtrooper</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Stormtrooper" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/sabrekylo.webp"> <h3>Sabre de Kylo Ren</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20Conde%20Dookan" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+            <div class="product-card"> <img src="imagens/griev.jpg"> <h3>Gen. Grievous</h3> <div class="price">R$ 50</div> <a href="https://wa.me/5500999999999?text=Quero%20comprar%20o%20General%20Grievous" target="_blank" class="btn-action">DOMINAR AGORA</a> </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

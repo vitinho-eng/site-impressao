@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Mario 3D Prints - Reino do Cogumelo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ========================================
+   RESET
+   ======================================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins', sans-serif;
+    background: #202020;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ========================================
+   FUNDO TEMÁTICO (CÉU DO MARIO)
+   ======================================== */
+.video-bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-2;
+    background: #5c94fc; /* Azul clássico do céu do Mario */
+}
+
+/* Elementos decorativos de fundo */
+.decoracao-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.nuvem {
+    position: absolute;
+    background: white;
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    opacity: 0.8;
+    animation: moverNuvem linear infinite;
+}
+
+.nuvem::after, .nuvem::before {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.nuvem::after { width: 50px; height: 50px; top: -25px; left: 15px; }
+.nuvem::before { width: 40px; height: 40px; top: -15px; left: 45px; }
+
+@keyframes moverNuvem {
+    from { transform: translateX(-150px); }
+    to { transform: translateX(110vw); }
+}
+
+/* ========================================
+   PARTÍCULAS (MOEDAS E ESTRELAS)
+   ======================================== */
+.particulas{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    pointer-events:none;
+}
+
+.particula{
+    position:absolute;
+    width:20px;
+    height:20px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    animation: flutuar 10s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #b8860b;
+    font-weight: bold;
+    border: 2px solid #b8860b;
+}
+
+@keyframes flutuar{
+    0%{
+        transform:translateY(110vh) rotate(0deg);
+        opacity:0;
+    }
+    10%{
+        opacity:1;
+    }
+    90%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-10vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* ========================================
+   HEADER FIXA (MARIO STYLE)
+   ======================================== */
+.header-fixa{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:80px;
+    background:rgba(231, 12, 12, 0.9); /* Vermelho Mario */
+    border-bottom:4px solid #000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    z-index:200;
+    box-shadow:0 4px 0 rgba(0,0,0,0.3);
+}
+
+.header-logo{
+    font-size:16px;
+    font-family:'Press Start 2P', cursive;
+    color:white;
+    text-shadow: 3px 3px 0 #000;
+}
+
+.botao-voltar{
+    padding:10px 20px;
+    background:#43ad21; /* Verde Luigi/Cano */
+    border:3px solid #000;
+    color:white;
+    font-weight:600;
+    border-radius:4px;
+    cursor:pointer;
+    transition:all 0.2s steps(4);
+    font-family:'Press Start 2P', cursive;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:10px;
+}
+
+.botao-voltar:hover{
+    background:#56d62d;
+    transform:translateY(-4px);
+    box-shadow: 0 4px 0 #000;
+}
+
+/* ========================================
+   CONTAINER PRINCIPAL
+   ======================================== */
+.container{
+    position:relative;
+    z-index:10;
+    width:100%;
+    min-height:100vh;
+    padding:120px 20px 40px 20px;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.header{
+    text-align:center;
+    margin-bottom:60px;
+    opacity:0;
+    animation:fadeIn 1s ease-out 0.5s forwards;
+}
+
+.titulo{
+    font-size:40px;
+    font-family:'Press Start 2P', cursive;
+    color:#fff;
+    margin-bottom:25px;
+    text-shadow: 6px 6px 0 #e70c0c, 10px 10px 0 #000;
+}
+
+.subtitulo{
+    font-size:14px;
+    font-family:'Press Start 2P', cursive;
+    color:#ffd700;
+    text-shadow: 2px 2px 0 #000;
+    letter-spacing:1px;
+}
+
+/* ========================================
+   ANIMAÇÕES
+   ======================================== */
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(20px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+@keyframes slideInUp{
+    from{ opacity:0; transform:translateY(50px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+/* ========================================
+   GRID DE PRODUTOS
+   ======================================== */
+.times-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:40px;
+    max-width:1400px;
+    margin:0 auto;
+    padding:40px;
+}
+
+/* ========================================
+   CARD DO PRODUTO - MARIO BLOCK STYLE
+   ======================================== */
+.card-time{
+    position:relative;
+    border-radius:8px;
+    padding:30px;
+    cursor:pointer;
+    transition:all 0.2s steps(4);
+    overflow:hidden;
+    animation:slideInUp 0.8s ease-out forwards;
+    min-height:500px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    background:#f99c1c; /* Cor do bloco de interrogação */
+    border:4px solid #000;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+}
+
+.card-time::after {
+    content: '?';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 30px;
+    color: rgba(0,0,0,0.1);
+}
+
+.card-time:hover{
+    transform:translateY(-10px);
+    box-shadow: 12px 12px 0 rgba(0,0,0,0.3);
+}
+
+/* ========================================
+   ÍCONE DO PERSONAGEM
+   ======================================== */
+.escudo-time{
+    position:relative;
+    width:80px;
+    height:80px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    margin-bottom:15px;
+    background: white;
+    border: 4px solid #000;
+    border-radius: 8px;
+}
+
+.escudo-time img{
+    width:80%;
+    height:80%;
+    object-fit:contain;
+}
+
+/* ========================================
+   CONTEÚDO DO CARD
+   ======================================== */
+.card-content{
+    position:relative;
+    z-index:2;
+}
+
+.nome-time{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:15px;
+    font-family:'Press Start 2P', cursive;
+    color:#fff;
+    text-shadow: 3px 3px 0 #000;
+}
+
+.descricao-produto{
+    font-size:14px;
+    margin-bottom:20px;
+    line-height:1.6;
+    color: #000;
+    font-weight: 600;
+}
+
+/* ========================================
+   IMAGEM DO PRODUTO
+   ======================================== */
+.imagem-produto{
+    width:100%;
+    height:220px;
+    border-radius:4px;
+    margin:20px 0;
+    overflow:hidden;
+    border:4px solid #000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,0.2);
+}
+
+.imagem-produto img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ========================================
+   FOOTER DO CARD
+   ======================================== */
+.card-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding-top:15px;
+    border-top:4px solid #000;
+    position:relative;
+    z-index:2;
+}
+
+.preco{
+    font-size:16px;
+    font-family:'Press Start 2P', cursive;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.botao-comprar{
+    flex:1;
+    padding:12px 10px;
+    background:#e70c0c;
+    border:3px solid #000;
+    color:white;
+    font-family:'Press Start 2P', cursive;
+    font-size: 10px;
+    text-decoration:none;
+    display:inline-block;
+    text-align:center;
+    transition: 0.2s steps(4);
+}
+
+.botao-comprar:hover{
+    background: #ff3d3d;
+    transform: scale(1.05);
+}
+
+/* Cores personalizadas por personagem */
+/* Mario */
+.card-time:nth-child(1) { background: #e70c0c; }
+.card-time:nth-child(1) .botao-comprar { background: #ffd700; color: #000; }
+
+/* Luigi */
+.card-time:nth-child(2) { background: #43ad21; }
+.card-time:nth-child(2) .botao-comprar { background: #fff; color: #000; }
+
+/* Peach */
+.card-time:nth-child(3) { background: #ff85e1; }
+.card-time:nth-child(3) .botao-comprar { background: #fff; color: #000; }
+
+/* Bowser */
+.card-time:nth-child(4) { background: #4a7a1a; }
+.card-time:nth-child(4) .botao-comprar { background: #e70c0c; color: #fff; }
+
+/* Yoshi */
+.card-time:nth-child(5) { background: #8cd421; }
+.card-time:nth-child(5) .botao-comprar { background: #fff; color: #000; }
+
+/* Toad */
+.card-time:nth-child(6) { background: #fff; }
+.card-time:nth-child(6) .nome-time { color: #e70c0c; }
+.card-time:nth-child(6) .botao-comprar { background: #0058ff; color: #fff; }
+
+/* Donkey Kong */
+.card-time:nth-child(7) { background: #8b4513; }
+.card-time:nth-child(7) .botao-comprar { background: #e70c0c; color: #fff; }
+
+/* Wario */
+.card-time:nth-child(8) { background: #ffd700; }
+.card-time:nth-child(8) .nome-time { color: #7b00ff; }
+.card-time:nth-child(8) .botao-comprar { background: #7b00ff; color: #fff; }
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+@media(max-width:768px){
+    .titulo{ font-size:24px; }
+    .times-grid{ grid-template-columns:1fr; padding:20px; }
+    .header-fixa{ padding:0 20px; }
+    .header-logo{ font-size:10px; }
+    .botao-voltar{ font-size:8px; }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="video-bg"></div>
+<div class="decoracao-bg" id="decoracaoBg"></div>
+
+<div class="particulas" id="particulasContainer"></div>
+
+<header class="header-fixa">
+    <div class="header-logo">🍄 MARIO 3D PRINTS</div>
+    <a href="produtos.html" class="botao-voltar">MENU PRINCIPAL</a>
+</header>
+
+<div class="container">
+
+    <div class="header">
+        <h1 class="titulo">SUPER MARIO 3D</h1>
+        <p class="subtitulo">Colecionáveis do Reino do Cogumelo</p>
+    </div>
+
+    <div class="times-grid" id="marioSection">
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/mario4.webp" alt="Mario"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Mario</h2>
+                <p class="descricao-produto">O herói lendário em uma pose clássica. Impressão 3D com detalhes incríveis do macacão e boné.</p>
+                <div class="imagem-produto"><img src="imagens/mario2.jpg" alt="Mario 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">100 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/luigi2.webp" alt="Luigi"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Luigi</h2>
+                <p class="descricao-produto">O irmão corajoso pronto para a aventura. Ideal para completar sua coleção de heróis.</p>
+                <div class="imagem-produto"><img src="imagens/luigi.webp" alt="Luigi 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">95 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/princesa.webp" alt="Peach"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Princesa Peach</h2>
+                <p class="descricao-produto">A soberana do Reino do Cogumelo em toda sua elegância. Detalhes refinados no vestido e coroa.</p>
+                <div class="imagem-produto"><img src="imagens/peach.png" alt="Peach 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">120 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/bowser2.webp" alt="Bowser"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Bowser</h2>
+                <p class="descricao-produto">O vilão mais imponente! Uma peça robusta com destaque para os espinhos do casco.</p>
+                <div class="imagem-produto"><img src="imagens/bowser.jpg" alt="Bowser 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">150 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/yoshi2.png" alt="Yoshi"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Yoshi</h2>
+                <p class="descricao-produto">O companheiro mais fiel das aventuras. Réplica fiel com cores vibrantes e acabamento liso.</p>
+                <div class="imagem-produto"><img src="imagens/yoshi.png" alt="Yoshi 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">90 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/sapo2.webp" alt="Toad"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Toad</h2>
+                <p class="descricao-produto">O pequeno guardião do castelo. Uma peça fofa e essencial para qualquer fã da Nintendo.</p>
+                <div class="imagem-produto"><img src="imagens/sapo.png" alt="Toad 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">80 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/macaco2.png" alt="DK"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Donkey Kong</h2>
+                <p class="descricao-produto">O rei da selva em 3D. Destaque para a textura do pelo e sua gravata icônica.</p>
+                <div class="imagem-produto"><img src="imagens/macaco.webp" alt="DK 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">130 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+        <div class="card-time">
+            <div class="escudo-time"><img src="imagens/wario2.png" alt="Wario"></div>
+            <div class="card-content">
+                <h2 class="nome-time">Wario</h2>
+                <p class="descricao-produto">O anti-herói ganancioso. Expressão facial detalhada e cores características.</p>
+                <div class="imagem-produto"><img src="imagens/wario.jpg" alt="Wario 3D"></div>
+            </div>
+            <div class="card-footer">
+                <span class="preco">110 Moedas</span>
+                <a class="botao-comprar" href="#">COMPRAR</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    /* Geração de partículas (Moedas) */
+    const particulasContainer = document.getElementById('particulasContainer');
+    
+    for(let i = 0; i < 20; i++){
+        const particula = document.createElement('div');
+        particula.className = 'particula';
+        particula.innerText = '$';
+        const leftPos = Math.random() * 100;
+        particula.style.left = leftPos + '%';
+        const delay = Math.random() * 8;
+        particula.style.animationDelay = delay + 's';
+        const size = 15 + Math.random() * 15;
+        particula.style.width = size + 'px';
+        particula.style.height = size + 'px';
+        particula.style.fontSize = (size * 0.6) + 'px';
+        particulasContainer.appendChild(particula);
+    }
+
+    /* Geração de nuvens */
+    const decoracaoBg = document.getElementById('decoracaoBg');
+    for(let i = 0; i < 6; i++) {
+        const nuvem = document.createElement('div');
+        nuvem.className = 'nuvem';
+        nuvem.style.top = (Math.random() * 60) + '%';
+        nuvem.style.left = '-150px';
+        nuvem.style.animationDuration = (20 + Math.random() * 30) + 's';
+        nuvem.style.animationDelay = (Math.random() * 20) + 's';
+        nuvem.style.transform = 'scale(' + (0.5 + Math.random()) + ')';
+        decoracaoBg.appendChild(nuvem);
+    }
+
+    /* Lógica do WhatsApp */
+    const MEU_NUMERO = "5500000000000"; // INSIRA SEU NUMERO AQUI (DDI + DDD + NUMERO)
+
+    document.querySelectorAll('.botao-comprar').forEach(botao => {
+        botao.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Pega os dados do card
+            const card = this.closest('.card-time');
+            const nome = card.querySelector('.nome-time').innerText;
+            const preco = card.querySelector('.preco').innerText;
+
+            // Cria a mensagem para o WhatsApp
+            const mensagem = encodeURIComponent(`Olá! 🍄 Gostaria de encomendar a impressão 3D do personagem: ${nome}\nValor: ${preco}\n\nComo faço para prosseguir?`);
+            
+            // Cria a URL do WhatsApp
+            const urlWhats = `https://api.whatsapp.com/send?phone=${MEU_NUMERO}&text=${mensagem}`;
+
+            // Abre o WhatsApp em uma nova aba
+            window.open(urlWhats, '_blank');
+        });
+    });
+
+    console.log('🍄 Super Mario 3D Prints - WhatsApp Ativado!');
+
+</script>
+
+</body>
+
+</html>

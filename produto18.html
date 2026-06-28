@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DC Universe 3D | Hall das Lendas</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --dc-blue: #0047ab;
+            --dc-dark: #05070a;
+            --dc-accent: #007bff;
+            --card-radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dc-dark); }
+        ::-webkit-scrollbar-thumb { background: #1a202c; border-radius: 10px; border: 2px solid var(--dc-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--dc-blue); }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dc-dark);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 71, 171, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 123, 255, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            opacity: 0.5;
+        }
+
+        header {
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 7, 10, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 123, 255, 0.2);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .logo span { color: var(--dc-blue); }
+
+        .btn-back {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 8px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover { background: white; color: black; border-color: white; }
+
+        main.container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 30px 100px;
+        }
+
+        .hero { text-align: center; margin-bottom: 50px; }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(24px, 5vw, 48px);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            background: linear-gradient(to bottom, #fff 50%, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #888;
+            padding: 8px 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            transition: 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--dc-blue); color: white; box-shadow: inset 0 0 10px rgba(0, 71, 171, 0.3); }
+
+        .character-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+
+        .char-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            position: relative;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .char-card.show { opacity: 1; transform: translateY(0); }
+        .char-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--theme-color);
+            box-shadow: 0 0 30px var(--theme-color-op);
+            transform: translateY(-10px);
+        }
+
+        .card-banner {
+            width: 100%; height: 250px; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #000;
+        }
+        .card-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.5s; }
+        .char-card:hover .card-banner img { opacity: 1; transform: scale(1.1); }
+
+        .char-info h2 { font-family: 'Orbitron', sans-serif; font-size: 18px; margin-bottom: 10px; color: white; text-transform: uppercase; }
+        .char-info p { font-size: 13px; color: #999; line-height: 1.6; margin-bottom: 25px; min-height: 60px; }
+
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .price { font-size: 18px; font-weight: 700; color: #fff; font-family: 'Orbitron', sans-serif; }
+        .btn-buy { padding: 10px 16px; background: var(--theme-color); color: white; text-decoration: none; border-radius: 4px; font-weight: 700; font-size: 10px; text-transform: uppercase; transition: 0.3s; }
+
+        /* PALETA DE CORES DC EXPANDIDA */
+        .theme-sup { --theme-color: #ff0000; --theme-color-op: rgba(255, 0, 0, 0.2); }
+        .theme-bat { --theme-color: #fdd835; --theme-color-op: rgba(253, 216, 53, 0.15); }
+        .theme-ww { --theme-color: #ff9900; --theme-color-op: rgba(255, 153, 0, 0.2); }
+        .theme-gl { --theme-color: #00ff00; --theme-color-op: rgba(0, 255, 0, 0.2); }
+        .theme-flash { --theme-color: #ffea00; --theme-color-op: rgba(255, 234, 0, 0.2); }
+        .theme-joker { --theme-color: #a333ff; --theme-color-op: rgba(163, 51, 255, 0.2); }
+        .theme-aqua { --theme-color: #00ced1; --theme-color-op: rgba(0, 206, 209, 0.2); }
+        .theme-cyborg { --theme-color: #c0c0c0; --theme-color-op: rgba(192, 192, 192, 0.2); }
+        .theme-shazam { --theme-color: #ff0000; --theme-color-op: rgba(255, 0, 0, 0.2); }
+        .theme-arrow { --theme-color: #228b22; --theme-color-op: rgba(34, 139, 34, 0.2); }
+        .theme-harley { --theme-color: #ff1493; --theme-color-op: rgba(255, 20, 147, 0.2); }
+        .theme-lex { --theme-color: #32cd32; --theme-color-op: rgba(50, 205, 50, 0.2); }
+        .theme-darkseid { --theme-color: #4b0082; --theme-color-op: rgba(75, 0, 130, 0.2); }
+        .theme-raven { --theme-color: #483d8b; --theme-color-op: rgba(72, 61, 139, 0.2); }
+        .theme-nightwing { --theme-color: #1e90ff; --theme-color-op: rgba(30, 144, 255, 0.2); }
+        .theme-deathstroke { --theme-color: #ff8c00; --theme-color-op: rgba(255, 140, 0, 0.2); }
+
+        @media (max-width: 768px) { header { padding: 15px 20px; } main.container { padding: 120px 20px; } }
+    </style>
+</head>
+
+<body>
+    <div class="bg-overlay"></div>
+    <div class="bg-grid"></div>
+    
+    <header>
+        <div class="logo"><span>DC</span> UNIVERSE 3D</div>
+        <a href="produtos.html" class="btn-back">HALL DE PRODUTOS</a>
+    </header>
+
+    <main class="container">
+        <div class="hero">
+            <h1>The Legendary Collection</h1>
+            <p style="color: #666; letter-spacing: 3px; font-size: 11px;">COLEÇÃO PERSONAGENS DC</p>
+        </div>
+
+        <nav class="filters">
+            <button class="filter-btn active" data-filter="all">Tudo</button>
+            <button class="filter-btn" data-filter="hero">Heróis</button>
+            <button class="filter-btn" data-filter="villain">Vilões</button>
+        </nav>
+
+        <div class="character-grid">
+            <article class="char-card theme-sup" data-category="hero">
+                <div class="card-banner"><img src="imagens/super2.webp"></div>
+                <div class="char-info"><h2>Superman</h2><p>O Homem de Aço com pintura especial no icônico brasão da esperança.</p></div>
+                <div class="card-footer"><span class="price">R$ 299,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20superman" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-bat" data-category="hero">
+                <div class="card-banner"><img src="imagens/batman.webp"></div>
+                <div class="char-info"><h2>Batman</h2><p>O Cavaleiro das Trevas com acabamento fosco e capa em kevlar esculpida.</p></div>
+                <div class="card-footer"><span class="price">R$ 279,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20Batman" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-ww" data-category="hero">
+                <div class="card-banner"><img src="imagens/mulher.webp"></div>
+                <div class="char-info"><h2>Wonder Woman</h2><p>A princesa de Themyscira com detalhes em ouro envelhecido.</p></div>
+                <div class="card-footer"><span class="price">R$ 259,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20da%20mulher maravilha" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-joker" data-category="villain">
+                <div class="card-banner"><img src="imagens/corings.webp"></div>
+                <div class="char-info"><h2>The Joker</h2><p>O Príncipe Palhaço do Crime com terno roxo texturizado.</p></div>
+                <div class="card-footer"><span class="price">R$ 269,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20coringa" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-flash" data-category="hero">
+                <div class="card-banner"><img src="imagens/flash.webp"></div>
+                <div class="char-info"><h2>The Flash</h2><p>Capturado em pose de super velocidade com raios de Speed Force.</p></div>
+                <div class="card-footer"><span class="price">R$ 229,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20flash" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-aqua" data-category="hero">
+                <div class="card-banner"><img src="imagens/aqua.webp"></div>
+                <div class="char-info"><h2>Aquaman</h2><p>O Rei de Atlântida com escamas em pintura dourada hidrodinâmica.</p></div>
+                <div class="card-footer"><span class="price">R$ 239,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20aquaman" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-cyborg" data-category="hero">
+                <div class="card-banner"><img src="imagens/cyborg2.webp"></div>
+                <div class="char-info"><h2>Cyborg</h2><p>Peça tecnológica com detalhes em fibra de carbono e LED vermelho simulado.</p></div>
+                <div class="card-footer"><span class="price">R$ 249,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20cyborg" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-harley" data-category="villain">
+                <div class="card-banner"><img src="imagens/arlequina.webp"></div>
+                <div class="char-info"><h2>Harley Quinn</h2><p>A Rainha de Gotham com seu clássico taco de beisebol e cores vibrantes.</p></div>
+                <div class="card-footer"><span class="price">R$ 219,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20da%20arlequina" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-gl" data-category="hero">
+                <div class="card-banner"><img src="imagens/lanterna.webp"></div>
+                <div class="char-info"><h2>Green Lantern</h2><p>Efeito translúcido na construção de energia do anel esmeralda.</p></div>
+                <div class="card-footer"><span class="price">R$ 219,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20lanterna verde" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-lex" data-category="villain">
+                <div class="card-banner"><img src="imagens/lex.webp"></div>
+                <div class="char-info"><h2>Lex Luthor</h2><p>A mente mais brilhante da Terra em sua armadura de guerra tecnológica.</p></div>
+                <div class="card-footer"><span class="price">R$ 289,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20lex Luthor" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-shazam" data-category="hero">
+                <div class="card-banner"><img src="imagens/shazam.webp"></div>
+                <div class="char-info"><h2>Shazam</h2><p>O campeão dos magos com o raio no peito em acabamento brilhante.</p></div>
+                <div class="card-footer"><span class="price">R$ 229,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20shazam" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-arrow" data-category="hero">
+                <div class="card-banner"><img src="imagens/verde.webp"></div>
+                <div class="char-info"><h2>Green Arrow</h2><p>Peça esculpida com arco em material flexível e flechas detalhadas.</p></div>
+                <div class="card-footer"><span class="price">R$ 219,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20arqueiro verde" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-darkseid" data-category="villain">
+                <div class="card-banner"><img src="imagens/dark.webp"></div>
+                <div class="char-info"><h2>Darkseid</h2><p>O soberano de Apokolips. Peça imponente com base de lava fundida.</p></div>
+                <div class="card-footer"><span class="price">R$ 349,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20darkseid" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-raven" data-category="hero">
+                <div class="card-banner"><img src="imagens/ravena.webp"></div>
+                <div class="char-info"><h2>Raven</h2><p>A poderosa mística em pose de levitação com capa de tecido premium.</p></div>
+                <div class="card-footer"><span class="price">R$ 239,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20ravena" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-nightwing" data-category="hero">
+                 <div class="card-banner"><img src="imagens/asanegra.webp"></div>
+                <div class="char-info"><h2>Nightwing</h2><p>Dick Grayson em pose acrobática com seus bastões de esgrima elétricos.</p></div>
+                <div class="card-footer"><span class="price">R$ 229,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20asa Negra" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            <article class="char-card theme-deathstroke" data-category="villain">
+                 <div class="card-banner"><img src="imagens/death.webp"></div>
+                <div class="char-info"><h2>Deathstroke</h2><p>O maior mercenário do mundo com arsenal completo detalhado em escala.</p></div>
+                <div class="card-footer"><span class="price">R$ 269,00</span><a href="https://wa.me/5599999999999?text=Quero%20comprar%20a%20figure%20do%20caçador" class="btn-buy">Adquirir</a></div>
+            </article>
+
+            </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll('.char-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
+            }, { threshold: 0.1 });
+            cards.forEach(card => observer.observe(card));
+
+            const btns = document.querySelectorAll('.filter-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.getAttribute('data-filter');
+                    cards.forEach(card => {
+                        card.classList.remove('show');
+                        setTimeout(() => {
+                            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                                card.style.display = 'block';
+                                setTimeout(() => card.classList.add('show'), 50);
+                            } else { card.style.display = 'none'; }
+                        }, 300);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

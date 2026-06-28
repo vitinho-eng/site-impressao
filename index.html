@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Studio | Experiência Premium em Impressão 3D</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --secondary: #a855f7;
+            --bg-dark: #0a0014;
+            --bg-light: #1a0033;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            background-image: radial-gradient(circle at top left, var(--bg-light), var(--bg-dark) 70%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(10, 0, 20, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(56,189,248,0.4);
+            text-decoration: none;
+        }
+
+        nav { display: flex; align-items: center; gap: 30px; }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 15px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover, .cart-btn:hover { color: var(--primary); }
+
+        .cart-btn {
+            background: rgba(56,189,248,0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--primary);
+            border: 1px solid rgba(56,189,248,0.2);
+        }
+
+        /* HERO INSTITUCIONAL */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 120px 5% 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 50px;
+        }
+
+        .hero-text { flex: 1; max-width: 650px; }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(36px, 4.5vw, 60px);
+            line-height: 1.1;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 550px;
+            filter: drop-shadow(0 20px 30px rgba(168,85,247,0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* BOTÕES */
+        .btn {
+            padding: 15px 35px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), #0ea5e9);
+            color: #000;
+            box-shadow: 0 5px 15px rgba(56,189,248,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(56,189,248,0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: #25D366;
+            color: #25D366;
+            background: rgba(37,211,102,0.05);
+            transform: translateY(-3px);
+        }
+
+        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; }
+
+        /* TRUST BAR (Prova Social) */
+        .trust-bar {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 30px 5%;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .trust-item i { font-size: 24px; color: var(--primary); }
+
+        /* SEÇÕES */
+        .section {
+            padding: 100px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        /* O QUE VOCÊ PODE CRIAR (Cards de Categoria) */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .category-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 40px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            transition: 0.4s;
+            text-align: center;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(168,85,247,0.2);
+            border-color: rgba(168,85,247,0.5);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .category-card i {
+            font-size: 45px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .category-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .category-card p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+        /* DIFERENCIAIS (Por que escolher) */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            text-align: left;
+        }
+
+        .feature-item {
+            background: rgba(0,0,0,0.3);
+            border-left: 4px solid var(--primary);
+            padding: 30px;
+            border-radius: 0 15px 15px 0;
+            transition: 0.3s;
+        }
+
+        .feature-item:hover { background: rgba(255,255,255,0.03); }
+
+        .feature-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-item h4 i { color: var(--primary); }
+        .feature-item p { color: var(--text-muted); font-size: 14px; }
+
+        /* CTA FINAL */
+        .cta-section {
+            text-align: center;
+            padding: 100px 5%;
+            background: linear-gradient(135deg, rgba(13,0,26,0.8), rgba(26,0,51,0.8));
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .cta-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+
+        /* FOOTER SIMPLES E ELEGANTE */
+        footer {
+            background: #05000a;
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* RESPONSIVO */
+        @media(max-width: 900px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 150px; }
+            .hero-buttons { justify-content: center; }
+            nav { display: none; }
+            .trust-bar { gap: 20px; flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">3D STUDIO</a>
+        <nav>
+            <a href="#inicio">Início</a>
+            <a href="#solucoes">Soluções</a>
+            <a href="#diferenciais">Diferenciais</a>
+            <a href="produtos.html" class="cart-btn"><i class="fas fa-box-open"></i> Ver Catálogo</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="hero-text">
+            <h1>Transformamos Ideias em Realidade.</h1>
+            <p>Especialistas em materializar sua imaginação. Criações exclusivas em impressão 3D para quem busca inovação, personalização sob medida e acabamento superior.</p>
+            
+            <div class="hero-buttons">
+                <a href="produtos.html" class="btn btn-primary"><i class="fas fa-layer-group"></i> Explorar Produtos</a>
+                <a href="https://wa.me/55419999521641" target="_blank" class="btn btn-secondary"><i class="fab fa-whatsapp"></i> Solicitar Orçamento</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="imagens/Gemini_Generated_Image_au0gqqau0gqqau0g.png" alt="Conceito de Impressão 3D">
+        </div>
+    </section>
+
+    <div class="trust-bar">
+
+        <div class="trust-item"><i class="fas fa-gem"></i> Qualidade Premium</div>
+        <div class="trust-item"><i class="fas fa-pen-nib"></i> Projetos Sob Demanda</div>
+    </div>
+
+    <section class="section" id="solucoes">
+        <div class="section-header">
+            <h2>O que você pode criar?</h2>
+            <p>Atendemos desde colecionadores exigentes até projetos de decoração exclusivos para o seu ambiente.</p>
+        </div>
+        
+        <div class="category-grid">
+            <div class="category-card">
+                <i class="fas fa-mask"></i>
+                <h3>Personagens</h3>
+                <p>Do digital para o físico. Modelagem e impressão de heróis, vilões e criaturas com riqueza de detalhes impressionante.</p>
+            </div>
+
+            <div class="category-card">
+                <i class="fas fa-couch"></i>
+                <h3>Decoração</h3>
+                <p>Design moderno e exclusivo. Vasos geométricos, luminárias e peças esculturais para transformar seus ambientes.</p>
+            </div>
+
+            <div class="category-card">
+                <i class="fas fa-gamepad"></i>
+                <h3>Geek & Gamer</h3>
+                <p>Eleve o nível do seu setup. Suportes personalizados para fones, controles e itens icônicos dos seus jogos favoritos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="diferenciais">
+        <div class="section-header">
+            <h2>Por que escolher a nossa impressão 3D?</h2>
+            <p>Combinamos tecnologia de ponta com um trabalho artesanal minucioso.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <h4><i class="fas fa-crosshairs"></i> Alta Precisão</h4>
+                <p>Trabalhamos com resoluções de até 8K para garantir que cada microdetalhe do modelo 3D seja preservado.</p>
+            </div>
+            <div class="feature-item">
+                <h4><i class="fas fa-shield-alt"></i> Material Premium</h4>
+                <p>Utilizamos resinas e filamentos de alta durabilidade, garantindo resistência estrutural às suas peças.</p>
+            </div>
+            <div class="feature-item">
+                <h4><i class="fas fa-paint-roller"></i> Acabamento Fino</h4>
+                <p>Limpeza, cura UV e lixamento rigorosos para entregar uma superfície pronta para pintura ou já finalizada.</p>
+            </div>
+            <div class="feature-item">
+                <h4><i class="fas fa-headset"></i> Suporte Dedicado</h4>
+                <p>Acompanhamento total do projeto, da ideia inicial ao envio da peça pronta para a sua casa.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Sua ideia merece sair do papel.</h2>
+        <p>Não encontrou o que procurava no catálogo? Nós modelamos e imprimimos sob medida para você, solicite seu orçamento.</p>
+        <a href="produtos.html" class="btn btn-primary"><i class="fas fa-rocket"></i> Ver Portfólio Completo</a>
+    </section>
+
+    <footer>
+        <div style="font-family: 'Orbitron', sans-serif; color: #38bdf8; font-size: 20px; margin-bottom: 10px;">3D STUDIO</div>
+        © 2026 3D Studio - Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

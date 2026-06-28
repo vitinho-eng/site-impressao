@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suportes Gamer 3D</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== BODY ===== */
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:#0a0f1f;
+    color:#f5f5f5;
+    overflow-x:hidden;
+}
+
+/* ===== LUZ SUAVE ===== */
+body::before{
+    content:"";
+    position:fixed;
+    width:200%;
+    height:200%;
+    background:linear-gradient(60deg, rgba(0,200,255,0.02), rgba(0,255,150,0.02));
+    animation: moveLight 20s linear infinite alternate;
+    z-index:0;
+}
+
+@keyframes moveLight{
+    from{ transform:translate(0,0); }
+    to{ transform:translate(-400px,-200px); }
+}
+
+/* ===== CANVAS PARTÍCULAS ===== */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:0;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+    position:relative;
+    z-index:2;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-start;
+    padding:40px;
+    gap:40px;
+}
+
+/* ===== CARD ===== */
+.produto-card{
+    width:100%;
+    max-width:400px;
+    display:flex;
+    flex-direction:column;
+    border-radius:15px;
+    background:rgba(10,20,40,0.9);
+    border:1px solid rgba(0,200,255,0.2);
+    box-shadow:0 0 15px rgba(0,200,255,0.2);
+    overflow:hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity:0;
+    transform: translateY(20px);
+}
+
+/* ===== Hover 3D e brilho ===== */
+.produto-card:hover{
+    transform:scale(1.03) rotateY(3deg);
+    box-shadow:0 0 40px rgba(0,255,200,0.3);
+}
+
+/* ===== GALERIA ===== */
+.galeria{
+    position:relative;
+    width:100%;
+    height:300px;
+    overflow:hidden;
+}
+
+.slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:0.4s ease;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* ===== BOTÕES SLIDER ===== */
+.produto-card .nav {
+    opacity: 0; /* invisível por padrão */
+    transition: opacity 0.3s;
+}
+
+.produto-card:hover .nav {
+    opacity: 1; /* aparece no hover */
+}
+
+.nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.4);
+    border:1px solid #00d4ff;
+    color:#00d4ff;
+    font-size:20px;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:3;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.nav:hover{
+    background:#00d4ff;
+    color:black;
+}
+
+.prev{ left:10px; }
+.next{ right:10px; }
+
+/* ===== INFO ===== */
+.info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:15px 20px 30px;
+    text-align:center;
+}
+
+.info h1{
+    font-family:'Orbitron', sans-serif;
+    font-size:24px;
+    color:#00eaff;
+    margin:10px 0;
+}
+
+.info p{
+    font-size:14px;
+    color:#cfd8dc;
+    margin:5px 0 15px;
+}
+
+.preco{
+    font-size:20px;
+    font-weight:700;
+    color:#00ffcc;
+    margin-bottom:15px;
+}
+
+/* ===== BOTÃO COMPRA ===== */
+.botao-comprar{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg, #00aaff, #00ffcc);
+    color:black;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    text-decoration:none;
+}
+
+.botao-comprar:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px #00eaff;
+}
+
+/* ===== BOTÃO TODOS PRODUTOS ===== */
+.botao-todos-produtos{
+    padding:12px 20px;
+    background:linear-gradient(90deg, #00aaff, #00ffcc);
+    color:black;
+    font-weight:600;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-block;
+    transition:0.3s;
+}
+
+.botao-todos-produtos:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px #00eaff;
+}
+
+/* ===== RESPONSIVO ===== */
+@media(max-width:900px){
+    .container{
+        flex-direction:column;
+        align-items:center;
+    }
+    .produto-card{
+        width:90%;
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container">
+
+<!-- ===== PRODUTO 1 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte12.webp" class="slide active" loading="lazy">
+        <img src="imagens/suporte2.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer 3D</h1>
+        <p>Para celular, controle e headset.</p>
+        <div class="preco">R$ 25,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%203D"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== PRODUTO 2 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte10.jpg" class="slide active" loading="lazy">
+        <img src="imagens/suporte4.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer XL</h1>
+        <p>Modelo maior, ideal para múltiplos dispositivos.</p>
+        <div class="preco">R$ 35,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%20XL"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== PRODUTO 3 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte5.webp" class="slide active" loading="lazy">
+        <img src="imagens/suporte6.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer Mini</h1>
+        <p>Compacto, ideal para mesas pequenas.</p>
+        <div class="preco">R$ 20,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%20Mini"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== PRODUTO 4 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte6.jpg" class="slide active" loading="lazy">
+        <img src="imagens/suporte8.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer Pro</h1>
+        <p>Alta resistência e design moderno.</p>
+        <div class="preco">R$ 45,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%20Pro"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== PRODUTO 5 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte7.jpeg" class="slide active" loading="lazy">
+        <img src="imagens/suporte10.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer Flex</h1>
+        <p>Ajustável e portátil para qualquer mesa.</p>
+        <div class="preco">R$ 28,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%20Flex"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== PRODUTO 6 ===== -->
+<div class="produto-card">
+    <div class="galeria">
+        <img src="imagens/suporte8.jpeg" class="slide active" loading="lazy">
+        <img src="imagens/suporte12.jpg" class="slide" loading="lazy">
+        <button class="nav prev">&#10094;</button>
+        <button class="nav next">&#10095;</button>
+    </div>
+    <div class="info">
+        <h1>Suporte Gamer Ultimate</h1>
+        <p>Design premium, resistência máxima.</p>
+        <div class="preco">R$ 50,00</div>
+        <a href="https://wa.me/5541991234567?text=Olá,%20quero%20comprar%20o%20Suporte%20Gamer%20Ultimate"
+           target="_blank"
+           class="botao-comprar">
+           Comprar via WhatsApp
+        </a>
+    </div>
+</div>
+
+<!-- ===== BOTÃO TODOS PRODUTOS ===== -->
+<div style="width:100%; text-align:center; margin-top:30px;">
+    <a href="produtos.html" class="botao-todos-produtos">← Todos os Produtos</a>
+</div>
+
+</div>
+
+<script>
+/* ===== ANIMAÇÃO DE ENTRADA DOS CARDS ===== */
+const cards = document.querySelectorAll('.produto-card');
+window.addEventListener('load', () => {
+    cards.forEach((card, i) => {
+        setTimeout(() => {
+            card.style.opacity = 1;
+            card.style.transform = 'translateY(0)';
+        }, i * 150); // atraso entre os cards
+    });
+});
+
+/* ===== SLIDER POR CARD ===== */
+document.querySelectorAll(".produto-card").forEach(card => {
+    let slides = card.querySelectorAll(".slide");
+    let current = 0;
+
+    const showSlide = index => {
+        slides.forEach(s => s.classList.remove("active"));
+        slides[index].classList.add("active");
+    };
+
+    card.querySelector(".next").addEventListener("click", () => {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+    });
+
+    card.querySelector(".prev").addEventListener("click", () => {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+    });
+});
+
+/* ===== PARTÍCULAS SUAVES ===== */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const symbols = ["△","○","✕","□","X","A","B"];
+
+let particles = [];
+
+for(let i=0;i<50;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        size:Math.random()*15+10,
+        speedY:Math.random()*0.5+0.2,
+        symbol:symbols[Math.floor(Math.random()*symbols.length)]
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+        ctx.fillStyle="rgba(0,255,200,0.15)";
+        ctx.font = p.size + "px Arial";
+        ctx.fillText(p.symbol, p.x, p.y);
+        p.y += p.speedY;
+        if(p.y > canvas.height){
+            p.y = -20;
+            p.x = Math.random()*canvas.width;
+        }
+    });
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
