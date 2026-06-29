@@ -16,7 +16,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── VÍDEO BG ─────────────────────── */
 .video-bg {
   position: fixed; inset: 0;
   width: 100%; height: 100%;
@@ -25,13 +24,12 @@ body {
   filter: brightness(.35);
 }
 
-/* ── HEADER ───────────────────────── */
+/* ── HEADER ─────────────────────── */
 .header {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 50;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px;
-  background: rgba(0,0,0,.45);
+  padding: 14px 24px;
+  background: rgba(0,0,0,.5);
   backdrop-filter: blur(8px);
 }
 
@@ -41,55 +39,47 @@ body {
   letter-spacing: 4px;
   color: #c8bfa4;
   font-family: 'Permanent Marker', cursive;
-  text-shadow: 1px 1px 3px black;
-  font-size: clamp(11px, 3vw, 16px);
+  font-size: clamp(11px, 2.5vw, 15px);
 }
 
 .voltar-global {
-  background: #c8bfa4;
-  color: black;
-  font-weight: bold;
-  padding: 8px 14px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: clamp(11px, 2.5vw, 14px);
-  white-space: nowrap;
-  transition: .3s;
+  background: #c8bfa4; color: black;
+  font-weight: bold; font-size: clamp(11px, 2vw, 14px);
+  padding: 8px 16px; border: none;
+  border-radius: 5px; cursor: pointer;
+  transition: .3s; white-space: nowrap;
   animation: neon 1.5s infinite alternate;
 }
 .voltar-global:hover { transform: scale(1.05); }
 
 @keyframes neon {
-  0%   { box-shadow: 0 0 5px #c8bfa4,  0 0 10px #c8bfa4;  opacity: .8; }
-  50%  { box-shadow: 0 0 15px #fffa7f, 0 0 25px #fffa7f; opacity: 1;  }
-  100% { box-shadow: 0 0 5px #c8bfa4,  0 0 10px #c8bfa4;  opacity: .8; }
+  0%   { box-shadow: 0 0 5px #c8bfa4,  0 0 10px #c8bfa4;  opacity:.8; }
+  50%  { box-shadow: 0 0 15px #fffa7f, 0 0 25px #fffa7f; opacity:1;  }
+  100% { box-shadow: 0 0 5px #c8bfa4,  0 0 10px #c8bfa4;  opacity:.8; }
 }
 
-/* ── WALL / GRID ──────────────────── */
+/* ── GRID DE PERSONAGENS ─────────── */
 .wall {
   min-height: 100vh;
-  padding: 100px 20px 60px;
+  padding: 100px 24px 60px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 32px;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
+  justify-items: center;
 }
 
-/* ── CARD PERSONAGEM ──────────────── */
 .personagem {
   width: 100%;
-  max-width: 220px;
+  max-width: 210px;
   cursor: pointer;
   text-align: center;
-  transition: transform .3s ease;
+  transition: transform .3s;
 }
-
 .personagem img {
   width: 100%;
   aspect-ratio: 3/4;
@@ -97,32 +87,32 @@ body {
   border-radius: 8px;
   box-shadow: 0 5px 25px rgba(0,0,0,.7);
   margin-bottom: 8px;
-  transition: transform .3s ease, filter .3s ease;
+  transition: transform .3s, filter .3s;
 }
 .personagem:hover img {
   transform: scale(1.07);
   filter: brightness(1.1) drop-shadow(0 0 8px rgba(200,191,164,.6));
 }
-
 .label {
-  font-size: clamp(13px, 2vw, 16px);
-  color: #f4f4f4;
   font-family: 'Permanent Marker', cursive;
+  font-size: clamp(13px, 1.8vw, 16px);
+  color: #f4f4f4;
   text-shadow: 1px 1px 2px black;
-  margin-bottom: 6px;
   transition: color .3s;
 }
 .personagem:hover .label { color: #ffdd57; }
 
-/* ── MODAL ────────────────────────── */
+/* ══════════════════════════════════
+   MODAL — layout DESKTOP (padrão)
+   imagem esquerda | info direita
+══════════════════════════════════ */
 .modal {
   display: none;
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.95);
-  backdrop-filter: blur(3px);
+  background: rgba(0,0,0,.92);
+  backdrop-filter: blur(4px);
   z-index: 100;
-  justify-content: center;
-  align-items: center;
+  align-items: center; justify-content: center;
   padding: 20px;
   overflow-y: auto;
 }
@@ -130,45 +120,61 @@ body {
 
 .produto {
   background: linear-gradient(135deg, #3d3d3d 0%, #2c2b27 50%, #1a1a1a 100%);
-  color: white;
-  padding: 28px 24px;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
   border: 2px solid #c8bfa4;
+  border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,.95), 0 0 40px rgba(200,191,164,.25);
   position: relative;
-  text-align: center;
   font-family: 'Permanent Marker', cursive;
-  animation: popup .45s cubic-bezier(.34,1.56,.64,1) forwards;
-  /* scroll interno se conteúdo for grande */
+  animation: popup .45s cubic-bezier(.34,1.56,.64,1) both;
+  width: 100%;
+  max-width: 820px;        /* desktop: wide */
   max-height: 90vh;
   overflow-y: auto;
+
+  /* ── DESKTOP: lado a lado ── */
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  padding: 36px 32px;
 }
 
-/* brilho interno */
 .produto::before {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(circle at 30% 30%, rgba(255,221,87,.08), transparent 55%);
-  border-radius: 12px;
-  pointer-events: none;
+  background: radial-gradient(circle at 25% 30%, rgba(255,221,87,.07), transparent 55%);
+  border-radius: 14px; pointer-events: none;
 }
 
-.produto img {
+/* coluna imagem */
+.col-img {
+  flex-shrink: 0;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.col-img img {
   width: 100%;
-  max-width: 240px;
-  border-radius: 6px;
-  margin-bottom: 12px;
+  border-radius: 8px;
   box-shadow: 0 5px 20px rgba(0,0,0,.5), 0 0 15px rgba(200,191,164,.2);
   transition: transform .3s, filter .3s;
+  object-fit: cover;
 }
-.produto img:hover { transform: scale(1.04); filter: brightness(1.1); }
+.col-img img:hover { transform: scale(1.04); filter: brightness(1.1); }
+
+/* coluna info */
+.col-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
 
 .produto h2 {
-  margin: 8px 0 12px;
   color: #ffdd57;
-  font-size: clamp(20px, 5vw, 26px);
+  font-size: clamp(20px, 3vw, 28px);
   letter-spacing: 2px;
   text-shadow: 2px 2px 4px rgba(0,0,0,.8);
 }
@@ -178,31 +184,22 @@ body {
   color: #d0d0d0;
   font-style: italic;
   line-height: 1.5;
-  margin: 8px 0 14px;
 }
 
-/* specs */
 .detalhes-container {
   background: rgba(0,0,0,.3);
   border: 1px solid #c8bfa4;
   border-radius: 6px;
   padding: 14px;
-  margin: 12px 0;
-  text-align: left;
 }
 .detalhes-titulo {
-  color: #ffdd57;
-  font-size: 13px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: #ffdd57; font-size: 13px;
+  text-transform: uppercase; letter-spacing: 1px;
   border-bottom: 1px solid #c8bfa4;
-  padding-bottom: 8px;
-  margin-bottom: 8px;
+  padding-bottom: 8px; margin-bottom: 8px;
 }
 .detalhe-item {
-  display: flex;
-  justify-content: space-between;
+  display: flex; justify-content: space-between;
   padding: 7px 0;
   border-bottom: 1px solid rgba(200,191,164,.18);
   font-size: 12px;
@@ -212,35 +209,24 @@ body {
 .detalhe-valor { color: #e8e8e8; text-align: right; }
 
 .produto-preco {
-  font-size: clamp(18px, 5vw, 22px);
+  font-size: clamp(20px, 3vw, 24px);
   color: #ffdd57;
   font-weight: bold;
-  margin: 14px 0;
 }
 
-/* botão wpp */
 .btn-wpp {
-  display: block;
-  width: 100%;
+  display: block; width: 100%;
   padding: 13px;
-  border: none;
   background: linear-gradient(135deg, #556b2f, #6b8e23);
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-  border-radius: 6px;
+  color: white; text-decoration: none; text-align: center;
+  border-radius: 6px; border: none; cursor: pointer;
   font-family: 'Permanent Marker', cursive;
-  font-size: 15px;
-  letter-spacing: 1px;
-  transition: .3s;
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  text-align: center;
+  font-size: 15px; letter-spacing: 1px;
+  transition: .3s; position: relative; overflow: hidden;
 }
 .btn-wpp::before {
   content: '';
-  position: absolute; top: 0; left: -100%;
+  position: absolute; top:0; left:-100%;
   width: 100%; height: 100%;
   background: rgba(255,255,255,.18);
   transition: left .3s;
@@ -251,43 +237,55 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,.6), 0 0 14px rgba(107,142,35,.5);
 }
 .btn-wpp:hover::before { left: 100%; }
-.btn-wpp:active { transform: translateY(0); }
 
-/* fechar */
 .close {
-  position: absolute; top: 10px; right: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  color: #c8bfa4;
+  position: absolute; top: 12px; right: 14px;
+  cursor: pointer; font-size: 22px; color: #c8bfa4;
   width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-  transition: .3s;
-  z-index: 1;
+  border-radius: 50%; transition: .3s; z-index: 1;
 }
-.close:hover {
-  background: rgba(200,191,164,.2);
-  color: #ffdd57;
-  transform: rotate(90deg);
-}
+.close:hover { background: rgba(200,191,164,.2); color: #ffdd57; transform: rotate(90deg); }
 
 @keyframes popup {
-  from { transform: scale(.82) rotateX(-8deg); opacity: 0; }
-  to   { transform: scale(1)   rotateX(0);     opacity: 1; }
+  from { transform: scale(.84) rotateX(-8deg); opacity:0; }
+  to   { transform: scale(1)   rotateX(0);     opacity:1; }
 }
 
-/* ── RESPONSIVO ───────────────────── */
-@media (max-width: 600px) {
-  .wall { padding: 90px 12px 50px; }
-  .grid { gap: 18px; grid-template-columns: repeat(2, 1fr); }
+/* ══════════════════════════════════
+   MOBILE — empilha verticalmente
+══════════════════════════════════ */
+@media (max-width: 620px) {
+
+  .wall { padding: 88px 12px 50px; }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
   .personagem { max-width: 100%; }
 
-  .produto { padding: 20px 16px; }
-  .detalhe-item { font-size: 11px; }
-}
+  /* modal ocupa quase tela toda */
+  .modal { padding: 12px; align-items: flex-end; }
 
-@media (max-width: 360px) {
-  .qz { display: none; } /* esconde label se tela for muito pequena */
+  .produto {
+    flex-direction: column;   /* empilha */
+    align-items: center;
+    text-align: center;
+    padding: 22px 16px 26px;
+    border-radius: 16px 16px 0 0;  /* só arredonda em cima — sobe da base */
+    max-width: 100%;
+    max-height: 88vh;
+    gap: 16px;
+  }
+
+  .col-img { width: 100%; max-width: 200px; }
+  .col-info { width: 100%; align-items: center; }
+
+  .detalhes-container { text-align: left; }
+  .detalhe-item { font-size: 11px; }
+
+  .btn-wpp { font-size: 14px; padding: 12px; }
 }
 
 </style>
@@ -298,132 +296,56 @@ body {
   <source src="imagens/thelast2.mp4" type="video/mp4">
 </video>
 
-<!-- HEADER FIXO -->
 <div class="header">
   <div class="qz">QUARANTINE ZONE</div>
-  <button class="voltar-global" onclick="window.location.href='produtos.html'">
-    ← Todos os produtos
-  </button>
+  <button class="voltar-global" onclick="window.location.href='produtos.html'">← Todos os produtos</button>
 </div>
 
-<!-- GRID -->
 <section class="wall">
   <div class="grid" id="grid"></div>
 </section>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="produto">
     <span class="close" onclick="fechar()">✕</span>
-    <div id="conteudo"></div>
+    <div class="col-img">
+      <img id="modal-img" src="" alt="">
+    </div>
+    <div class="col-info" id="conteudo"></div>
   </div>
 </div>
 
 <script>
 const produtos = [
-  {
-    id: "joel",
-    nome: "Joel",
-    identidade: "imagens/joel22.webp",
-    produto: "imagens/joel.png",
-    descricao: "Action Figure detalhada",
-    preco: "R$149",
-    dimensoes: "15cm", peso: "180g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  },
-  {
-    id: "ellie",
-    nome: "Ellie",
-    identidade: "imagens/ellie2.webp",
-    produto: "imagens/ellie.jpg",
-    descricao: "Action Figure detalhada",
-    preco: "R$149",
-    dimensoes: "14cm", peso: "165g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  },
-  {
-    id: "estalador",
-    nome: "Estalador",
-    identidade: "imagens/estala.webp",
-    produto: "imagens/estalador.webp",
-    descricao: "Infectado icônico",
-    preco: "R$149",
-    dimensoes: "13cm", peso: "175g",
-    material: "Resina Premium", acabamento: "Pintura Manual + Efeitos"
-  },
-  {
-    id: "tommy",
-    nome: "Tommy",
-    identidade: "imagens/tommy.jpg",
-    produto: "imagens/tommy_produto.webp",
-    descricao: "Ally sobrevivente",
-    preco: "R$129",
-    dimensoes: "14cm", peso: "160g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  },
-  {
-    id: "clicker",
-    nome: "Clicker",
-    identidade: "imagens/dina.webp",
-    produto: "imagens/clicker_produto.webp",
-    descricao: "Infectado avançado",
-    preco: "R$159",
-    dimensoes: "16cm", peso: "200g",
-    material: "Resina Premium", acabamento: "Pintura Manual + Textura"
-  },
-  {
-    id: "abby",
-    nome: "Abby",
-    identidade: "imagens/abby.webp",
-    produto: "imagens/abby_produto.webp",
-    descricao: "Action Figure detalhada",
-    preco: "R$159",
-    dimensoes: "15cm", peso: "185g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  },
-  {
-    id: "maria",
-    nome: "Maria",
-    identidade: "imagens/mariat.webp",
-    produto: "imagens/abby_produto.webp",
-    descricao: "Action Figure detalhada",
-    preco: "R$159",
-    dimensoes: "15cm", peso: "185g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  },
-  {
-    id: "tess",
-    nome: "Tess",
-    identidade: "imagens/tess.webp",
-    produto: "imagens/abby_produto.webp",
-    descricao: "Action Figure detalhada",
-    preco: "R$159",
-    dimensoes: "15cm", peso: "185g",
-    material: "Resina Premium", acabamento: "Pintura Manual"
-  }
+  { id:"joel",      nome:"Joel",      identidade:"imagens/joel22.webp",  produto:"imagens/joel.png",           descricao:"Action Figure detalhada",   preco:"R$149", dimensoes:"15cm", peso:"180g", material:"Resina Premium", acabamento:"Pintura Manual" },
+  { id:"ellie",     nome:"Ellie",     identidade:"imagens/ellie2.webp",  produto:"imagens/ellie.jpg",          descricao:"Action Figure detalhada",   preco:"R$149", dimensoes:"14cm", peso:"165g", material:"Resina Premium", acabamento:"Pintura Manual" },
+  { id:"estalador", nome:"Estalador", identidade:"imagens/estala.webp",  produto:"imagens/estalador.webp",     descricao:"Infectado icônico",         preco:"R$149", dimensoes:"13cm", peso:"175g", material:"Resina Premium", acabamento:"Pintura Manual + Efeitos" },
+  { id:"tommy",     nome:"Tommy",     identidade:"imagens/tommy.jpg",    produto:"imagens/tommy_produto.webp", descricao:"Ally sobrevivente",         preco:"R$129", dimensoes:"14cm", peso:"160g", material:"Resina Premium", acabamento:"Pintura Manual" },
+  { id:"clicker",   nome:"Clicker",   identidade:"imagens/dina.webp",    produto:"imagens/clicker_produto.webp",descricao:"Infectado avançado",       preco:"R$159", dimensoes:"16cm", peso:"200g", material:"Resina Premium", acabamento:"Pintura Manual + Textura" },
+  { id:"abby",      nome:"Abby",      identidade:"imagens/abby.webp",    produto:"imagens/abby_produto.webp",  descricao:"Action Figure detalhada",   preco:"R$159", dimensoes:"15cm", peso:"185g", material:"Resina Premium", acabamento:"Pintura Manual" },
+  { id:"maria",     nome:"Maria",     identidade:"imagens/mariat.webp",  produto:"imagens/abby_produto.webp",  descricao:"Action Figure detalhada",   preco:"R$159", dimensoes:"15cm", peso:"185g", material:"Resina Premium", acabamento:"Pintura Manual" },
+  { id:"tess",      nome:"Tess",      identidade:"imagens/tess.webp",    produto:"imagens/abby_produto.webp",  descricao:"Action Figure detalhada",   preco:"R$159", dimensoes:"15cm", peso:"185g", material:"Resina Premium", acabamento:"Pintura Manual" }
 ];
 
-/* ── RENDERIZA GRID ──────────────────── */
+/* renderiza grid */
 const grid = document.getElementById('grid');
 produtos.forEach(p => {
   const div = document.createElement('div');
   div.className = 'personagem';
-  div.innerHTML = `
-    <img src="${p.identidade}" alt="${p.nome}" loading="lazy">
-    <div class="label">${p.nome.toUpperCase()}</div>
-  `;
+  div.innerHTML = `<img src="${p.identidade}" alt="${p.nome}" loading="lazy"><div class="label">${p.nome.toUpperCase()}</div>`;
   div.onclick = () => abrir(p.id);
   grid.appendChild(div);
 });
 
-/* ── MODAL ───────────────────────────── */
 function abrir(id) {
   const p = produtos.find(x => x.id === id);
   if (!p) return;
 
+  document.getElementById('modal-img').src = p.produto;
+  document.getElementById('modal-img').alt = p.nome;
+
   document.getElementById('conteudo').innerHTML = `
     <h2>${p.nome}</h2>
-    <img src="${p.produto}" alt="${p.nome}">
     <p class="produto-descricao">${p.descricao}</p>
     <div class="detalhes-container">
       <div class="detalhes-titulo">📋 Especificações</div>
@@ -435,26 +357,15 @@ function abrir(id) {
     <div class="produto-preco">${p.preco}</div>
     <a class="btn-wpp"
        href="https://wa.me/5511999999999?text=Quero+comprar+${encodeURIComponent(p.nome)}+-+${p.dimensoes}+-+${p.preco}"
-       target="_blank">
-      🌿 Levar para o abrigo
-    </a>
+       target="_blank">🌿 Levar para o abrigo</a>
   `;
 
   document.getElementById('modal').classList.add('aberto');
 }
 
-function fechar() {
-  document.getElementById('modal').classList.remove('aberto');
-}
-
-/* fecha ao clicar fora do card */
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) fechar();
-});
-
-/* fecha com ESC */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') fechar(); });
+function fechar() { document.getElementById('modal').classList.remove('aberto'); }
+document.getElementById('modal').addEventListener('click', e => { if(e.target === e.currentTarget) fechar(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') fechar(); });
 </script>
-
 </body>
 </html>
