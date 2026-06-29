@@ -197,14 +197,27 @@ canvas{
     box-shadow:0 0 15px #00eaff;
 }
 
-/* ===== RESPONSIVO ===== */
-@media(max-width:900px){
+/* ===== RESPONSIVIDADE (CELULARES E TABLETS) ===== */
+@media(max-width:768px){
     .container{
-        flex-direction:column;
-        align-items:center;
+        padding: 20px 15px; /* Reduz bordas para dar mais espaço aos cards */
+        gap: 30px; /* Reduz espaço entre os cards */
     }
+    
     .produto-card{
-        width:90%;
+        width: 100%; 
+    }
+    
+    /* Garante que os botões do slider fiquem sempre visíveis, já que não existe mouse para fazer "hover" em telas touch */
+    .produto-card .nav {
+        opacity: 1;
+        background: rgba(0,0,0,0.6); 
+    }
+    
+    /* Remove animações de escala e rotação complexas no touch para não ficar travando ou preso após o clique */
+    .produto-card:hover{
+        transform: translateY(0); 
+        box-shadow: 0 0 15px rgba(0,200,255,0.2); 
     }
 }
 </style>
@@ -215,7 +228,6 @@ canvas{
 
 <div class="container">
 
-<!-- ===== PRODUTO 1 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte12.webp" class="slide active" loading="lazy">
@@ -235,7 +247,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== PRODUTO 2 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte10.jpg" class="slide active" loading="lazy">
@@ -255,7 +266,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== PRODUTO 3 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte5.webp" class="slide active" loading="lazy">
@@ -275,7 +285,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== PRODUTO 4 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte6.jpg" class="slide active" loading="lazy">
@@ -295,7 +304,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== PRODUTO 5 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte7.jpeg" class="slide active" loading="lazy">
@@ -315,7 +323,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== PRODUTO 6 ===== -->
 <div class="produto-card">
     <div class="galeria">
         <img src="imagens/suporte8.jpeg" class="slide active" loading="lazy">
@@ -335,7 +342,6 @@ canvas{
     </div>
 </div>
 
-<!-- ===== BOTÃO TODOS PRODUTOS ===== -->
 <div style="width:100%; text-align:center; margin-top:30px;">
     <a href="produtos.html" class="botao-todos-produtos">← Todos os Produtos</a>
 </div>
@@ -379,8 +385,13 @@ document.querySelectorAll(".produto-card").forEach(card => {
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Função para ajustar o tamanho do canvas (necessário para se o usuário girar a tela do celular)
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Chamada inicial
 
 const symbols = ["△","○","✕","□","X","A","B"];
 
