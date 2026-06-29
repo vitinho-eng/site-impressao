@@ -91,11 +91,41 @@
         body:has(.side-dark:hover) .bg-dark-side { opacity: 0.5; }
 
         /* ===== ESTRUTURA PRINCIPAL ===== */
-        .main-wrapper {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
+      .main-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    flex-wrap: wrap; /* ADICIONADO: permite que o conteúdo da direita vá para baixo */
+}
+
+/* Esconde o sabre central em telas pequenas, pois ele não fará sentido em layout de coluna */
+@media (max-width: 768px) {
+    .central-saber {
+        display: none;
+    }
+    
+    .main-wrapper {
+        flex-direction: column; /* Coloca um lado embaixo do outro */
+    }
+
+    .side-content {
+        padding: 40px 15px; /* Reduz padding lateral para ganhar espaço */
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(1, 1fr); /* Em mobile, exibe 1 coluna de cards */
+        max-width: 100%;
+    }
+
+    .btn-central-back {
+        top: 20px;
+        padding: 8px 15px;
+        font-size: 9px;
+    }
+}
+
+
+
 
         .central-saber {
             position: absolute;
