@@ -16,7 +16,7 @@
             font-family: 'Montserrat', sans-serif;
             background: #000;
             color: white;
-            min-height: 500vh; /* Espaço para scroll */
+            min-height: 500vh; /* Espaço para scroll no PC */
             overflow-x: hidden;
         }
 
@@ -36,6 +36,7 @@
         .modal-content {
             text-align: center;
             max-width: 450px;
+            width: 90%;
             padding: 40px;
             border: 1px solid #330000;
             background: rgba(10, 0, 0, 0.98);
@@ -175,6 +176,57 @@
         @keyframes blinkEyes { 0%, 45%, 55%, 100% { opacity: 0; } 50% { opacity: 0.5; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes flickerLight { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } 52% { opacity: 1; } 54% { opacity: 0.3; } 56% { opacity: 1; } }
+
+        /* =========================================
+           RESPONSIVIDADE (CELULARES E TABLETS)
+           ========================================= */
+        @media (max-width: 768px) {
+            body {
+                min-height: auto; /* Remove os espaços em branco gigantes criados pelo JS no celular */
+            }
+
+            .titulo {
+                padding-top: 100px;
+                font-size: 35px;
+            }
+
+            .botao-voltar {
+                top: 15px; left: 15px;
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+
+            /* Container dos cards vira uma coluna centralizada */
+            #galeria {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 50px; /* Espaço entre cada card */
+                padding: 50px 0 100px 0;
+            }
+
+            .personagem {
+                /* !important ignora os cálculos do JavaScript no mobile */
+                position: relative !important; 
+                top: auto !important; 
+                left: auto !important; 
+                width: 85%; /* Se ajusta a telas menores */
+                max-width: 320px;
+            }
+
+            .personagem:hover {
+                transform: scale(1.03) !important;
+            }
+
+            /* Esconde os olhos para não bagunçarem a rolagem no mobile */
+            .olhos-container {
+                display: none !important; 
+            }
+
+            .modal-content h2 {
+                font-size: 26px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -188,7 +240,7 @@
         </div>
     </div>
 
-    <video id="video-nevoa" autoplay muted loop>
+    <video id="video-nevoa" autoplay muted loop playsinline>
         <source src="imagens/nevoa.mp4" type="video/mp4">
     </video>
     <div id="overlay"></div>
