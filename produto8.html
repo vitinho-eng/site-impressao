@@ -13,7 +13,6 @@
 <style>
 
 /* RESET */
-
 *{
 margin:0;
 padding:0;
@@ -28,7 +27,6 @@ overflow-x:hidden;
 }
 
 /* VIDEO FUNDO */
-
 .video-bg{
 position:fixed;
 top:0;
@@ -46,7 +44,6 @@ filter:brightness(40%);
 }
 
 /* PARTICULAS MAGICAS */
-
 .particulas{
 position:fixed;
 width:100%;
@@ -65,43 +62,19 @@ animation:magia 10s linear infinite;
 }
 
 @keyframes magia{
-
-0%{
-transform:translateY(100vh);
-opacity:0;
-}
-
-50%{
-opacity:1;
-}
-
-100%{
-transform:translateY(-10vh);
-opacity:0;
-}
-
+0%{ transform:translateY(100vh); opacity:0; }
+50%{ opacity:1; }
+100%{ transform:translateY(-10vh); opacity:0; }
 }
 
 /* ANIMAÇÃO DAS CAIXAS */
-
 @keyframes flutuar{
-
-0%{
-transform:translateY(0px);
-}
-
-50%{
-transform:translateY(-20px);
-}
-
-100%{
-transform:translateY(0px);
-}
-
+0%{ transform:translateY(0px); }
+50%{ transform:translateY(-20px); }
+100%{ transform:translateY(0px); }
 }
 
 /* BOTAO VOLTAR */
-
 .voltar-container{
 display:flex;
 justify-content:center;
@@ -109,117 +82,69 @@ margin-top:30px;
 }
 
 .botao-voltar{
-
 padding:12px 26px;
-
 border:2px solid #ffd700;
-
 color:#ffd700;
-
 text-decoration:none;
-
 border-radius:6px;
-
 transition:0.3s;
-
 }
 
 .botao-voltar:hover{
-
 background:#ffd700;
 color:black;
-
 box-shadow:0 0 12px #ffd700;
-
 }
 
 /* TITULO */
-
 .titulo{
-
 text-align:center;
-
 font-size:55px;
-
 margin-top:30px;
-
 color:#f5d76e;
-
 text-shadow:0 0 10px black;
-
 }
 
 /* LINHA MAGICA */
-
 .linha-magica{
-
 width:200px;
 height:2px;
-
 background:linear-gradient(to right, transparent, #ffd700, transparent);
-
 margin:20px auto 40px auto;
-
 box-shadow:0 0 10px #ffd700;
-
 }
 
-/* PRODUTOS MAIS ESPALHADOS */
-
+/* PRODUTOS */
 .produtos{
-
 display:grid;
-
 grid-template-columns:repeat(auto-fit,minmax(260px,280px));
-
 justify-content:center;
-
-gap:80px;   /* antes era 40px */
-
-padding:80px;  /* antes era 60px */
-
-max-width:1400px; /* aumentei espaço */
-
+gap:80px;
+padding:80px;
+max-width:1400px;
 margin:auto;
-
 }
 
 /* CARD */
-
 .card{
-
-width:280px;
-
+width:100%;
+max-width:280px;
+margin: 0 auto;
 min-height:420px;
-
 background:rgba(10,10,15,0.75);
-
 border:2px solid #a67c00;
-
 border-radius:12px;
-
 padding:20px;
-
 text-align:center;
-
 backdrop-filter:blur(6px);
-
 transition:0.3s;
-
 display:flex;
-
 flex-direction:column;
-
 justify-content:space-between;
-
-/* ANIMAÇÃO MAIS RÁPIDA */
-
 animation:flutuar 3.5s ease-in-out infinite;
-
 }
 
 /* DELAY DIFERENTE */
-
 .card:nth-child(2){
 animation-delay:1s;
 }
@@ -229,100 +154,84 @@ animation-delay:2s;
 }
 
 .card:hover{
-
 transform:translateY(-8px) scale(1.03);
-
 box-shadow:0 0 20px rgba(255,215,0,0.5);
-
 }
 
 /* IMAGEM */
-
 .card img{
-
 width:100%;
 height:180px;
-
 object-fit:cover;
-
 border-radius:8px;
-
 margin-bottom:15px;
-
 }
 
 /* TITULO PRODUTO */
-
 .card h2{
-
 color:#ffd700;
-
 margin-bottom:10px;
-
 }
 
 /* DESCRIÇÕES */
-
 .personagem-desc{
-
 font-size:14px;
-
 margin-bottom:10px;
-
 color:#ccc;
-
 }
 
 .produto-desc{
-
 font-size:13px;
-
 margin-bottom:15px;
-
 color:#aaa;
-
 }
 
 /* PREÇO */
-
 .preco{
-
 font-size:22px;
-
 color:#ffd700;
-
 margin-bottom:15px;
-
 }
 
 /* BOTAO COMPRAR */
-
 .botao{
-
 display:inline-block;
-
 padding:10px 20px;
-
 border:2px solid #bfab2c;
-
 color:#ffd67d;
-
 text-decoration:none;
-
 border-radius:6px;
-
 transition:0.3s;
-
 }
 
 .botao:hover{
-
 background:#bf932c;
-
 color:white;
-
 box-shadow:0 0 15px #ffe97d;
+}
 
+/* =========================================
+   RESPONSIVIDADE PARA CELULARES E TABLETS
+   ========================================= */
+@media (max-width: 768px) {
+    .titulo {
+        font-size: 35px; /* Reduz o tamanho do título */
+        padding: 0 15px; /* Evita que o texto encoste nas bordas */
+    }
+
+    .produtos {
+        gap: 40px; /* Reduz o espaço entre os itens */
+        padding: 30px 15px; /* Reduz as bordas laterais gigantes no celular */
+    }
+
+    .voltar-container {
+        padding: 0 15px;
+    }
+
+    .botao-voltar {
+        font-size: 14px; /* Diminui levemente a fonte do botão voltar */
+        text-align: center;
+    }
 }
 
 </style>
@@ -331,28 +240,20 @@ box-shadow:0 0 15px #ffe97d;
 
 <body>
 
-<!-- VIDEO -->
-
 <div class="video-bg">
 <video autoplay muted loop>
 <source src="imagens/harry22.mp4" type="video/mp4">
 </video>
 </div>
 
-<!-- PARTICULAS -->
-
 <div class="particulas">
-
 <span style="left:10%;animation-delay:1s"></span>
 <span style="left:25%;animation-delay:3s"></span>
 <span style="left:40%;animation-delay:5s"></span>
 <span style="left:55%;animation-delay:2s"></span>
 <span style="left:70%;animation-delay:4s"></span>
 <span style="left:85%;animation-delay:6s"></span>
-
 </div>
-
-<!-- VOLTAR -->
 
 <div class="voltar-container">
 <a href="produtos.html" class="botao-voltar">← Voltar para todos os produtos</a>
@@ -365,88 +266,63 @@ box-shadow:0 0 15px #ffe97d;
 <section class="produtos">
 
 <div class="card">
-
 <h2>Varinha do Harry</h2>
-
-<img src="imagens/albus2.png">
-
-
-
-
-
+<img src="imagens/albus2.png" alt="Varinha do Harry">
 
 <div class="personagem-desc">
 Varinha utilizada por Harry Potter.
 </div>
-
 <div class="produto-desc">
 Impressão 3D com pintura artesanal.
 </div>
-
 <div class="preco">
 R$129
 </div>
-
 <a class="botao" 
 href="https://wa.me/5541999999999?text=Olá%20tenho%20interesse%20na%20Varinha%20do%20Harry" 
 target="_blank">
 Comprar
 </a>
-
 </div>
 
-
 <div class="card">
-
 <h2>Vira-Tempo</h2>
-
-<img src="imagens/harryp.jpg">
+<img src="imagens/harryp.jpg" alt="Vira-Tempo">
 
 <div class="personagem-desc">
 Artefato usado por Hermione para manipular o tempo.
 </div>
-
 <div class="produto-desc">
 Peça colecionável com acabamento dourado.
 </div>
-
 <div class="preco">
 R$159
 </div>
-
 <a class="botao" 
 href="https://wa.me/5541999999999?text=Olá%20tenho%20interesse%20no%20Vira-Tempo" 
 target="_blank">
 Comprar
 </a>
-
 </div>
 
-
 <div class="card">
-
 <h2>Óculos do Harry</h2>
-
-<img src="imagens/coruja.webp">
+<img src="imagens/coruja.webp" alt="Óculos do Harry">
 
 <div class="personagem-desc">
 Os famosos óculos redondos do jovem bruxo.
 </div>
-
 <div class="produto-desc">
 Item colecionável inspirado em Hogwarts.
 </div>
-
 <div class="preco">
 R$99
 </div>
-
 <a class="botao" 
 href="https://wa.me/5541999999999?text=Olá%20tenho%20interesse%20nos%20Óculos%20do%20Harry" 
 target="_blank">
 Comprar
 </a>
-
 </div>
 
 </section>
