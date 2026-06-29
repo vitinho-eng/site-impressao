@@ -178,15 +178,15 @@
         @keyframes flickerLight { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } 52% { opacity: 1; } 54% { opacity: 0.3; } 56% { opacity: 1; } }
 
         /* =========================================
-           RESPONSIVIDADE (CELULARES E TABLETS)
+           RESPONSIVIDADE APRIMORADA PARA CELULARES
            ========================================= */
         @media (max-width: 768px) {
             body {
-                min-height: auto; /* Remove os espaços em branco gigantes criados pelo JS no celular */
+                min-height: auto;
             }
 
             .titulo {
-                padding-top: 100px;
+                padding-top: 120px;
                 font-size: 35px;
             }
 
@@ -196,29 +196,39 @@
                 font-size: 12px;
             }
 
-            /* Container dos cards vira uma coluna centralizada */
+            /* Espaçamento gigante para recuperar a imersão de procurar no escuro */
             #galeria {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 50px; /* Espaço entre cada card */
-                padding: 50px 0 100px 0;
+                gap: 60vh; /* 60% da altura da tela de distância entre cada card */
+                padding: 30vh 0 40vh 0; /* Espaço vazio antes do primeiro e depois do último */
             }
 
             .personagem {
-                /* !important ignora os cálculos do JavaScript no mobile */
                 position: relative !important; 
                 top: auto !important; 
                 left: auto !important; 
-                width: 85%; /* Se ajusta a telas menores */
-                max-width: 320px;
+                width: 85%; 
+                max-width: 300px;
             }
 
-            .personagem:hover {
-                transform: scale(1.03) !important;
+            /* Cria um zigue-zague leve no celular para não ficar perfeitamente reto */
+            .personagem:nth-child(odd) {
+                transform: translateX(-5%);
+            }
+            .personagem:nth-child(even) {
+                transform: translateX(5%);
             }
 
-            /* Esconde os olhos para não bagunçarem a rolagem no mobile */
+            /* Efeitos de hover ajustados para funcionar com o zigue-zague */
+            .personagem:nth-child(odd):hover {
+                transform: translateX(-5%) scale(1.03) !important;
+            }
+            .personagem:nth-child(even):hover {
+                transform: translateX(5%) scale(1.03) !important;
+            }
+
             .olhos-container {
                 display: none !important; 
             }
@@ -304,27 +314,25 @@
             lanterna.style.background = `radial-gradient(circle ${250 + flicker}px at ${e.clientX}px ${e.clientY}px, transparent 0%, rgba(0,0,0,0.98) 80%)`;
         });
 
-        // NOVA LÓGICA DE POSICIONAMENTO IMPREVISÍVEL
+        // LÓGICA DE POSICIONAMENTO PARA TELAS GRANDES (PC)
         const passoVertical = 850;
         let ultimaColuna = -1;
 
         cards.forEach((card, i) => {
             let top = 600 + (i * passoVertical);
             
-            // Sorteia uma das 3 posições (0=esquerda, 1=centro, 2=direita)
             let novaColuna;
             do {
                 novaColuna = Math.floor(Math.random() * 3);
-            } while (novaColuna === ultimaColuna); // Garante que não repete o mesmo lado seguidamente
+            } while (novaColuna === ultimaColuna); 
             
             ultimaColuna = novaColuna;
 
             let leftBase;
-            if (novaColuna === 0) leftBase = 10;      // Esquerda
-            else if (novaColuna === 1) leftBase = 40; // Centro
-            else leftBase = 70;                      // Direita
+            if (novaColuna === 0) leftBase = 10;      
+            else if (novaColuna === 1) leftBase = 40; 
+            else leftBase = 70;                      
 
-            // Adiciona uma pequena variação aleatória extra (+/- 5%)
             let variacao = (Math.random() * 10) - 5;
             card.style.left = (leftBase + variacao) + "%";
             card.style.top = top + "px";
