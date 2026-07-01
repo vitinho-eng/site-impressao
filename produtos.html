@@ -4,186 +4,268 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produtos - Loja 3D</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 
-*, *::before, *::after {
-  margin: 0; padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
 
 body {
-  background: linear-gradient(120deg, #020617, #0f172a, #020617, #1e1b4b);
-  background-size: 300% 300%;
-  animation: bgMove 15s ease infinite;
-  color: white;
-  min-height: 100vh;
+  background: linear-gradient(120deg,#020617,#0f172a,#020617,#1e1b4b);
+  background-size:300% 300%;
+  animation:bgMove 15s ease infinite;
+  color:white; min-height:100vh;
 }
-
 @keyframes bgMove {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%  {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 
 /* ── HEADER ─────────────────────── */
 header {
-  text-align: center;
-  padding: 44px 20px 36px;
-  background: rgba(0,0,0,.3);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  text-align:center; padding:44px 20px 36px;
+  background:rgba(0,0,0,.3); backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
-
 header h1 {
-  font-size: clamp(22px, 5vw, 36px);
-  font-weight: 900;
-  background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size:clamp(22px,5vw,36px); font-weight:900;
+  background:linear-gradient(90deg,#38bdf8,#818cf8,#c084fc);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+header a {
+  display:inline-block; margin-top:14px; color:#38bdf8;
+  text-decoration:none; font-weight:600; font-size:14px;
+  padding:9px 20px; border-radius:10px; transition:.3s;
+}
+header a:hover { background:rgba(56,189,248,.15); transform:translateY(-2px); }
+
+/* ══════════════════════════════════════
+   BANNER COPA DO MUNDO 2026
+══════════════════════════════════════ */
+.copa-banner {
+  position: relative;
+  max-width: 1400px;
+  margin: 40px auto 0;
+  border-radius: 20px;
+  overflow: hidden;
+  /* gradiente inspirado na identidade FIFA 2026 */
+  background: linear-gradient(135deg,
+    #7c00c8 0%, #c00060 22%, #ff4500 44%,
+    #ff8c00 60%, #00a86b 78%, #0055cc 100%);
+  padding: 2px; /* borda colorida */
 }
 
-header a {
-  display: inline-block;
-  margin-top: 14px;
-  color: #38bdf8;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 9px 20px;
-  border-radius: 10px;
-  transition: .3s;
+.copa-inner {
+  background: #0a0a14;
+  border-radius: 18px;
+  padding: 40px 28px 34px;
+  position: relative;
+  overflow: hidden;
 }
-header a:hover {
-  background: rgba(56,189,248,.15);
+
+/* faixa colorida animada no topo */
+.copa-inner::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg,
+    #c00060, #ff4500, #ff8c00, #ffd700, #00a86b, #0055cc, #7c00c8);
+  background-size: 200%;
+  animation: stripMove 3s linear infinite;
+}
+@keyframes stripMove { to { background-position: 200% 0; } }
+
+#copa-canvas {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  pointer-events:none; z-index:0;
+}
+
+/* título */
+.copa-title {
+  position: relative; z-index: 2;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.copa-title h2 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(30px, 5vw, 54px);
+  letter-spacing: 6px;
+  /* gradiente multicolor FIFA 2026 */
+  background: linear-gradient(90deg, #ff4500, #ff8c00, #ffd700, #00c853, #2979ff, #aa00ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200%;
+  animation: titleShift 4s ease infinite alternate;
+}
+@keyframes titleShift { from{background-position:0%} to{background-position:100%} }
+.copa-title p {
+  color: rgba(255,255,255,.45);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 4px; text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* ── ESCUDOS EM PERSPECTIVA ─────── */
+.escudos-wrap {
+  position: relative; z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  padding: 8px 0 16px;
+}
+
+.escudo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+}
+
+/* posições */
+.escudo-item.centro { transform: scale(1);       z-index:10; margin:0 4px; }
+.escudo-item.near   { transform: rotateY(20deg) translateX(-6px)  scale(.75); z-index:8; opacity:.85; }
+.escudo-item.near.right { transform: rotateY(-20deg) translateX(6px) scale(.75); }
+.escudo-item.mid    { transform: rotateY(32deg) translateX(-12px) scale(.60); z-index:6; opacity:.65; }
+.escudo-item.mid.right  { transform: rotateY(-32deg) translateX(12px) scale(.60); }
+.escudo-item.far    { transform: rotateY(42deg) translateX(-18px) scale(.48); z-index:4; opacity:.45; }
+.escudo-item.far.right  { transform: rotateY(-42deg) translateX(18px) scale(.48); }
+
+/* hover — avança e aplica cor da seleção */
+.escudo-item:hover {
+  transform: translateZ(40px) scale(1.1) !important;
+  opacity: 1 !important;
+  z-index: 20 !important;
+}
+
+/* escudo wrapper — sem efeitos fixos, só no hover */
+.escudo-img {
+  position: relative;
+  border-radius: 50%;
+  transition: box-shadow .3s;
+}
+.escudo-img img {
+  display: block;
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(255,255,255,.04);
+  border: 2px solid rgba(255,255,255,.12);
+  transition: border-color .3s;
+}
+
+/* tamanhos */
+.centro .escudo-img img { width:128px; height:128px; }
+.near   .escudo-img img { width: 96px; height: 96px; }
+.mid    .escudo-img img { width: 78px; height: 78px; }
+.far    .escudo-img img { width: 64px; height: 64px; }
+
+/* glow de cor por seleção ao hover */
+.escudo-item[data-color]:hover .escudo-img {
+  box-shadow: 0 0 0 3px var(--sel-color),
+              0 0 28px var(--sel-color),
+              0 0 56px color-mix(in srgb, var(--sel-color) 40%, transparent);
+}
+.escudo-item[data-color]:hover .escudo-img img {
+  border-color: var(--sel-color);
+}
+
+/* nome */
+.escudo-nome {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  text-align: center; white-space: nowrap;
+}
+.centro .escudo-nome {
+  color: #fff; font-size: 12px;
+}
+
+/* CTA */
+.copa-cta {
+  position: relative; z-index: 2;
+  text-align: center; margin-top: 24px;
+}
+.copa-cta a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 26px;
+  background: linear-gradient(90deg,#ff4500,#ff8c00,#ffd700);
+  background-size: 200%;
+  color: #000; font-weight: 800; font-size: 12px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; border-radius: 6px;
+  transition: .3s;
+  box-shadow: 0 0 18px rgba(255,140,0,.35);
+}
+.copa-cta a:hover {
+  background-position: right;
+  box-shadow: 0 0 32px rgba(255,140,0,.6);
   transform: translateY(-2px);
 }
 
 /* ── GRID ───────────────────────── */
+.section-label {
+  max-width:1400px; margin:40px auto 16px;
+  padding:0 20px;
+  font-size:12px; font-weight:700;
+  color:rgba(255,255,255,.35);
+  letter-spacing:2px; text-transform:uppercase;
+}
+
 .products {
-  width: 100%;
-  max-width: 1400px;
-  margin: 40px auto 60px;
-  padding: 0 20px;
-  display: grid;
-  /* desktop grande: 6 col */
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
+  width:100%; max-width:1400px;
+  margin:0 auto 60px; padding:0 20px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:20px;
 }
 
-/* ── CARD ───────────────────────── */
 .card {
-  width: 100%;              /* sempre ocupa o espaço da coluna */
-  background: rgba(10,20,50,.65);
-  border-radius: 14px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(0,150,255,.28);
-  box-shadow: 0 0 14px rgba(0,150,255,.12);
-  transition: transform .3s, box-shadow .3s;
+  width:100%; background:rgba(10,20,50,.65);
+  border-radius:14px; padding:14px;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(0,150,255,.28);
+  box-shadow:0 0 14px rgba(0,150,255,.12);
+  transition:transform .3s, box-shadow .3s;
 }
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 24px rgba(0,150,255,.3);
-}
-
-.card img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  transition: transform .4s;
-}
-.card:hover img { transform: scale(1.05); }
-
-.card h3 {
-  font-size: clamp(12px, 1.4vw, 16px);
-  font-weight: 700;
-  margin-bottom: 5px;
-  line-height: 1.3;
-}
-
-.card .price {
-  color: #38bdf8;
-  font-weight: 600;
-  font-size: clamp(11px, 1.2vw, 14px);
-  margin-bottom: 12px;
-}
-
-.card a {
-  display: block;
-  width: 100%;
-  text-decoration: none;
-  margin-top: auto;
-}
-
-/* ── BOTÃO ──────────────────────── */
+.card:hover { transform:translateY(-5px); box-shadow:0 0 24px rgba(0,150,255,.3); }
+.card img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; margin-bottom:12px; transition:transform .4s; }
+.card:hover img { transform:scale(1.05); }
+.card h3 { font-size:clamp(12px,1.4vw,16px); font-weight:700; margin-bottom:5px; line-height:1.3; }
+.card .price { color:#38bdf8; font-weight:600; font-size:clamp(11px,1.2vw,14px); margin-bottom:12px; }
+.card a { display:block; width:100%; text-decoration:none; margin-top:auto; }
 .card button {
-  width: 100%;
-  padding: clamp(9px, 1.5vw, 13px);
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #38bdf8, #6366f1, #c084fc, #38bdf8);
-  background-size: 300%;
-  color: white;
-  font-weight: 700;
-  font-size: clamp(11px, 1.2vw, 13px);
-  cursor: pointer;
-  transition: .35s;
-  position: relative;
-  overflow: hidden;
+  width:100%; padding:clamp(9px,1.5vw,13px); border:none; border-radius:10px;
+  background:linear-gradient(90deg,#38bdf8,#6366f1,#c084fc,#38bdf8);
+  background-size:300%; color:white; font-weight:700; font-size:clamp(11px,1.2vw,13px);
+  cursor:pointer; transition:.35s; position:relative; overflow:hidden;
 }
-.card button:hover {
-  background-position: right center;
-  transform: translateY(-3px);
-  box-shadow: 0 0 14px rgba(56,189,248,.55), 0 8px 20px rgba(0,0,0,.4);
-}
-.card button:active { transform: scale(.96); }
+.card button:hover { background-position:right center; transform:translateY(-3px); box-shadow:0 0 14px rgba(56,189,248,.55); }
+.card button:active { transform:scale(.96); }
 .card button::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent);
-  transition: .55s;
+  content:''; position:absolute; top:0; left:-100%;
+  width:100%; height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:.55s;
 }
-.card button:hover::before { left: 100%; }
+.card button:hover::before { left:100%; }
 
-/* ── BREAKPOINTS ────────────────── */
-/* notebook/tablet grande */
-@media (max-width: 1200px) {
-  .products { grid-template-columns: repeat(5, 1fr); }
+/* ── BREAKPOINTS ─────────────────── */
+@media(max-width:1200px){ .products{grid-template-columns:repeat(5,1fr);} }
+@media(max-width:960px) { .products{grid-template-columns:repeat(4,1fr);gap:16px;} }
+@media(max-width:700px) { .products{grid-template-columns:repeat(3,1fr);gap:14px;} }
+@media(max-width:480px) {
+  .products{grid-template-columns:repeat(2,1fr);gap:12px;padding:0 12px;margin-top:24px;}
+  .card{padding:10px;}
+  .escudo-item.far  { display:none; }
+  .centro .escudo-img img { width: 96px; height: 96px; }
+  .near   .escudo-img img { width: 70px; height: 70px; }
+  .mid    .escudo-img img { width: 54px; height: 54px; }
+  .copa-banner { margin:20px 12px 0; }
+  .copa-inner  { padding:28px 12px 24px; }
 }
-
-/* tablet */
-@media (max-width: 960px) {
-  .products { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-}
-
-/* tablet pequeno */
-@media (max-width: 700px) {
-  .products { grid-template-columns: repeat(3, 1fr); gap: 14px; }
-}
-
-/* celular */
-@media (max-width: 480px) {
-  .products {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    padding: 0 12px;
-    margin-top: 24px;
-  }
-  .card { padding: 10px; }
-}
-
-/* celular muito pequeno */
-@media (max-width: 300px) {
-  .products { grid-template-columns: 1fr; }
-}
+@media(max-width:300px){ .products{grid-template-columns:1fr;} }
 
 </style>
 </head>
@@ -194,135 +276,123 @@ header a:hover {
   <a href="index.html">← Voltar</a>
 </header>
 
+<!-- ══ BANNER COPA ══ -->
+<div class="copa-banner">
+  <div class="copa-inner">
+    <canvas id="copa-canvas"></canvas>
+
+    <div class="copa-title">
+      <h2>COPA DO MUNDO 2026</h2>
+      <p>Escudos oficiais das seleções · Impressão 3D premium</p>
+    </div>
+
+    <div class="escudos-wrap">
+      <div class="escudo-item far"        data-color="#1a3a8f" style="--sel-color:#1a3a8f">
+        <div class="escudo-img"><img src="imagens/franca.png"     alt="França"></div>
+        <span class="escudo-nome">França</span>
+      </div>
+      <div class="escudo-item mid"        data-color="#74b2e2" style="--sel-color:#74b2e2">
+        <div class="escudo-img"><img src="imagens/argentina.png"  alt="Argentina"></div>
+        <span class="escudo-nome">Argentina</span>
+      </div>
+      <div class="escudo-item near"       data-color="#d52b1e" style="--sel-color:#d52b1e">
+        <div class="escudo-img"><img src="imagens/portugal.png"   alt="Portugal"></div>
+        <span class="escudo-nome">Portugal</span>
+      </div>
+
+      <!-- BRASIL — CENTRO -->
+      <div class="escudo-item centro"     data-color="#009c3b" style="--sel-color:#009c3b">
+        <div class="escudo-img"><img src="imagens/brasa.webp"     alt="Brasil"></div>
+        <span class="escudo-nome">🇧🇷 Brasil</span>
+      </div>
+
+      <div class="escudo-item near right" data-color="#000000" style="--sel-color:#333">
+        <div class="escudo-img"><img src="imagens/alemanha.png"   alt="Alemanha"></div>
+        <span class="escudo-nome">Alemanha</span>
+      </div>
+      <div class="escudo-item mid right"  data-color="#c60b1e" style="--sel-color:#c60b1e">
+        <div class="escudo-img"><img src="imagens/espanha.png"    alt="Espanha"></div>
+        <span class="escudo-nome">Espanha</span>
+      </div>
+      <div class="escudo-item far right"  data-color="#cf081f" style="--sel-color:#cf081f">
+        <div class="escudo-img"><img src="imagens/inglaterra2.jpg" alt="Inglaterra"></div>
+        <span class="escudo-nome">Inglaterra</span>
+      </div>
+    </div>
+
+    <div class="copa-cta">
+      <a href="produto13.html">Ver Coleção Completa →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GRID PRODUTOS ══ -->
+<p class="section-label">Todos os produtos</p>
+
 <section class="products">
-
-  <div class="card">
-    <img src="imagens/miniaturas1.webp" alt="Miniaturas 3D">
-    <h3>Miniaturas 3D</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto4.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/capathe.png" alt="The Last Of Us">
-    <h3>The Last Of Us</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto5.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/suporte22.jpg" alt="Suportes Personalizados">
-    <h3>Suportes Personalizados</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto6.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/terror.webp" alt="Personagens Terror">
-    <h3>Personagens Terror</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto1.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/objeto3d.jpeg" alt="Objetos Decorativos">
-    <h3>Objetos Decorativos</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto2.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/star.jpg" alt="Star Wars">
-    <h3>Star Wars</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto3.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/anel.jpg" alt="Senhor dos Anéis">
-    <h3>Senhor dos Anéis</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto7.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/harry.jpg" alt="Harry Potter">
-    <h3>Harry Potter</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto8.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/resd.jpg" alt="Resident Evil">
-    <h3>Resident Evil</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto9.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/goku.png" alt="Dragon Ball">
-    <h3>Dragon Ball</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto10.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/god of war.jpg" alt="God Of War">
-    <h3>God Of War</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto11.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/ucm.jpeg" alt="Marvel">
-    <h3>Marvel</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto12.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/bra.jpg" alt="Times de Futebol">
-    <h3>Times de Futebol</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto13.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/super.jpg" alt="Super Mario">
-    <h3>Super Mario</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto14.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/luminaria1.webp" alt="Luminárias">
-    <h3>Luminárias</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto15.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/dream2.webp" alt="DreamWorks">
-    <h3>DreamWorks</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto16.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/disney.jpg" alt="Disney">
-    <h3>Disney</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto17.html"><button>Ver Produto</button></a>
-  </div>
-
-  <div class="card">
-    <img src="imagens/dcs.jpeg" alt="DC">
-    <h3>DC</h3>
-    <p class="price">Sob consulta</p>
-    <a href="produto18.html"><button>Ver Produto</button></a>
-  </div>
-
+  <div class="card"><img src="imagens/miniaturas1.webp" alt="Miniaturas 3D"><h3>Miniaturas 3D</h3><p class="price">Sob consulta</p><a href="produto4.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/capathe.png" alt="The Last Of Us"><h3>The Last Of Us</h3><p class="price">Sob consulta</p><a href="produto5.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/suporte22.jpg" alt="Suportes Personalizados"><h3>Suportes Personalizados</h3><p class="price">Sob consulta</p><a href="produto6.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/terror.webp" alt="Personagens Terror"><h3>Personagens Terror</h3><p class="price">Sob consulta</p><a href="produto1.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/objeto3d.jpeg" alt="Objetos Decorativos"><h3>Objetos Decorativos</h3><p class="price">Sob consulta</p><a href="produto2.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/star.jpg" alt="Star Wars"><h3>Star Wars</h3><p class="price">Sob consulta</p><a href="produto3.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/anel.jpg" alt="Senhor dos Anéis"><h3>Senhor dos Anéis</h3><p class="price">Sob consulta</p><a href="produto7.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/harry.jpg" alt="Harry Potter"><h3>Harry Potter</h3><p class="price">Sob consulta</p><a href="produto8.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/resd.jpg" alt="Resident Evil"><h3>Resident Evil</h3><p class="price">Sob consulta</p><a href="produto9.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/goku.png" alt="Dragon Ball"><h3>Dragon Ball</h3><p class="price">Sob consulta</p><a href="produto10.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/god of war.jpg" alt="God Of War"><h3>God Of War</h3><p class="price">Sob consulta</p><a href="produto11.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/ucm.jpeg" alt="Marvel"><h3>Marvel</h3><p class="price">Sob consulta</p><a href="produto12.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/bra.jpg" alt="Times de Futebol"><h3>Times de Futebol</h3><p class="price">Sob consulta</p><a href="produto13.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/super.jpg" alt="Super Mario"><h3>Super Mario</h3><p class="price">Sob consulta</p><a href="produto14.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/luminaria1.webp" alt="Luminárias"><h3>Luminárias</h3><p class="price">Sob consulta</p><a href="produto15.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/dream2.webp" alt="DreamWorks"><h3>DreamWorks</h3><p class="price">Sob consulta</p><a href="produto16.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/disney.jpg" alt="Disney"><h3>Disney</h3><p class="price">Sob consulta</p><a href="produto17.html"><button>Ver Produto</button></a></div>
+  <div class="card"><img src="imagens/dcs.jpeg" alt="DC"><h3>DC</h3><p class="price">Sob consulta</p><a href="produto18.html"><button>Ver Produto</button></a></div>
 </section>
+
+<script>
+/* ── PARTÍCULAS DO BANNER ──────────────────── */
+(function(){
+  const cv  = document.getElementById('copa-canvas');
+  const ctx = cv.getContext('2d');
+  const banner = cv.parentElement;
+
+  function resize(){
+    cv.width  = banner.offsetWidth;
+    cv.height = banner.offsetHeight;
+  }
+  resize();
+  new ResizeObserver(resize).observe(banner);
+
+  const pts = Array.from({length:55}, () => ({
+    x:  Math.random() * cv.width,
+    y:  Math.random() * cv.height,
+    r:  Math.random() * 1.8 + .4,
+    vx: (Math.random() - .5) * .4,
+    vy: -(Math.random() * .6 + .2),
+    life: Math.random(),
+    speed: Math.random() * .006 + .003,
+    gold: Math.random() < .6
+  }));
+
+  (function loop(){
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    pts.forEach(p => {
+      p.life += p.speed;
+      if(p.life > 1){ p.life = 0; p.x = Math.random() * cv.width; p.y = cv.height + 10; }
+      const alpha = Math.sin(p.life * Math.PI) * .7;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      const colors = ['255,69,0','255,140,0','255,215,0','0,200,83','41,121,255','170,0,255'];
+      const c = colors[Math.floor(p.r * 2) % colors.length];
+      ctx.fillStyle = `rgba(${c},${alpha * .6})`;
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+    });
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
 
 </body>
 </html>
