@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokémon 3D | Coleção de Figuras</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #ffffff;
+  color: #1a1a2e;
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════
+   FUNDO — CÉU + GRAMA
+════════════════════════════════ */
+.sky {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(180deg,
+    #87ceeb 0%, #b0e0ff 35%,
+    #d4f0ff 55%, #e8f8e8 75%,
+    #c8f0c0 85%, #a0dc98 100%);
+}
+
+.clouds {
+  position: fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+}
+.cloud {
+  position: absolute;
+  background: rgba(255,255,255,.85);
+  border-radius: 50px;
+  filter: blur(2px);
+  animation: driftCloud linear infinite;
+}
+.cloud::before, .cloud::after {
+  content:''; position:absolute;
+  background: rgba(255,255,255,.85);
+  border-radius: 50%;
+}
+.cloud::before { width:60%; height:160%; top:-80%; left:15%; }
+.cloud::after  { width:45%; height:130%; top:-65%; left:45%; }
+@keyframes driftCloud {
+  from { transform: translateX(-200px); }
+  to   { transform: translateX(calc(100vw + 200px)); }
+}
+
+.grass-stripe {
+  position: absolute; bottom:0; left:0; right:0; z-index:3;
+  height: 70px; overflow:hidden; pointer-events:none;
+}
+.grass-stripe svg { width:100%; height:100%; }
+
+/* ════════════════════════════════
+   HEADER
+════════════════════════════════ */
+.site-header {
+  position: fixed; top:0; left:0; right:0; z-index:500;
+  background: #cc0000;
+  padding: 0 28px;
+  height: 58px;
+  display: flex; align-items:center; justify-content:space-between;
+  box-shadow: 0 4px 0 #990000, 0 6px 20px rgba(0,0,0,.2);
+}
+.site-header::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:4px;
+  background: #111;
+}
+
+.logo {
+  display: flex; align-items:center; gap: 10px;
+  font-family:'Fredoka One',cursive;
+  font-size: 22px; letter-spacing:1px; color:#fff;
+  text-shadow: 2px 2px 0 #990000;
+}
+
+.pokeball-icon {
+  width: 32px; height: 32px; border-radius:50%;
+  border: 3px solid #fff;
+  position:relative; overflow:hidden;
+  animation: spinBall 3s linear infinite;
+  flex-shrink:0; background:#fff;
+}
+.pokeball-icon::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:50%;
+  background: #cc0000;
+}
+.pokeball-icon::after {
+  content:''; position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:10px; height:10px; border-radius:50%;
+  background:#fff; border:2px solid #333; z-index:2;
+  box-shadow:0 0 0 3px rgba(0,0,0,.3);
+}
+@keyframes spinBall{ to{ transform:rotate(360deg); } }
+
+.btn-back {
+  display:flex; align-items:center; gap:6px;
+  background: rgba(0,0,0,.25); color:#fff;
+  font-family:'Nunito',sans-serif; font-size:12px; font-weight:800;
+  text-decoration:none; padding:7px 14px; border-radius:20px;
+  border:2px solid rgba(255,255,255,.3); transition:.2s;
+  white-space:nowrap;
+}
+.btn-back:hover { background:rgba(0,0,0,.4); border-color:rgba(255,255,255,.6); }
+.btn-back svg { transition:transform .2s; }
+.btn-back:hover svg { transform:translateX(-3px); }
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero {
+  position:relative; z-index:2;
+  min-height: 100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding: 90px 20px 120px;
+  overflow:hidden;
+}
+
+.hero h1 {
+  font-family:'Fredoka One',cursive;
+  font-size: clamp(52px, 12vw, 130px);
+  line-height: 1;
+  color: #ffcb05;
+  text-shadow:
+    4px 4px 0 #cc8800,
+    -2px -2px 0 #cc8800,
+    2px -2px 0 #cc8800,
+    -2px 2px 0 #cc8800,
+    0 6px 0 #996600,
+    0 8px 16px rgba(0,0,0,.2);
+  animation: popIn .7s cubic-bezier(.34,1.56,.64,1) both;
+  letter-spacing: 2px;
+}
+.hero h1 span {
+  color: #cc0000;
+  text-shadow:
+    4px 4px 0 #880000,
+    -2px -2px 0 #880000,
+    2px -2px 0 #880000,
+    -2px 2px 0 #880000,
+    0 6px 0 #550000,
+    0 8px 16px rgba(0,0,0,.2);
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.5) rotate(-5deg);}
+  to{opacity:1;transform:scale(1) rotate(0);}
+}
+
+.hero-sub {
+  font-family:'Fredoka One',cursive;
+  font-size: clamp(16px,3vw,24px);
+  color: #fff;
+  text-shadow: 2px 2px 0 rgba(0,0,0,.3);
+  margin-top: 16px;
+  background: #cc0000;
+  display: inline-block;
+  padding: 6px 24px; border-radius:30px;
+  box-shadow: 0 4px 0 #880000;
+  animation: popIn .7s .15s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+.deco-balls {
+  position:absolute; inset:0; pointer-events:none; z-index:0;
+}
+.deco-b {
+  position:absolute; border-radius:50%;
+  border:3px solid rgba(255,255,255,.4);
+  animation: floatB ease-in-out infinite;
+  overflow:hidden;
+}
+.deco-b::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:50%;
+  background: rgba(204,0,0,.4);
+}
+.deco-b::after {
+  content:''; position:absolute; top:50%; left:0; right:0; height:3px;
+  background: rgba(0,0,0,.3);
+}
+@keyframes floatB{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-16px) rotate(15deg);}
+}
+
+.type-pills {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:8px;
+  margin-top:24px;
+  animation: popIn .7s .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+.type-pill {
+  font-family:'Fredoka One',cursive;
+  font-size:14px; letter-spacing:.5px;
+  padding:6px 18px; border-radius:20px;
+  border:none; cursor:pointer; transition:.2s;
+  box-shadow: 0 4px 0 rgba(0,0,0,.2);
+  color:#fff;
+}
+.type-pill:hover { transform:translateY(-2px); box-shadow:0 6px 0 rgba(0,0,0,.2); }
+.type-pill:active { transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.2); }
+
+.scroll-arrow {
+  position:absolute; bottom:88px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  font-family:'Fredoka One',cursive; font-size:13px;
+  color: rgba(255,255,255,.8);
+  text-shadow:1px 1px 0 rgba(0,0,0,.2);
+  animation:bounce 1.5s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ════════════════════════════════
+   SEÇÃO DE PRODUTOS
+════════════════════════════════ */
+.produtos-section {
+  position:relative; z-index:2;
+  background: linear-gradient(180deg, #e8f8e8 0%, #f0f8ff 100%);
+  padding: 60px 16px 80px;
+}
+
+.section-header {
+  max-width:1200px; margin:0 auto 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+}
+.section-title {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(26px,5vw,40px); color:#cc0000;
+  text-shadow:2px 2px 0 #880000;
+  display:flex; align-items:center; gap:10px;
+}
+
+.filters {
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.f-btn {
+  font-family:'Fredoka One',cursive; font-size:13px;
+  padding:7px 18px; border-radius:20px; border:none;
+  cursor:pointer; transition:.2s;
+  box-shadow:0 4px 0 rgba(0,0,0,.15);
+}
+.f-btn:hover { transform:translateY(-2px); }
+.f-btn:active { transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.15); }
+.f-btn.active { background:#cc0000; color:#fff; box-shadow:0 4px 0 #880000; }
+
+.result-count {
+  max-width:1200px; margin:0 auto 20px;
+  font-size:13px; font-weight:800; color:#777;
+}
+.result-count strong { color:#cc0000; }
+
+/* ════════════════════════════════
+   GRID & CARDS
+════════════════════════════════ */
+.grid {
+  max-width:1200px; margin:0 auto;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap:24px;
+}
+
+.card {
+  border-radius:20px;
+  overflow:hidden;
+  border:3px solid var(--c-border,#ffffff);
+  background: var(--c-bg, #fff);
+  display:flex; flex-direction:column;
+  box-shadow: 0 6px 0 var(--c-shadow,#ccc), 0 8px 24px rgba(0,0,0,.1);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  opacity:0; transform:translateY(24px) scale(.95);
+  cursor:pointer;
+}
+.card.show {
+  opacity:1; transform:translateY(0) scale(1);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.34,1.56,.64,1),
+              box-shadow .25s;
+}
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 14px 0 var(--c-shadow,#ccc), 0 18px 32px rgba(0,0,0,.15);
+}
+
+.card-top {
+  padding:14px 14px 0;
+  background: var(--c-top, #f5f5f5);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.pokedex-num {
+  font-family:'Fredoka One',cursive;
+  font-size:12px; color:rgba(0,0,0,.35); letter-spacing:1px;
+}
+.type-tag {
+  font-family:'Fredoka One',cursive; font-size:11px;
+  padding:3px 12px; border-radius:20px;
+  background:var(--c-type,#ccc); color:#fff;
+  box-shadow:0 2px 0 rgba(0,0,0,.2);
+}
+
+.card-img {
+  background: var(--c-top, #f5f5f5);
+  padding:12px; height:190px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.card-img::before {
+  content:''; position:absolute;
+  width:130px; height:130px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,.6) 0%, transparent 70%);
+}
+.card-img img {
+  max-width:100%; max-height:100%;
+  object-fit:contain; position:relative; z-index:1;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.2));
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.card:hover .card-img img { transform:scale(1.12) translateY(-4px); }
+
+.card-wave {
+  width:100%; overflow:hidden; line-height:0;
+  background:var(--c-top,#f5f5f5);
+}
+.card-wave svg { display:block; }
+
+.card-body {
+  background:#fff; padding:12px 14px 16px;
+  display:flex; flex-direction:column; gap:8px; flex:1;
+}
+.card-name {
+  font-family:'Fredoka One',cursive;
+  font-size:20px; color:#1a1a2e; line-height:1;
+}
+.card-desc {
+  font-size:12px; font-weight:700; color:#888;
+  line-height:1.5; flex:1;
+}
+.card-price {
+  font-family:'Fredoka One',cursive;
+  font-size:22px; color:var(--c-type,#cc0000);
+}
+.card-price small {
+  font-family:'Nunito',sans-serif;
+  font-size:10px; font-weight:800; color:#aaa;
+  display:block; line-height:1; margin-bottom:2px;
+}
+
+.btn-pedir {
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  padding:11px; border-radius:12px;
+  background:#25D366; color:#fff;
+  font-family:'Fredoka One',cursive; font-size:14px;
+  text-decoration:none;
+  box-shadow:0 4px 0 #1a9e4a;
+  transition:.2s; margin-top:4px;
+}
+.btn-pedir:hover { background:#1fbc50; transform:translateY(-2px); box-shadow:0 6px 0 #1a9e4a; }
+.btn-pedir:active { transform:translateY(2px); box-shadow:0 2px 0 #1a9e4a; }
+
+/* ════════════════════════════════
+   FOOTER E RESPONSIVO
+════════════════════════════════ */
+.site-footer {
+  position:relative; z-index:2;
+  background:#cc0000;
+  border-top:4px solid #111;
+  padding:24px 20px;
+  text-align:center;
+}
+.footer-logo {
+  font-family:'Fredoka One',cursive;
+  font-size:18px; color:#ffcb05;
+  text-shadow:2px 2px 0 #996600;
+  margin-bottom:6px;
+}
+.footer-copy { font-size:11px; font-weight:700; color:rgba(255,255,255,.6); }
+
+@media(max-width:640px){
+  .site-header { padding:0 14px; }
+  .logo span:last-child { display:none; }
+  .section-header { flex-direction:column; align-items:flex-start; }
+  .grid { grid-template-columns:repeat(2,1fr); gap:14px; }
+  .card-img { height:150px; }
+  .hero { padding-bottom:140px; }
+}
+@media(max-width:360px){
+  .grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CÉU + NUVENS -->
+<div class="sky"></div>
+<div class="clouds">
+  <div class="cloud" style="width:120px;height:40px;top:12%;animation-duration:28s;animation-delay:0s;opacity:.9"></div>
+  <div class="cloud" style="width:80px;height:28px;top:22%;animation-duration:22s;animation-delay:-8s;opacity:.7"></div>
+  <div class="cloud" style="width:160px;height:50px;top:8%;animation-duration:35s;animation-delay:-15s;opacity:.85"></div>
+  <div class="cloud" style="width:60px;height:22px;top:30%;animation-duration:18s;animation-delay:-5s;opacity:.6"></div>
+  <div class="cloud" style="width:110px;height:36px;top:18%;animation-duration:26s;animation-delay:-20s;opacity:.8"></div>
+</div>
+
+<!-- HEADER (AQUI O BOTÃO DE VOLTAR ESTÁ CORRIGIDO) -->
+<header class="site-header">
+  <div class="logo">
+    <div class="pokeball-icon"></div>
+    <span>Pokémon</span>
+    <span>3D</span>
+  </div>
+  <a href="produtos.html" class="btn-back">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    Todos os produtos
+  </a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="deco-balls">
+    <div class="deco-b" style="width:70px;height:70px;top:15%;left:5%;animation-duration:5s;animation-delay:0s;opacity:.5"></div>
+    <div class="deco-b" style="width:45px;height:45px;top:25%;right:8%;animation-duration:4s;animation-delay:.8s;opacity:.4"></div>
+    <div class="deco-b" style="width:90px;height:90px;bottom:25%;left:10%;animation-duration:6s;animation-delay:.3s;opacity:.35"></div>
+    <div class="deco-b" style="width:55px;height:55px;top:60%;right:6%;animation-duration:4.5s;animation-delay:1.2s;opacity:.45"></div>
+    <div class="deco-b" style="width:30px;height:30px;top:40%;left:20%;animation-duration:3.5s;animation-delay:.6s;opacity:.3"></div>
+  </div>
+
+  <h1>POKÉMON<br><span>FIGURAS 3D</span></h1>
+  <div class="hero-sub">Impressão 3D premium · Feito sob pedido</div>
+
+  <div class="type-pills">
+    <div class="type-pill" style="background:#ff5722">🔥 Fogo</div>
+    <div class="type-pill" style="background:#1e88e5">💧 Água</div>
+    <div class="type-pill" style="background:#43a047">🌿 Planta</div>
+    <div class="type-pill" style="background:#f5c518;color:#333">⚡ Elétrico</div>
+    <div class="type-pill" style="background:#9c27b0">🔮 Psíquico</div>
+    <div class="type-pill" style="background:#e8872a">🐉 Dragão</div>
+  </div>
+
+  <div class="scroll-arrow">
+    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+    Ver coleção
+  </div>
+
+  <div class="grass-stripe">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 Q60,0 120,30 Q180,60 240,30 Q300,0 360,30 Q420,60 480,30 Q540,0 600,30 Q660,60 720,30 Q780,0 840,30 Q900,60 960,30 Q1020,0 1080,30 Q1140,60 1200,30 Q1260,0 1320,30 Q1380,60 1440,30 L1440,70 L0,70 Z" fill="#5cb85c"/>
+      <path d="M0,40 Q60,10 120,40 Q180,70 240,40 Q300,10 360,40 Q420,70 480,40 Q540,10 600,40 Q660,70 720,40 Q780,10 840,40 Q900,70 960,40 Q1020,10 1080,40 Q1140,70 1200,40 Q1260,10 1320,40 Q1380,70 1440,40 L1440,70 L0,70 Z" fill="#4cae4c" opacity=".8"/>
+    </svg>
+  </div>
+</section>
+
+<!-- PRODUTOS -->
+<div class="produtos-section">
+  <div class="section-header">
+    <div class="section-title">⚡ Escolha o seu!</div>
+    <div class="filters">
+      <button class="f-btn active" data-filter="all">Todos</button>
+      <button class="f-btn" data-filter="fogo">🔥 Fogo</button>
+      <button class="f-btn" data-filter="agua">💧 Água</button>
+      <button class="f-btn" data-filter="eletrico">⚡ Elétrico</button>
+      <button class="f-btn" data-filter="planta">🌿 Planta</button>
+      <button class="f-btn" data-filter="outros">Outros</button>
+    </div>
+  </div>
+
+  <div class="result-count" id="result-count"></div>
+
+  <div class="grid" id="grid">
+    <!-- PIKACHU -->
+    <div class="card" data-category="eletrico" style="--c-top:#fff9c4;--c-border:#f5c518;--c-shadow:#c49a00;--c-bg:#fff;--c-type:#f5c518">
+      <div class="card-top">
+        <span class="pokedex-num">#025</span>
+        <span class="type-tag" style="background:#f5c518;color:#333">Elétrico</span>
+      </div>
+      <div class="card-img"><img src="imagens/pikachu.png" alt="Pikachu"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#fff9c4"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Pikachu</div>
+        <div class="card-desc">O mascote mais famoso do mundo Pokémon em figura 3D com pintura artesanal nas bochechas.</div>
+        <div class="card-price"><small>A partir de</small>R$ 129</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Pikachu" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- CHARIZARD -->
+    <div class="card" data-category="fogo" style="--c-top:#ffe0d0;--c-border:#ff5722;--c-shadow:#c23a00;--c-bg:#fff;--c-type:#ff5722">
+      <div class="card-top">
+        <span class="pokedex-num">#006</span>
+        <span class="type-tag">Fogo</span>
+      </div>
+      <div class="card-img"><img src="imagens/charizard.png" alt="Charizard"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#ffe0d0"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Charizard</div>
+        <div class="card-desc">O dragão de fogo em pose épica com asas abertas e chamas na cauda em resina premium.</div>
+        <div class="card-price"><small>A partir de</small>R$ 219</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Charizard" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- BLASTOISE -->
+    <div class="card" data-category="agua" style="--c-top:#d0eaff;--c-border:#1e88e5;--c-shadow:#1256a0;--c-bg:#fff;--c-type:#1e88e5">
+      <div class="card-top">
+        <span class="pokedex-num">#009</span>
+        <span class="type-tag">Água</span>
+      </div>
+      <div class="card-img"><img src="imagens/blastoise.png" alt="Blastoise"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#d0eaff"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Blastoise</div>
+        <div class="card-desc">Gigante aquático com canhões esculpidos em 3D e armadura com acabamento fosco premium.</div>
+        <div class="card-price"><small>A partir de</small>R$ 199</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Blastoise" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- BULBASAUR -->
+    <div class="card" data-category="planta" style="--c-top:#d8f5d8;--c-border:#43a047;--c-shadow:#276628;--c-bg:#fff;--c-type:#43a047">
+      <div class="card-top">
+        <span class="pokedex-num">#001</span>
+        <span class="type-tag">Planta</span>
+      </div>
+      <div class="card-img"><img src="imagens/bulbasaur.png" alt="Bulbasaur"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#d8f5d8"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Bulbasaur</div>
+        <div class="card-desc">O nº 1 da Pokédex com bulbo nas costas em textura realista e pintura artesanal detalhada.</div>
+        <div class="card-price"><small>A partir de</small>R$ 149</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Bulbasaur" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- MEWTWO -->
+    <div class="card" data-category="outros" style="--c-top:#f3e5f5;--c-border:#9c27b0;--c-shadow:#6a1b80;--c-bg:#fff;--c-type:#9c27b0">
+      <div class="card-top">
+        <span class="pokedex-num">#150</span>
+        <span class="type-tag">Psíquico</span>
+      </div>
+      <div class="card-img"><img src="imagens/mewtwo.png" alt="Mewtwo"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#f3e5f5"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Mewtwo</div>
+        <div class="card-desc">O lendário Pokémon genético em pose de poder com aura psíquica em resina translúcida.</div>
+        <div class="card-price"><small>A partir de</small>R$ 249</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Mewtwo" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- GENGAR -->
+    <div class="card" data-category="outros" style="--c-top:#ede7f6;--c-border:#5c35a0;--c-shadow:#3a1f6e;--c-bg:#fff;--c-type:#5c35a0">
+      <div class="card-top">
+        <span class="pokedex-num">#094</span>
+        <span class="type-tag">Fantasma</span>
+      </div>
+      <div class="card-img"><img src="imagens/gengar.png" alt="Gengar"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#ede7f6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Gengar</div>
+        <div class="card-desc">O fantasma sorridente com sombra em resina semitranslúcida e dentes esculpidos artesanalmente.</div>
+        <div class="card-price"><small>A partir de</small>R$ 179</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Gengar" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- EEVEE -->
+    <div class="card" data-category="outros" style="--c-top:#fff3e0;--c-border:#c8a165;--c-shadow:#8d6e3a;--c-bg:#fff;--c-type:#c8a165">
+      <div class="card-top">
+        <span class="pokedex-num">#133</span>
+        <span class="type-tag" style="color:#333">Normal</span>
+      </div>
+      <div class="card-img"><img src="imagens/eevee.png" alt="Eevee"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#fff3e0"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Eevee</div>
+        <div class="card-desc">O fofo Pokémon evolutivo com pelo texturizado, orelhas grandes e coleira em detalhes artesanais.</div>
+        <div class="card-price"><small>A partir de</small>R$ 149</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20figura%203D%20do%20Eevee" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.358.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- POKÉBOLA -->
+    <div class="card" data-category="outros" style="--c-top:#ffebee;--c-border:#cc0000;--c-shadow:#880000;--c-bg:#fff;--c-type:#cc0000">
+      <div class="card-top">
+        <span class="pokedex-num">Item</span>
+        <span class="type-tag">Especial</span>
+      </div>
+      <div class="card-img"><img src="imagens/pokebola.png" alt="Pokébola"></div>
+      <div class="card-wave">
+        <svg viewBox="0 0 300 18" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 Q75,18 150,0 Q225,-18 300,0 L300,18 L0,18 Z" fill="#ffebee"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Pokébola 3D</div>
+        <div class="card-desc">Réplica decorativa da Pokébola clássica em tamanho real com abertura funcional e acabamento brilhante.</div>
+        <div class="card-price"><small>A partir de</small>R$ 99</div>
+        <a class="btn-pedir" href="https://wa.me/5511999999999?text=Olá!%20Quero%20encomendar%20a%20Pokébola%203D" target="_blank">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          Encomendar no WhatsApp
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">⚡ Pokémon 3D · Loja de Impressão</div>
+  <div class="footer-copy">Todos os produtos feitos sob pedido · Envio para todo o Brasil</div>
+</footer>
+
+<!-- AQUI ESTÁ O SCRIPT CORRIGIDO E FINALIZADO -->
+<script>
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const btns  = document.querySelectorAll('.f-btn');
+  const rc    = document.getElementById('result-count');
+
+  function setCount(n){
+    rc.innerHTML = `<strong>${n}</strong> Pokémon encontrado${n !== 1 ? 's' : ''}`;
+  }
+
+  // Inicializa a exibição de todos os itens ao carregar a página
+  window.addEventListener('DOMContentLoaded', () => {
+    setCount(cards.length);
+    cards.forEach((c, i) => {
+      c.style.display = 'flex';
+      setTimeout(() => c.classList.add('show'), i * 65);
+    });
+  });
+
+  // Filtro interativo
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove a classe ativa de todos os botões e aplica apenas ao clicado
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const filter = btn.dataset.filter;
+      let count = 0;
+      
+      cards.forEach((card, index) => {
+        const isMatch = filter === 'all' || card.dataset.category === filter;
+        
+        // Remove a classe 'show' para animação de saída
+        card.classList.remove('show');
+        
+        if (isMatch) {
+          card.style.display = 'flex';
+          count++;
+          // Adiciona a classe 'show' com um pequeno atraso (efeito cascata)
+          setTimeout(() => card.classList.add('show'), index * 65);
+        } else {
+          // Oculta completamente o elemento caso não corresponda ao filtro
+          setTimeout(() => {
+            if(!card.classList.contains('show')) card.style.display = 'none';
+          }, 300); // Tempo necessário para a transição do css ocorrer
+        }
+      });
+      
+      setCount(count);
+    });
+  });
+</script>
+
+</body>
+</html>
