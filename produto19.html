@@ -227,23 +227,25 @@
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
     }
 
-    .copa-card-btn {
-      margin-top: auto;
-      width: 100%;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+   .copa-card-btn {
+  display: block;
+  text-decoration: none; /* Remove o sublinhado do link */
+  text-align: center;
+  margin-top: auto;
+  width: 100%;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Garante que o padding não quebre o layout */
+}
 
     .copa-card-btn:hover {
       background: #00ff66;
@@ -399,48 +401,79 @@
         <div class="copa-card">
           <div class="copa-card-img-wrapper">
             <span class="copa-badge">Lançamento</span>
-            <img src="https://via.placeholder.com/300x300/1a1a24/00ff66?text=Camisa+Brasil+3D" alt="Produto 1" class="copa-img">
+            <img src="imagens/caixafig.webp" alt="Produto 1" class="copa-img">
           </div>
           <div class="copa-card-info">
             <h3 class="copa-card-title">Camisa Seleção Brasileira (Malha 3D)</h3>
             <p class="copa-card-price">R$ 349,90</p>
-            <button class="copa-card-btn">Imprimir Agora</button>
+         <!-- Exemplo de como deve ficar cada botão no seu código -->
+<a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20em%20imprimir%20este%20produto%203D" class="copa-card-btn" target="_blank">
+  Imprimir Agora
+</a>
           </div>
         </div>
 
         <div class="copa-card">
           <div class="copa-card-img-wrapper">
-            <img src="https://via.placeholder.com/300x300/1a1a24/ffd700?text=Bola+Oficial" alt="Produto 2" class="copa-img">
+            <img src="imagens/taca.webp" alt="Produto 2" class="copa-img">
           </div>
           <div class="copa-card-info">
             <h3 class="copa-card-title">Bola Oficial Copa 2026 (Polímero)</h3>
             <p class="copa-card-price">R$ 299,90</p>
-            <button class="copa-card-btn">Imprimir Agora</button>
+        <!-- Exemplo de como deve ficar cada botão no seu código -->
+<a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20em%20imprimir%20este%20produto%203D" class="copa-card-btn" target="_blank">
+  Imprimir Agora
+</a>
           </div>
         </div>
 
         <div class="copa-card">
           <div class="copa-card-img-wrapper">
             <span class="copa-badge promo">-20% OFF</span>
-            <img src="https://via.placeholder.com/300x300/1a1a24/ff4500?text=Corta+Vento" alt="Produto 3" class="copa-img">
+            <img src="imagens/chaveiro.webp" alt="Produto 3" class="copa-img">
           </div>
           <div class="copa-card-info">
             <h3 class="copa-card-title">Jaqueta Corta Vento Textura Hexagonal</h3>
             <p class="copa-card-price">R$ 459,90</p>
-            <button class="copa-card-btn">Imprimir Agora</button>
+       <!-- Exemplo de como deve ficar cada botão no seu código -->
+<a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20em%20imprimir%20este%20produto%203D" class="copa-card-btn" target="_blank">
+  Imprimir Agora
+</a>
           </div>
         </div>
 
         <div class="copa-card">
           <div class="copa-card-img-wrapper">
-            <img src="https://via.placeholder.com/300x300/1a1a24/00a86b?text=Bon%C3%A9+3D" alt="Produto 4" class="copa-img">
+            <img src="imagens/caixa2.webp" alt="Produto 4" class="copa-img">
           </div>
           <div class="copa-card-info">
             <h3 class="copa-card-title">Boné Aba Curva Estrutura Mesh</h3>
             <p class="copa-card-price">R$ 119,90</p>
-            <button class="copa-card-btn">Imprimir Agora</button>
+           <!-- Exemplo de como deve ficar cada botão no seu código -->
+<a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20em%20imprimir%20este%20produto%203D" class="copa-card-btn" target="_blank">
+  Imprimir Agora
+</a>
           </div>
         </div>
+
+<div class="copa-card">
+          <div class="copa-card-img-wrapper">
+            <img src="imagens/caixa2.webp" alt="Produto 4" class="copa-img">
+          </div>
+          <div class="copa-card-info">
+            <h3 class="copa-card-title">Boné Aba Curva Estrutura Mesh</h3>
+            <p class="copa-card-price">R$ 119,90</p>
+           <!-- Exemplo de como deve ficar cada botão no seu código -->
+<a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20em%20imprimir%20este%20produto%203D" class="copa-card-btn" target="_blank">
+  Imprimir Agora
+</a>
+          </div>
+        </div>
+
+
+
+
+
 
       </div> <div class="copa-action">
         <a href="produtos.html" class="copa-btn-back">Voltar para Todos os Produtos</a>
