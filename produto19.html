@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banner Copa 2026 - Impressão 3D</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset básico */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #030305;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ==========================================================================
+       VÍDEO DE FUNDO (TELA INTEIRA) E OVERLAY ESCURO
+       ========================================================================== */
+    .bg-video-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    .bg-video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 3, 5, 0.5);
+      z-index: -1;
+    }
+
+    /* ==========================================================================
+       BANNER PRINCIPAL / CARD
+       ========================================================================== */
+    .copa-banner {
+      position: relative;
+      max-width: 1400px;
+      margin: 40px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #00ff66 0%, #0055cc 30%, #7c00c8 60%, #ff4500 100%);
+      padding: 2px;
+      z-index: 1;
+    }
+
+    .copa-inner {
+      background: rgba(17, 17, 26, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 50px 28px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Canvas para Partículas */
+    #copa-canvas {
+      position: absolute; 
+      inset: 0;
+      width: 100%; 
+      height: 100%;
+      pointer-events: none; 
+      z-index: 1;
+      opacity: 0.8;
+    }
+
+    /* ==========================================================================
+       TÍTULO NEON
+       ========================================================================== */
+    .copa-title {
+      position: relative; 
+      z-index: 2;
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    .copa-title h2 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(40px, 7vw, 72px);
+      letter-spacing: 8px;
+      margin: 0;
+      background: linear-gradient(90deg, #00ff66, #ff8c00, #ff4500, #00ff66);
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 300%;
+      animation: titleShift 6s linear infinite;
+      text-shadow: 0 0 20px rgba(0, 255, 102, 0.2), 0 0 40px rgba(255, 69, 0, 0.2);
+    }
+
+    @keyframes titleShift { 
+      0% { background-position: 0% center; } 
+      100% { background-position: 300% center; } 
+    }
+
+    .copa-title p {
+      color: #a0a0b0;
+      font-size: 13px; 
+      font-weight: 700;
+      letter-spacing: 6px; 
+      text-transform: uppercase;
+      margin-top: 10px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    /* ==========================================================================
+       CARDS DE PRODUTOS
+       ========================================================================== */
+    .copa-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .copa-card {
+      background: rgba(15, 15, 20, 0.6);
+      border: 1px solid rgba(0, 255, 102, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .copa-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: #00ff66; 
+      background: rgba(20, 20, 25, 0.8);
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 255, 102, 0.2),
+        inset 0 0 15px rgba(0, 255, 102, 0.1);
+    }
+
+    .copa-card-img-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0a0a0f;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .copa-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.5s ease;
+      filter: contrast(1.1) brightness(0.9);
+      position: relative;
+      z-index: 1;
+    }
+
+    .copa-card:hover .copa-img {
+      transform: scale(1.1); 
+      filter: contrast(1.2) brightness(1.1);
+    }
+
+    .copa-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 200, 83, 0.2);
+      border: 1px solid #00ff66;
+      color: #00ff66;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 4px;
+      z-index: 4;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+    }
+    
+    .copa-badge.promo {
+      background: rgba(255, 69, 0, 0.2);
+      border-color: #ff4500;
+      color: #ff4500;
+      box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
+    }
+
+    .copa-card-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .copa-card-title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 10px;
+      line-height: 1.4;
+    }
+
+    .copa-card-price {
+      color: #ffd700; 
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 20px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    .copa-card-btn {
+      margin-top: auto;
+      width: 100%;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .copa-card-btn:hover {
+      background: #00ff66;
+      color: #000;
+      border-color: #00ff66;
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
+    }
+
+    /* ==========================================================================
+       ÁREA DE BOTÕES DE AÇÃO INTERNOS
+       ========================================================================== */
+    .copa-action {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px; /* Espaço entre os botões */
+    }
+
+    /* NOVO BOTÃO: Voltar para Produtos */
+    .copa-btn-back {
+      display: inline-block;
+      text-decoration: none;
+      color: #00ff66;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20px;
+      letter-spacing: 2px;
+      padding: 12px 40px;
+      border-radius: 40px;
+      background: rgba(0, 255, 102, 0.05);
+      border: 2px solid #00ff66;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+    }
+
+    .copa-btn-back:hover {
+      background: #00ff66;
+      color: #000;
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.6);
+      transform: translateY(-2px);
+    }
+
+    /* BOTÃO PRINCIPAL: Ver Coleção */
+    .copa-btn-full {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 26px;
+      letter-spacing: 3px;
+      padding: 16px 50px;
+      border-radius: 40px;
+      background: linear-gradient(90deg, #ff4500, #c00060, #7c00c8, #ff4500);
+      background-size: 300%;
+      transition: all 0.4s ease;
+      position: relative;
+      animation: bgShift 4s linear infinite, pulseGlow 2s infinite alternate;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.4), 0 0 30px rgba(192, 0, 96, 0.2); }
+      100% { box-shadow: 0 0 25px rgba(255, 69, 0, 0.8), 0 0 50px rgba(124, 0, 200, 0.6); transform: scale(1.02); }
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% center; }
+      100% { background-position: 300% center; }
+    }
+
+    .copa-btn-full:hover {
+      color: #fff;
+      animation: bgShift 2s linear infinite;
+      transform: scale(1.08) translateY(-3px);
+      box-shadow: 0 10px 40px rgba(255, 69, 0, 0.9);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE (CELULAR)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .copa-banner {
+        margin: 20px 10px;
+        border-radius: 12px;
+      }
+      .copa-inner {
+        padding: 40px 16px;
+      }
+      .copa-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+      }
+      .copa-card {
+        padding: 12px;
+      }
+      .copa-card-title {
+        font-size: 14px;
+      }
+      .copa-card-price {
+        font-size: 18px;
+      }
+      .copa-card-btn {
+        padding: 10px;
+        font-size: 12px;
+      }
+      .copa-btn-full {
+        font-size: 20px;
+        padding: 14px 30px;
+        width: 80%; /* Ajuste para preencher melhor em telas mobile */
+        box-sizing: border-box;
+      }
+      .copa-btn-back {
+        font-size: 16px;
+        padding: 10px 32px;
+        width: 80%;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .copa-grid {
+        grid-template-columns: 1fr;
+      }
+      .copa-btn-full, .copa-btn-back {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay loop muted playsinline class="bg-video-fullscreen">
+    <source src="imagens/copa.mp4" type="video/mp4">
+  </video>
+  
+  <div class="bg-video-overlay"></div>
+
+  <div class="copa-banner">
+    <div class="copa-inner">
+      <canvas id="copa-canvas"></canvas>
+
+      <div class="copa-title">
+        <h2>COPA DO MUNDO 2026</h2>
+        <p>A Revolução da Impressão 3D nos Esportes</p>
+      </div>
+
+      <div class="copa-grid">
+        
+        <div class="copa-card">
+          <div class="copa-card-img-wrapper">
+            <span class="copa-badge">Lançamento</span>
+            <img src="https://via.placeholder.com/300x300/1a1a24/00ff66?text=Camisa+Brasil+3D" alt="Produto 1" class="copa-img">
+          </div>
+          <div class="copa-card-info">
+            <h3 class="copa-card-title">Camisa Seleção Brasileira (Malha 3D)</h3>
+            <p class="copa-card-price">R$ 349,90</p>
+            <button class="copa-card-btn">Imprimir Agora</button>
+          </div>
+        </div>
+
+        <div class="copa-card">
+          <div class="copa-card-img-wrapper">
+            <img src="https://via.placeholder.com/300x300/1a1a24/ffd700?text=Bola+Oficial" alt="Produto 2" class="copa-img">
+          </div>
+          <div class="copa-card-info">
+            <h3 class="copa-card-title">Bola Oficial Copa 2026 (Polímero)</h3>
+            <p class="copa-card-price">R$ 299,90</p>
+            <button class="copa-card-btn">Imprimir Agora</button>
+          </div>
+        </div>
+
+        <div class="copa-card">
+          <div class="copa-card-img-wrapper">
+            <span class="copa-badge promo">-20% OFF</span>
+            <img src="https://via.placeholder.com/300x300/1a1a24/ff4500?text=Corta+Vento" alt="Produto 3" class="copa-img">
+          </div>
+          <div class="copa-card-info">
+            <h3 class="copa-card-title">Jaqueta Corta Vento Textura Hexagonal</h3>
+            <p class="copa-card-price">R$ 459,90</p>
+            <button class="copa-card-btn">Imprimir Agora</button>
+          </div>
+        </div>
+
+        <div class="copa-card">
+          <div class="copa-card-img-wrapper">
+            <img src="https://via.placeholder.com/300x300/1a1a24/00a86b?text=Bon%C3%A9+3D" alt="Produto 4" class="copa-img">
+          </div>
+          <div class="copa-card-info">
+            <h3 class="copa-card-title">Boné Aba Curva Estrutura Mesh</h3>
+            <p class="copa-card-price">R$ 119,90</p>
+            <button class="copa-card-btn">Imprimir Agora</button>
+          </div>
+        </div>
+
+      </div> <div class="copa-action">
+        <a href="produtos.html" class="copa-btn-back">Voltar para Todos os Produtos</a>
+        
+
+  <script>
+    const canvas = document.getElementById('copa-canvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    let w, h;
+
+    function resizeCanvas() {
+      w = canvas.width = canvas.parentElement.clientWidth;
+      h = canvas.height = canvas.parentElement.clientHeight;
+    }
+    
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initParticles();
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedX = (Math.random() * 1) - 0.5;
+        this.speedY = (Math.random() * -1.5) - 0.5;
+        
+        const colors = ['rgba(0, 255, 102,', 'rgba(255, 69, 0,', 'rgba(0, 150, 255,'];
+        this.colorStr = colors[Math.floor(Math.random() * colors.length)];
+        this.opacity = Math.random() * 0.7 + 0.2;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        if (this.y < 0) {
+          this.y = h;
+          this.x = Math.random() * w;
+        }
+        if (this.x > w || this.x < 0) {
+          this.speedX = -this.speedX;
+        }
+      }
+      
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.colorStr + this.opacity + ')';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.colorStr + '1)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      let numberOfParticles = (w * h) / 8000; 
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    resizeCanvas();
+    initParticles();
+    animateParticles();
+  </script>
+</body>
+</html>
