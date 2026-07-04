@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro Bingo | Registro Shinobi 3D</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --void: #0a0806;
+            --void-deep: #050403;
+            --parchment: #e7dbb8;
+            --parchment-dark: #cdbb8e;
+            --ink: #251d12;
+            --seal-red: #9c1c1c;
+            --gold: #c9a227;
+            --card-radius: 4px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::-webkit-scrollbar { width: 9px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: var(--seal-red); border-radius: 10px; border: 2px solid var(--void); }
+
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            background: var(--void);
+            color: var(--parchment);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* ===================== FUNDO — vazio noturno + selo kanji gigante ===================== */
+        .bg-void {
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, #171008 0%, var(--void) 45%, var(--void-deep) 100%);
+            z-index: -4;
+        }
+        .bg-kanji {
+            position: fixed;
+            top: 46%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Yuji Syuku', serif;
+            font-size: 62vw;
+            line-height: 1;
+            color: rgba(232, 89, 12, 0.045);
+            z-index: -3;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .bg-embers {
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(156, 28, 28, 0.10) 0%, transparent 32%),
+                radial-gradient(circle at 88% 78%, rgba(201, 162, 39, 0.07) 0%, transparent 32%);
+            z-index: -2;
+        }
+        .bg-grain {
+            position: fixed; inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+            opacity: 0.12;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===================== HEADER — hitai-ate (bandana) ===================== */
+        header {
+            padding: 14px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 8, 6, 0.82);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(201, 162, 39, 0.25);
+        }
+
+        .hitai {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hitai-plate {
+            width: 42px; height: 30px;
+            background: linear-gradient(160deg, #8a9aa0 0%, #4d5a5f 45%, #2a3336 100%);
+            border-radius: 3px;
+            position: relative;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -3px 6px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hitai-plate svg { width: 22px; height: 22px; }
+        .hitai-cloth {
+            width: 30px; height: 3px;
+            background: linear-gradient(90deg, var(--seal-red), #6e1111);
+        }
+        .logo {
+            font-family: 'Yuji Syuku', serif;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: var(--parchment);
+            text-shadow: 0 0 16px rgba(201, 162, 39, 0.35);
+        }
+        .logo small {
+            display: block;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+
+        .btn-back {
+            color: var(--parchment);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 9px 20px;
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            background: rgba(201, 162, 39, 0.06);
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-back:hover { background: var(--gold); border-color: var(--gold); color: var(--void); }
+
+        /* ===================== HERO ===================== */
+        main.container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 150px 30px 100px;
+            position: relative;
+        }
+
+        .hero { text-align: center; margin-bottom: 20px; }
+        .hero .eyebrow {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 14px;
+            border-top: 1px solid rgba(201,162,39,0.4);
+            border-bottom: 1px solid rgba(201,162,39,0.4);
+            padding: 6px 0;
+        }
+        .hero h1 {
+            font-family: 'Yuji Syuku', serif;
+            font-size: clamp(34px, 6vw, 68px);
+            letter-spacing: 2px;
+            color: var(--parchment);
+            text-shadow: 0 0 30px rgba(201, 162, 39, 0.25);
+        }
+        .hero p.sub {
+            color: #b3a583;
+            font-size: 13px;
+            margin-top: 14px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        /* Divisor kunai */
+        .kunai-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 40px 0 46px;
+        }
+        .kunai-divider .line { height: 1px; width: 120px; background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5)); }
+        .kunai-divider .line.right { background: linear-gradient(90deg, rgba(201,162,39,0.5), transparent); }
+        .kunai-divider svg { width: 26px; height: 26px; }
+
+        /* ===================== FILTROS — selos de vila ===================== */
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 55px;
+        }
+        .village-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #8a7d5f;
+            transition: 0.3s;
+        }
+        .village-seal {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            border: 2px solid rgba(201, 162, 39, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(201, 162, 39, 0.04);
+            font-family: 'Yuji Syuku', serif;
+            font-size: 22px;
+            color: #8a7d5f;
+            transition: 0.3s;
+        }
+        .village-btn span.label {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .village-btn:hover .village-seal,
+        .village-btn.active .village-seal {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 18px rgba(201, 162, 39, 0.35);
+            background: rgba(201, 162, 39, 0.12);
+        }
+        .village-btn:hover, .village-btn.active { color: var(--parchment); }
+
+        /* ===================== GRID DE DOSSIÊS ===================== */
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 44px 32px;
+        }
+
+        .dossier {
+            --rot: 0deg;
+            background:
+                linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0)) ,
+                var(--parchment);
+            background-blend-mode: overlay;
+            color: var(--ink);
+            border-radius: var(--card-radius);
+            padding: 0 0 18px;
+            position: relative;
+            transform: rotate(var(--rot));
+            opacity: 0;
+            translate: 0 30px;
+            transition: opacity 0.5s ease, translate 0.5s ease, transform 0.35s ease, box-shadow 0.35s ease;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+            clip-path: polygon(
+                0% 1.5%, 6% 0%, 14% 1.2%, 22% 0.2%, 30% 1.6%, 38% 0%, 46% 1%, 54% 0.3%,
+                62% 1.4%, 70% 0.1%, 78% 1.1%, 86% 0.4%, 94% 1.3%, 100% 0%,
+                100% 100%, 0% 100%
+            );
+        }
+        .dossier.show { opacity: 1; translate: 0 0; }
+        .dossier:hover {
+            transform: rotate(0deg) translateY(-8px);
+            box-shadow: 0 22px 50px rgba(0,0,0,0.65), 0 0 30px var(--glow-color);
+            z-index: 5;
+        }
+
+        .pin {
+            position: absolute;
+            top: -14px; left: 50%;
+            transform: translateX(-50%) rotate(-8deg);
+            width: 28px; height: 28px;
+            z-index: 3;
+            filter: drop-shadow(0 3px 4px rgba(0,0,0,0.6));
+        }
+
+        .stamp-rank {
+            position: absolute;
+            top: 14px; right: 12px;
+            z-index: 3;
+            border: 2px solid var(--char-color);
+            color: var(--char-color);
+            font-weight: 900;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 5px 9px;
+            border-radius: 50%;
+            transform: rotate(12deg);
+            background: rgba(231, 219, 184, 0.85);
+            text-align: center;
+            width: 64px; height: 64px;
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1.1;
+            mix-blend-mode: multiply;
+            opacity: 0.92;
+        }
+
+        .photo {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 14px;
+            border-bottom: 3px double var(--ink);
+        }
+        .photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(85%) sepia(20%) contrast(1.05);
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
+        .dossier:hover .photo img {
+            filter: grayscale(0%) sepia(0%) contrast(1);
+            transform: scale(1.06);
+        }
+        .photo::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(37,29,18,0) 55%, rgba(37,29,18,0.35) 100%);
+            pointer-events: none;
+        }
+
+        .dossier-body { padding: 16px 20px 0; }
+
+        .dossier-body h2 {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--ink);
+            border-left: 4px solid var(--char-color);
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #5b4d33;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed rgba(37,29,18,0.25);
+            padding-bottom: 10px;
+        }
+        .meta-row span b { color: var(--ink); font-weight: 800; }
+
+        .desc {
+            font-size: 12.5px;
+            color: #4a3d26;
+            line-height: 1.65;
+            min-height: 56px;
+            margin-bottom: 16px;
+        }
+
+        .bounty-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed rgba(37,29,18,0.25);
+            padding-top: 14px;
+        }
+        .bounty-label {
+            display: block;
+            font-size: 8.5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #7a6a44;
+            font-weight: 700;
+        }
+        .bounty-val {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+        .btn-capture {
+            background: var(--char-color);
+            color: var(--parchment);
+            text-decoration: none;
+            padding: 10px 18px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            box-shadow: 2px 2px 0 rgba(37,29,18,0.4);
+            transition: 0.25s;
+        }
+        .btn-capture:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 rgba(37,29,18,0.5); filter: brightness(1.08); }
+        .btn-capture:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(37,29,18,0.4); }
+
+        @media (max-width: 768px) {
+            header { padding: 14px 20px; }
+            main.container { padding: 130px 18px 60px; }
+            .bg-kanji { font-size: 90vw; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-void"></div>
+    <div class="bg-kanji">忍</div>
+    <div class="bg-embers"></div>
+    <div class="bg-grain"></div>
+
+    <header>
+        <div class="hitai">
+            <div class="hitai-plate">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C9 6 5 8 5 13a7 7 0 0014 0c0-5-4-7-7-11z" fill="#dfe6e8" stroke="#1c2426" stroke-width="1"/></svg>
+            </div>
+            <div class="hitai-cloth"></div>
+            <div class="logo">Livro Bingo<small>Registro Shinobi 3D</small></div>
+        </div>
+        <a href="produtos.html" class="btn-back">◄ Todos os Produtos</a>
+    </header>
+
+    <main class="container">
+        <div class="hero">
+            <span class="eyebrow">Arquivo Confidencial — Nações Elementais</span>
+            <h1>登録された忍者<br>Shinobi Registrados</h1>
+            <p class="sub">Cada peça desta coleção é catalogada como no Livro Bingo original: classificação, vila de origem e recompensa. Clique em "Adquirir" para requisitar a captura da sua estátua.</p>
+        </div>
+
+        <div class="kunai-divider">
+            <span class="line"></span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#c9a227"/></svg>
+            <span class="line right"></span>
+        </div>
+
+        <nav class="filters">
+            <button class="village-btn active" data-filter="all">
+                <span class="village-seal">全</span>
+                <span class="label">Todos</span>
+            </button>
+            <button class="village-btn" data-filter="konoha">
+                <span class="village-seal">木</span>
+                <span class="label">Konoha</span>
+            </button>
+            <button class="village-btn" data-filter="akatsuki">
+                <span class="village-seal">暁</span>
+                <span class="label">Akatsuki</span>
+            </button>
+            <button class="village-btn" data-filter="sannin">
+                <span class="village-seal">三</span>
+                <span class="label">Sannin</span>
+            </button>
+        </nav>
+
+        <div class="dossier-grid">
+
+            <article class="dossier" data-category="konoha" style="--rot:-1.4deg; --char-color:#e8590c; --glow-color:rgba(232,89,12,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">HOKAGE<br>7º</div>
+                <div class="photo"><img src="imagens/naruto2.webp" alt="Naruto Uzumaki"></div>
+                <div class="dossier-body">
+                    <h2>Naruto Uzumaki</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Vento</b></span></div>
+                    <p class="desc">Jinchuuriki da Kyuubi. Pose de Rasengan esculpida com base iluminada em LED âmbar.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 299,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Naruto" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:1.1deg; --char-color:#5b5ce0; --glow-color:rgba(91,92,224,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">SHADOW<br>HOKAGE</div>
+                <div class="photo"><img src="imagens/sasuke.webp" alt="Sasuke Uchiha"></div>
+                <div class="dossier-body">
+                    <h2>Sasuke Uchiha</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Raio</b></span></div>
+                    <p class="desc">Pose de Chidori com efeito de raio esculpido em resina translúcida.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 319,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Sasuke" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:-0.8deg; --char-color:#d43f8d; --glow-color:rgba(212,63,141,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">JOUNIN<br>MÉDICO</div>
+                <div class="photo"><img src="imagens/sakura.webp" alt="Sakura Haruno"></div>
+                <div class="dossier-body">
+                    <h2>Sakura Haruno</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Terra</b></span></div>
+                    <p class="desc">Pose de socão com rachaduras esculpidas em detalhe na base.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 269,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20da%20Sakura" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:1.6deg; --char-color:#6b7280; --glow-color:rgba(107,114,128,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">HOKAGE<br>6º</div>
+                <div class="photo"><img src="imagens/kakashi.webp" alt="Kakashi Hatake"></div>
+                <div class="dossier-body">
+                    <h2>Kakashi Hatake</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Raio</b></span></div>
+                    <p class="desc">Efeito de Raikiri em LED azul e Sharingan pintado com brilho realista.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 349,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Kakashi" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="akatsuki" style="--rot:-1.2deg; --char-color:#b91c1c; --glow-color:rgba(185,28,28,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">RANK<br>S</div>
+                <div class="photo"><img src="imagens/itachi.webp" alt="Itachi Uchiha"></div>
+                <div class="dossier-body">
+                    <h2>Itachi Uchiha</h2>
+                    <div class="meta-row"><span>Vila: <b>Renegado</b></span><span>Elemento: <b>Fogo</b></span></div>
+                    <p class="desc">Mangekyou Sharingan detalhado, capa da Akatsuki em alto relevo.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 289,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Itachi" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="sannin" style="--rot:1.3deg; --char-color:#65a30d; --glow-color:rgba(101,163,13,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">SANNIN<br>LENDÁRIO</div>
+                <div class="photo"><img src="imagens/jiraiya.webp" alt="Jiraiya"></div>
+                <div class="dossier-body">
+                    <h2>Jiraiya</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Fogo</b></span></div>
+                    <p class="desc">Modo Sábio sobre o Gamabunta em miniatura, base com efeito de respingo.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 329,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Jiraiya" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="sannin" style="--rot:-1.6deg; --char-color:#0f9d6e; --glow-color:rgba(15,157,110,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">HOKAGE<br>5º</div>
+                <div class="photo"><img src="imagens/tsunade.webp" alt="Tsunade Senju"></div>
+                <div class="dossier-body">
+                    <h2>Tsunade Senju</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Terra</b></span></div>
+                    <p class="desc">Manto de Hokage com efeito de chakra verde de cura esculpido na mão.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 309,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20da%20Tsunade" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="sannin" style="--rot:0.9deg; --char-color:#7c3aed; --glow-color:rgba(124,58,237,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">SANNIN<br>LENDÁRIO</div>
+                <div class="photo"><img src="imagens/orochimaru.webp" alt="Orochimaru"></div>
+                <div class="dossier-body">
+                    <h2>Orochimaru</h2>
+                    <div class="meta-row"><span>Vila: <b>Renegado</b></span><span>Elemento: <b>Todos</b></span></div>
+                    <p class="desc">Emergindo de uma cobra esculpida, pintura de escamas em alto relevo.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 339,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Orochimaru" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:-1deg; --char-color:#c9891a; --glow-color:rgba(201,137,26,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">KAZEKAGE</div>
+                <div class="photo"><img src="imagens/gaara.webp" alt="Gaara"></div>
+                <div class="dossier-body">
+                    <h2>Gaara</h2>
+                    <div class="meta-row"><span>Vila: <b>Areia</b></span><span>Elemento: <b>Areia</b></span></div>
+                    <p class="desc">Envolto em areia dourada esculpida em movimento congelado.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 279,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Gaara" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:1.4deg; --char-color:#16a34a; --glow-color:rgba(22,163,74,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">TAIJUTSU<br>MESTRE</div>
+                <div class="photo"><img src="imagens/rocklee.webp" alt="Rock Lee"></div>
+                <div class="dossier-body">
+                    <h2>Rock Lee</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>—</b></span></div>
+                    <p class="desc">Portões Internos abertos, com efeito de aura verde de chakra explosivo.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 259,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Rock%20Lee" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:-1.3deg; --char-color:#9333ea; --glow-color:rgba(147,51,234,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">CLÃ<br>HYUGA</div>
+                <div class="photo"><img src="imagens/hinata.webp" alt="Hinata Hyuga"></div>
+                <div class="dossier-body">
+                    <h2>Hinata Hyuga</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Água</b></span></div>
+                    <p class="desc">Byakugan ativado em pose de Jyuuken, detalhes translúcidos no chakra.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 259,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20da%20Hinata" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="akatsuki" style="--rot:1.1deg; --char-color:#ea580c; --glow-color:rgba(234,88,12,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">DEUS<br>PAIN</div>
+                <div class="photo"><img src="imagens/pain.webp" alt="Pain"></div>
+                <div class="dossier-body">
+                    <h2>Pain — Caminho Deva</h2>
+                    <div class="meta-row"><span>Vila: <b>Chuva</b></span><span>Elemento: <b>—</b></span></div>
+                    <p class="desc">Piercings detalhados e efeito de Shinra Tensei esculpido ao redor.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 359,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Pain" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="akatsuki" style="--rot:-0.9deg; --char-color:#dc2626; --glow-color:rgba(220,38,38,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">RENEGADO</div>
+                <div class="photo"><img src="imagens/obito.webp" alt="Obito Uchiha"></div>
+                <div class="dossier-body">
+                    <h2>Obito Uchiha</h2>
+                    <div class="meta-row"><span>Vila: <b>Renegado</b></span><span>Elemento: <b>Fogo</b></span></div>
+                    <p class="desc">Máscara em espiral com efeito Kamui parcial, capa da Akatsuki detalhada.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 339,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Obito" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="akatsuki" style="--rot:1.5deg; --char-color:#4c1d95; --glow-color:rgba(76,29,149,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">DEUS<br>SHINOBI</div>
+                <div class="photo"><img src="imagens/madara.webp" alt="Madara Uchiha"></div>
+                <div class="dossier-body">
+                    <h2>Madara Uchiha</h2>
+                    <div class="meta-row"><span>Vila: <b>Renegado</b></span><span>Elemento: <b>Todos</b></span></div>
+                    <p class="desc">Rinnegan ativado com o Susanoo esculpido parcialmente na base.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 389,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Madara" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="dossier" data-category="konoha" style="--rot:-1.1deg; --char-color:#d4a017; --glow-color:rgba(212,160,23,0.45);">
+                <svg class="pin" viewBox="0 0 24 24" fill="none"><path d="M12 2 L14 9 L21 11 L14 13 L12 21 L10 13 L3 11 L10 9 Z" fill="#9c1c1c" stroke="#251d12" stroke-width="0.5"/></svg>
+                <div class="stamp-rank">HOKAGE<br>4º</div>
+                <div class="photo"><img src="imagens/minato.webp" alt="Minato Namikaze"></div>
+                <div class="dossier-body">
+                    <h2>Minato Namikaze</h2>
+                    <div class="meta-row"><span>Vila: <b>Konoha</b></span><span>Elemento: <b>Vento</b></span></div>
+                    <p class="desc">O Raio Amarelo em pose de Hiraishin, kunai especial incluída.</p>
+                    <div class="bounty-row">
+                        <div><span class="bounty-label">Recompensa</span><span class="bounty-val">R$ 329,00</span></div>
+                        <a href="https://wa.me/5599999999999?text=Quero%20requisitar%20a%20figure%20do%20Minato" class="btn-capture">Capturar</a>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll('.dossier');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('show');
+                });
+            }, { threshold: 0.1 });
+            cards.forEach(card => observer.observe(card));
+
+            const btns = document.querySelectorAll('.village-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.getAttribute('data-filter');
+                    cards.forEach(card => {
+                        card.classList.remove('show');
+                        setTimeout(() => {
+                            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                                card.style.display = 'block';
+                                setTimeout(() => card.classList.add('show'), 50);
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }, 250);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
