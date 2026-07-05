@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELOS 3D | Peças Articuladas</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Fundo clareado de #060709 para #0d1017 */
+    --bg: #0d1017;
+    --panel: rgba(17, 19, 24, 0.75);
+    --panel-hover: rgba(25, 28, 36, 0.85);
+    --steel: #8b949e;
+    --pin: #ffb020;
+    --joint: #23d5ab;
+    --danger: #ff5f56;
+    --card-radius: 20px;
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: #f0f2f5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Fundo Tecnológico ---------- */
+  .metal-bg {
+    position: fixed; inset: 0; z-index: -3;
+    background:
+      /* Gradientes com opacidade levemente maior para iluminar o fundo */
+      radial-gradient(circle at 10% 20%, rgba(35, 213, 171, 0.12), transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(255, 176, 32, 0.10), transparent 50%),
+      var(--bg);
+  }
+  .metal-lines {
+    position: fixed; inset: 0; z-index: -2;
+    /* Linhas diagonais sutilmente mais visíveis */
+    background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 60px);
+    opacity: 0.9;
+  }
+  
+  /* Opacidade geral das animações aumentada de 0.6 para 0.85 */
+  #elos-canvas { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; }
+
+  /* ---------- Header Superior ---------- */
+  header {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 40px;
+    background: rgba(13, 16, 23, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px;
+    letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
+  }
+  .logo .pin { width: 10px; height: 10px; border-radius: 50%; background: var(--pin); box-shadow: 0 0 12px var(--pin); }
+  
+  .btn-back {
+    color: #060709; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    padding: 12px 26px; border-radius: 30px;
+    background: linear-gradient(90deg, var(--joint), var(--pin));
+    box-shadow: 0 4px 15px rgba(35, 213, 171, 0.2);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+    text-transform: uppercase;
+  }
+  .btn-back:hover { 
+    transform: translateY(-2px) scale(1.03); 
+    box-shadow: 0 8px 25px rgba(35, 213, 171, 0.4); 
+  }
+
+  /* ---------- Seção Principal / Hero ---------- */
+  main.container { max-width: 1300px; margin: 0 auto; padding: 160px 24px 100px; position: relative; z-index: 1; }
+  .hero { text-align: center; margin-bottom: 64px; }
+  .hero .kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .25em;
+    color: var(--joint); text-transform: uppercase; display: block; margin-bottom: 18px;
+  }
+  
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 62px); line-height: 1.2; letter-spacing: -0.02em;
+    perspective: 1000px;
+  }
+  
+  .hero h1 .flex-word { 
+    display: inline-block; 
+    position: relative; 
+    color: var(--pin); 
+    text-shadow: 0 0 30px rgba(255,176,32,0.25);
+    padding-left: 20px; 
+    transform-origin: left center;
+    animation: articulate-fold 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    transform-style: preserve-3d;
+  }
+
+  .hero h1 .flex-word::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.8), inset 0 0 2px #000;
+  }
+
+  @keyframes articulate-fold {
+    0%, 100% { 
+      transform: rotateZ(0deg) rotateX(0deg); 
+      color: var(--pin);
+      text-shadow: 0 0 30px rgba(255,176,32,0.25);
+    }
+    25% { 
+      transform: rotateZ(-4deg) rotateX(15deg); 
+      color: var(--joint); 
+      text-shadow: 0 0 30px rgba(35, 213, 171, 0.4); 
+    }
+    75% { 
+      transform: rotateZ(3deg) rotateX(-10deg); 
+      color: var(--pin); 
+    }
+  }
+
+  .hero p { color: var(--steel); font-size: 16px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+  /* ---------- Grid Consistente ---------- */
+  .elos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+    position: relative;
+  }
+
+  /* ---------- Card Articulado ---------- */
+  .elo-card {
+    background: var(--panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--card-radius);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    display: flex; flex-direction: column;
+    position: relative;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease,
+                background-color 0.3s ease;
+    transform-origin: 16px 16px;
+  }
+  .elo-card.show { opacity: 1; transform: translateY(0); }
+  
+  .elo-card:hover {
+    background: var(--panel-hover);
+    transform: rotate(-1deg) translateY(-8px);
+    border-color: var(--char-color, var(--joint));
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px var(--glow-color, rgba(35,213,171,0.25));
+  }
+
+  .elo-card::before {
+    content: ''; position: absolute; top: 10px; left: 10px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--char-color, var(--joint));
+    box-shadow: 0 0 8px var(--char-color, var(--joint)), inset 0 0 2px rgba(0,0,0,0.5);
+    z-index: 3;
+  }
+
+  .card-img-wrap {
+    position: relative; width: 100%; aspect-ratio: 1 / 1;
+    border-radius: 14px; overflow: hidden; background: #0c0e12;
+    margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.95) contrast(1.02);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+  }
+  .elo-card:hover .card-img-wrap img { transform: scale(1.06); filter: brightness(1.05) contrast(1.08); }
+
+  .badge {
+    position: absolute; top: 14px; left: 14px; z-index: 4;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    padding: 6px 12px; border-radius: 6px; text-transform: uppercase;
+    background: rgba(13, 16, 23, 0.85); backdrop-filter: blur(4px);
+    border: 1px solid var(--char-color, var(--joint)); color: var(--char-color, var(--joint));
+  }
+  .badge.promo { border-color: var(--danger); color: var(--danger); }
+  
+  .joint-count {
+    position: absolute; bottom: 14px; right: 14px; z-index: 4;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+    padding: 6px 10px; border-radius: 6px;
+    background: rgba(13, 16, 23, 0.85); backdrop-filter: blur(4px);
+    color: #e4e6eb; border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .card-info { display: flex; flex-direction: column; flex-grow: 1; text-align: left; }
+  .card-info h3 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+  .card-info .desc { font-size: 13.5px; color: var(--steel); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
+  
+  .card-price { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #fff; display: flex; align-items: baseline; gap: 6px; }
+  .card-price span { font-size: 11px; font-weight: 400; color: var(--steel); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px;}
+
+  .card-footer { margin-top: auto; }
+  .btn-buy {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    text-align: center; text-decoration: none;
+    width: 100%; padding: 14px; box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.04); color: #f0f2f5;
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px;
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-buy svg { fill: currentColor; transition: transform 0.3s ease; }
+  .btn-buy:hover {
+    background: var(--char-color, var(--joint)); color: #060709; border-color: var(--char-color, var(--joint));
+    box-shadow: 0 0 20px var(--glow-color, rgba(35,213,171,0.35));
+  }
+  .btn-buy:hover svg { transform: scale(1.1); }
+
+  @media (max-width: 992px) {
+    header { padding: 16px 24px; }
+    main.container { padding: 130px 20px 80px; }
+    .elos-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  }
+
+  @media (max-width: 576px) {
+    .logo { font-size: 16px; }
+    .btn-back { padding: 10px 16px; font-size: 10px; }
+    .elos-grid { grid-template-columns: 1fr; gap: 24px; }
+    .hero h1 { font-size: 34px; }
+    .hero p { font-size: 14.5px; }
+    .elo-card { padding: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="metal-bg"></div>
+<div class="metal-lines"></div>
+<canvas id="elos-canvas"></canvas>
+
+<header>
+  <div class="logo"><span class="pin"></span>ELOS 3D</div>
+  <a href="produtos.html" class="btn-back">◄ Todos os Produtos</a>
+</header>
+
+<main class="container">
+  <div class="hero">
+    <span class="kicker">impressão 3d articulada · sob encomenda</span>
+    <h1>Peças que <span class="flex-word">se dobram</span> de verdade</h1>
+    <p>Cada elo sai da impressora perfeitamente integrado e pronto para movimento — livre de parafusos ou colas.</p>
+  </div>
+
+  <div class="elos-grid" id="elosGrid">
+
+    <article class="elo-card" style="--char-color:#23d5ab; --glow-color:rgba(35,213,171,0.3);">
+      <div class="card-img-wrap">
+        <span class="badge">Mais vendido</span>
+        <span class="joint-count">48 juntas</span>
+        <img src="imagens/dragao2.webp" alt="Dragão Articulado Ignis">
+      </div>
+      <div class="card-info">
+        <h3>Dragão Articulado Ignis</h3>
+        <p class="desc">Corpo serpenteante, asas dobráveis e cauda com 9 segmentos móveis complexos.</p>
+        <div class="card-price">R$ 189 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Drag%C3%A3o%20Articulado%20Ignis" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="elo-card" style="--char-color:#ffb020; --glow-color:rgba(255,176,32,0.3);">
+      <div class="card-img-wrap">
+        <span class="joint-count">60 juntas</span>
+        <img src="imagens/cobra.webp" alt="Serpente Flexível Nyx">
+      </div>
+      <div class="card-info">
+        <h3>Serpente Flexível Nyx</h3>
+        <p class="desc">Impressa em peça única estrutural — 60 elos hiper-fluidos que mimetizam escamas reais.</p>
+        <div class="card-price">R$ 129 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20na%20Serpente%20Flex%C3%ADvel%20Nyx" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="elo-card" style="--char-color:#ff5f56; --glow-color:rgba(255,95,86,0.3);">
+      <div class="card-img-wrap">
+        <span class="badge promo">-15% off</span>
+        <span class="joint-count">22 juntas</span>
+        <img src="imagens/escorpiao.webp" alt="Escorpião Cinético Vortex">
+      </div>
+      <div class="card-info">
+        <h3>Escorpião Cinético Vortex</h3>
+        <p class="desc">Cauda perfeitamente segmentada com ferrão balístico e pinças com abertura mecânica livre.</p>
+        <div class="card-price">R$ 99 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Escorpi%C3%A3o%20Cin%C3%A9tico%20Vortex" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="elo-card" style="--char-color:#8c7bff; --glow-color:rgba(140,123,255,0.3);">
+      <div class="card-img-wrap">
+        <span class="joint-count">64 juntas</span>
+        <img src="imagens/polvo.webp" alt="Polvo Articulado Abyssal">
+      </div>
+      <div class="card-info">
+        <h3>Polvo Articulado Abyssal</h3>
+        <p class="desc">Oito tentáculos independentes formados por elos concêntricos com angulação natural.</p>
+        <div class="card-price">R$ 219 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Polvo%20Articulado%20Abyssal" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="elo-card" style="--char-color:#23d5ab; --glow-color:rgba(35,213,171,0.3);">
+      <div class="card-img-wrap">
+        <span class="joint-count">16 juntas</span>
+        <img src="imagens/dino.webp" alt="DINOSSAURO">
+      </div>
+      <div class="card-info">
+        <h3>Dinossauro</h3>
+        <p class="desc">Design EDC ultra-compacto, cauda auto-enrolável e globos oculares com rotação 360° funcional.</p>
+        <div class="card-price">R$ 69 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Camale%C3%A3o%20de%20Bolso%20Tico" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="elo-card" style="--char-color:#ffb020; --glow-color:rgba(255,176,32,0.3);">
+      <div class="card-img-wrap">
+        <span class="joint-count">20 juntas</span>
+        <img src="imagens/tartaruga.webp" alt="Tartaruga Modular Terra">
+      </div>
+      <div class="card-info">
+        <h3>Tartaruga Modular Terra</h3>
+        <p class="desc">Casco geométrico fragmentado construído sobre chassi de 4 patas altamente articuladas.</p>
+        <div class="card-price">R$ 89 <span>à vista</span></div>
+        <div class="card-footer">
+          <a href="https://wa.me/5541999999999?text=Ol%C3%A1!%20Tenho%20interesse%20na%20Tartaruga%20Modular%20Terra" class="btn-buy" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.411 0 11.983 0c3.184.001 6.177 1.242 8.426 3.496 2.248 2.253 3.487 5.244 3.485 8.428-.003 6.577-5.355 11.925-11.931 11.925-2.005-.001-3.973-.505-5.717-1.464L0 24zm6.582-3.415c1.644.976 3.253 1.488 4.809 1.489 5.404 0 9.802-4.388 9.805-9.782.002-2.613-1.018-5.07-2.873-6.928C16.467 3.507 14.02 2.486 11.41 2.486c-5.412 0-9.814 4.39-9.817 9.786-.001 1.636.447 3.219 1.301 4.62l-.988 3.606 3.733-.973zM16.63 13.91c-.266-.134-1.58-.78-1.822-.867-.243-.088-.419-.133-.596.133-.176.265-.685.867-.839 1.044-.156.177-.311.199-.577.066-.267-.134-1.127-.416-2.147-1.326-.793-.707-1.329-1.582-1.486-1.848-.156-.265-.017-.409.117-.541.12-.12.267-.31.4-.464.133-.155.177-.266.266-.443.089-.177.044-.332-.022-.464-.067-.133-.596-1.437-.817-1.968-.215-.518-.432-.447-.596-.455-.155-.008-.332-.01-.508-.01-.177 0-.464.067-.708.332-.243.266-.93.908-.93 2.214s.952 2.568 1.084 2.746c.133.178 1.877 2.868 4.545 4.013.635.273 1.13.436 1.517.559.638.203 1.22.174 1.679.106.513-.075 1.582-.647 1.802-1.24.221-.593.221-1.099.155-1.207-.066-.108-.243-.177-.508-.31z"/></svg>
+            Chamar no Zap
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<script>
+  /* Animação suave escalonada dos cards */
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll('.elo-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('show'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
+    
+    cards.forEach(card => observer.observe(card));
+  });
+
+  /* Canvas Adaptativo de Conexões Flutuantes (Cores mais brilhantes) */
+  const canvas = document.getElementById('elos-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, links = [];
+  let resizeTimeout;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resize();
+      initLinks();
+    }, 200);
+  });
+
+  class Link {
+    constructor(){
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.20;
+      this.vy = (Math.random() - 0.5) * 0.20;
+      this.r = Math.random() * 1.8 + 1.2;
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy;
+      if(this.x < 0 || this.x > w) this.vx *= -1;
+      if(this.y < 0 || this.y > h) this.vy *= -1;
+    }
+    draw(){
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      // Pontos (nós) mais claros
+      ctx.fillStyle = 'rgba(35, 213, 171, 0.6)'; 
+      ctx.fill();
+    }
+  }
+
+  function initLinks(){
+    links = [];
+    const count = Math.min(Math.floor((w * h) / 28000), 75);
+    for(let i = 0; i < count; i++) links.push(new Link());
+  }
+
+  function step(){
+    ctx.clearRect(0, 0, w, h);
+    links.forEach(l => { l.update(); l.draw(); });
+    
+    for(let i = 0; i < links.length; i++){
+      for(let j = i + 1; j < links.length; j++){
+        const dx = links[i].x - links[j].x;
+        const dy = links[i].y - links[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if(dist < 140){
+          ctx.beginPath();
+          ctx.moveTo(links[i].x, links[i].y);
+          ctx.lineTo(links[j].x, links[j].y);
+          // Linhas mais brilhantes
+          ctx.strokeStyle = `rgba(255, 176, 32, ${0.18 * (1 - dist / 140)})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  resize(); initLinks(); step();
+</script>
+</body>
+</html>
